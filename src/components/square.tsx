@@ -1,6 +1,6 @@
-import React from 'react';
+import * as React from 'react';
 
-export default function Square(props) {
+export default function Square(props: any) {
     return (
         <button className={`square-${props.shade}`}
             onClick={props.onClick}
