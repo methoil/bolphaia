@@ -10,7 +10,7 @@ export default class Board extends React.Component<IBoard, {}> {
 
 
 
-  render() {
+  render(props) {
     const board = [];
     for (let i = 0; i < 8; i++) {
       const squareRows = [];
