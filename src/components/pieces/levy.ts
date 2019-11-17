@@ -1,7 +1,13 @@
-import Piece from './piece';
+import BasePiece from './piece';
 import { coordinate } from './IPieces';
 
-export default class Levy extends Piece {
+import whiteLevyImageSvg from "../../resources/whitePawn.svg";
+import blackLevyImageSvg from "../../resources/blackPawn.svg";
+
+export default class Levy extends BasePiece {
+    getImageUrl() {
+        return this.player === 'slavs' ? whiteLevyImageSvg : blackLevyImageSvg;
+    }
 
     isMovePossible(src: coordinate, dest: coordinate): boolean {
         return Math.abs(dest.x - src.x) <= 1 && Math.abs(dest.y - src.y) <= 1;

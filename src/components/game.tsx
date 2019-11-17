@@ -2,16 +2,20 @@ import * as React from "react";
 
 import "../index.css";
 import Board from "./board";
+import levy from './pieces/levy';
+import {IPiece} from './pieces/IPieces';
+
+export type IBoardState  = (IPiece | null) [][]; 
 
 interface IGame {
-  boardState: string[][];
+  boardState: IBoardState;
 }
 
 export default class Game extends React.Component<IGame, {}> {
-  boardState: string[][] = [];
+  boardState: IBoardState = [];
 
   render() {
-    return <Board boardState={this.boardState}></Board>;
+    return <Board boardState={this.boardState} onClick={this.onClick}></Board>;
   }
 
   constructor(props: any) {
@@ -23,8 +27,25 @@ export default class Game extends React.Component<IGame, {}> {
   private initializeBoard(xSize: number, ySize: number): void {
     this.boardState = [];
     for (let x = 0; x < xSize; x++) {
-      const stingTofill = x === 1 ? "L" : "";
-      this.boardState.push(new Array(ySize).fill(stingTofill) as string[]);
+      let pieceToPlace: IPiece | null = null;
+      if (x === 1) {
+          pieceToPlace = new levy('slavs');
+      } else if (x === 6) {
+          pieceToPlace = new levy('thracians');
+      }
+
+      this.boardState.push(new Array(ySize).fill(pieceToPlace));
     }
+  }
+
+  private onClick(xIndex: number, yIndex: number): void {
+    if (!this.boardState[xIndex][yIndex]) {
+        return;
+    }
+
+    // if (this.boardState[xIndex][yIndex] === 'L' ) {
+
+    //     return;
+    // }
   }
 }

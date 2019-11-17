@@ -2,6 +2,7 @@ import * as React from "react";
 
 import "../index.css";
 import Square from "./square";
+import {IBoardState} from './game';
 
 import levyImageSvg from "../Chess_plt45.svg";
 interface ISquare {
@@ -9,11 +10,9 @@ interface ISquare {
   shade: string;
   onClick: () => any;
 }
-interface IBoard {
-  squares: ISquare[];
-}
 interface IBoardProps {
-  boardState: string[][];
+  boardState: IBoardState;
+  onClick: (xIndex: number, yIndex: number) => void;
 }
 
 export default class Board extends React.Component<IBoardProps, {}> {
@@ -30,8 +29,9 @@ export default class Board extends React.Component<IBoardProps, {}> {
           (isEven(i) && isEven(j)) || (!isEven(i) && !isEven(j))
             ? "light-square"
             : "dark-square";
-        const backgroundImage =
-          this.props.boardState[i][j] === "L" ? levyImageSvg : "none";
+
+        const squareState = this.props.boardState[i][j];
+        const backgroundImage = squareState === null ? 'none' : squareState.getImageUrl();
         squareRows.push(
           this.renderSquare(i * 8 + j, squareShade, backgroundImage)
         );
@@ -51,7 +51,6 @@ export default class Board extends React.Component<IBoardProps, {}> {
       <Square
         key={id}
         // piece = {this.props.squares[i]}
-        // style = {this.props.squares[i]? this.props.squares[i].style : null}
         shade={squareShade}
         style={{ backgroundImage: `url(${backgroundImage})` }}
         // onClick={() => this.props.onClick(i)}
