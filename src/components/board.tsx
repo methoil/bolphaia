@@ -2,9 +2,8 @@ import * as React from "react";
 
 import "../index.css";
 import Square from "./square";
-import {IBoardState} from './game';
+import { IBoardState } from "./game";
 
-import levyImageSvg from "../Chess_plt45.svg";
 interface ISquare {
   style: string;
   shade: string;
@@ -31,10 +30,9 @@ export default class Board extends React.Component<IBoardProps, {}> {
             : "dark-square";
 
         const squareState = this.props.boardState[i][j];
-        const backgroundImage = squareState === null ? 'none' : squareState.getImageUrl();
-        squareRows.push(
-          this.renderSquare(i * 8 + j, squareShade, backgroundImage)
-        );
+        const backgroundImage =
+          squareState === null ? "none" : squareState.getImageUrl();
+        squareRows.push(this.renderSquare(i, j, squareShade, backgroundImage));
       }
       board.push(
         <div key={i} className="board-row">
@@ -46,19 +44,24 @@ export default class Board extends React.Component<IBoardProps, {}> {
     return <div>{board}</div>;
   }
 
-  renderSquare(id: number, squareShade: any, backgroundImage: string) {
+  renderSquare(
+    xIdx: number,
+    yIdx: number,
+    squareShade: any,
+    backgroundImage: string
+  ) {
     return (
       <Square
-        key={id}
+        key={xIdx * 8 + yIdx}
         // piece = {this.props.squares[i]}
         shade={squareShade}
         style={{ backgroundImage: `url(${backgroundImage})` }}
-        // onClick={() => this.props.onClick(i)}
+        onClick={() => this.props.onClick(xIdx, yIdx)}
       />
     );
   }
 }
 
 function isEven(num: number): boolean {
-  return num % 2 == 0;
+  return num % 2 === 0;
 }
