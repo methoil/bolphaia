@@ -1,4 +1,5 @@
 import * as React from "react";
+import { cloneDeep } from "lodash";
 
 import "../index.css";
 import Board from "./board";
@@ -50,15 +51,13 @@ export default class Game extends React.Component<IGame, {}> {
     const clickedPiece = this.boardState[xIndex][yIndex];
 
     if (!this.selectedPiece.piece && clickedPiece != null) {
-      this.selectedPiece = {
-        piece: clickedPiece,
-        location: { x: xIndex, y: yIndex }
-      };
-      this.setState({
-        boardState: this.boardState,
-        selectedPiece: this.selectedPiece
+      return this.setState({
+        // boardState: this.boardState,
+        selectedPiece: {
+          piece: clickedPiece,
+          location: { x: xIndex, y: yIndex }
+        }
       });
-      return;
     }
 
     if (
@@ -68,31 +67,29 @@ export default class Game extends React.Component<IGame, {}> {
         y: yIndex
       })
     ) {
-      this.boardState[this.selectedPiece.location.x][
+      const newBoardState = cloneDeep(this.boardState);
+      newBoardState[this.selectedPiece.location.x][
         this.selectedPiece.location.y
       ] = null;
-      this.boardState[xIndex][yIndex] = this.selectedPiece.piece;
-      this.selectedPiece = { piece: null, location: { x: -1, y: -1 } };
-      this.setState({
-        boardState: this.boardState,
-        selectedPiece: this.selectedPiece
+      newBoardState[xIndex][yIndex] = this.selectedPiece.piece;
+      return this.setState({
+        boardState: newBoardState,
+        selectedPiece: { piece: null, location: { x: -1, y: -1 } }
       });
-      return;
     }
 
+    // unselect piece when clicking on invalid move location
     if (
       !!this.selectedPiece.piece &&
-      this.selectedPiece.piece.isMovePossible(this.selectedPiece.location, {
+      !this.selectedPiece.piece.isMovePossible(this.selectedPiece.location, {
         x: xIndex,
         y: yIndex
       })
     ) {
-      this.selectedPiece = { piece: null, location: { x: -1, y: -1 } };
-      this.setState({
-        boardState: this.boardState,
-        selectedPiece: this.selectedPiece
+      return this.setState({
+        // boardState: this.boardState,
+        selectedPiece: { piece: null, location: { x: -1, y: -1 } }
       });
-      return;
     }
   }
 }
