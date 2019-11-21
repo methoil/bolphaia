@@ -8,19 +8,18 @@ import { IPiece, coordinate } from "./pieces/IPieces";
 
 export type IBoardState = (IPiece | null)[][];
 
-interface IGame {
+interface IGameState {
   boardState: IBoardState;
   selectedPiece: { piece: IPiece | null; location: coordinate };
 }
 
-export default class Game extends React.Component<IGame, {}> {
-  boardState: IBoardState = [];
-  selectedPiece: { piece: IPiece | null; location: coordinate };
+export default class Game extends React.Component<{}, {}> {
+  state: IGameState;
 
   render() {
     return (
       <Board
-        boardState={this.boardState}
+        boardState={this.state.boardState}
         onClick={this.onClick.bind(this)}
       ></Board>
     );
@@ -29,12 +28,14 @@ export default class Game extends React.Component<IGame, {}> {
   constructor(props: any) {
     // no props will be passed here?
     super(props);
-    this.selectedPiece = { piece: null, location: { x: -1, y: -1 } };
-    this.initializeBoard(8, 8);
+    this.state = {
+      selectedPiece: { piece: null, location: { x: -1, y: -1 } },
+      boardState: this.initializeBoard(8, 8)
+    };
   }
 
-  private initializeBoard(xSize: number, ySize: number): void {
-    this.boardState = [];
+  private initializeBoard(xSize: number, ySize: number): IBoardState {
+    const boardState = [];
     for (let x = 0; x < xSize; x++) {
       let pieceToPlace: IPiece | null = null;
       if (x === 1) {
@@ -43,16 +44,18 @@ export default class Game extends React.Component<IGame, {}> {
         pieceToPlace = new levy("thracians");
       }
 
-      this.boardState.push(new Array(ySize).fill(pieceToPlace));
+      boardState.push(new Array(ySize).fill(pieceToPlace));
     }
+
+    return boardState;
   }
 
   private onClick(xIndex: number, yIndex: number): void {
-    const clickedPiece = this.boardState[xIndex][yIndex];
+    const clickedPiece = this.state.boardState[xIndex][yIndex];
 
-    if (!this.selectedPiece.piece && clickedPiece != null) {
+    if (!this.state.selectedPiece.piece && clickedPiece != null) {
       return this.setState({
-        // boardState: this.boardState,
+        // boardState: this.state.boardState,
         selectedPiece: {
           piece: clickedPiece,
           location: { x: xIndex, y: yIndex }
@@ -61,17 +64,20 @@ export default class Game extends React.Component<IGame, {}> {
     }
 
     if (
-      !!this.selectedPiece.piece &&
-      this.selectedPiece.piece.isMovePossible(this.selectedPiece.location, {
-        x: xIndex,
-        y: yIndex
-      })
+      !!this.state.selectedPiece.piece &&
+      this.state.selectedPiece.piece.isMovePossible(
+        this.state.selectedPiece.location,
+        {
+          x: xIndex,
+          y: yIndex
+        }
+      )
     ) {
-      const newBoardState = cloneDeep(this.boardState);
-      newBoardState[this.selectedPiece.location.x][
-        this.selectedPiece.location.y
+      const newBoardState = cloneDeep(this.state.boardState);
+      newBoardState[this.state.selectedPiece.location.x][
+        this.state.selectedPiece.location.y
       ] = null;
-      newBoardState[xIndex][yIndex] = this.selectedPiece.piece;
+      newBoardState[xIndex][yIndex] = this.state.selectedPiece.piece;
       return this.setState({
         boardState: newBoardState,
         selectedPiece: { piece: null, location: { x: -1, y: -1 } }
@@ -80,14 +86,17 @@ export default class Game extends React.Component<IGame, {}> {
 
     // unselect piece when clicking on invalid move location
     if (
-      !!this.selectedPiece.piece &&
-      !this.selectedPiece.piece.isMovePossible(this.selectedPiece.location, {
-        x: xIndex,
-        y: yIndex
-      })
+      !!this.state.selectedPiece.piece &&
+      !this.state.selectedPiece.piece.isMovePossible(
+        this.state.selectedPiece.location,
+        {
+          x: xIndex,
+          y: yIndex
+        }
+      )
     ) {
       return this.setState({
-        // boardState: this.boardState,
+        // boardState: this.state.boardState,
         selectedPiece: { piece: null, location: { x: -1, y: -1 } }
       });
     }
