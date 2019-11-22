@@ -55,7 +55,6 @@ export default class Game extends React.Component<{}, {}> {
 
     if (!this.state.selectedPiece.piece && clickedPiece != null) {
       return this.setState({
-        // boardState: this.state.boardState,
         selectedPiece: {
           piece: clickedPiece,
           location: { x: xIndex, y: yIndex }
@@ -96,7 +95,6 @@ export default class Game extends React.Component<{}, {}> {
       )
     ) {
       return this.setState({
-        // boardState: this.state.boardState,
         selectedPiece: { piece: null, location: { x: -1, y: -1 } }
       });
     }
