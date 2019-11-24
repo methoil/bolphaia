@@ -1,4 +1,5 @@
 import * as React from "react";
+import { connect } from "react-redux";
 import { cloneDeep } from "lodash";
 
 import "../index.css";
@@ -7,13 +8,14 @@ import levy from "./pieces/levy";
 import { IPiece, coordinate } from "./pieces/IPieces";
 
 export type IBoardState = (IPiece | null)[][];
+export type ISelectedPiece = { piece: IPiece | null; location: coordinate };
 
 interface IGameState {
   boardState: IBoardState;
-  selectedPiece: { piece: IPiece | null; location: coordinate };
+  selectedPiece: ISelectedPiece;
 }
 
-export default class Game extends React.Component<{}, {}> {
+export default class Game extends React.Component<{dispatch}, {}> {
   state: IGameState;
 
   render() {
@@ -100,3 +102,12 @@ export default class Game extends React.Component<{}, {}> {
     }
   }
 }
+
+const mapStateToProps = (state: any) => {
+  return {
+    boardState: state.boardState,
+    selectedPiece: state.selectedPiece,
+  };
+};
+
+const gameContainer = connect(mapStateToProps)(Game);
