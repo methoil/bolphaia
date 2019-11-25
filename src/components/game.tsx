@@ -5,6 +5,7 @@ import "../index.css";
 import Board from "./board";
 import levy from "./pieces/levy";
 import { IPiece, coordinate } from "./pieces/IPieces";
+import Cataphract from "./pieces/cataphract";
 
 export type IBoardState = (IPiece | null)[][];
 
@@ -38,10 +39,22 @@ export default class Game extends React.Component<{}, {}> {
     const boardState = [];
     for (let x = 0; x < xSize; x++) {
       let pieceToPlace: IPiece | null = null;
-      if (x === 1) {
+      if (x === 0) {
+        const rowArray = new Array(ySize).fill(null);
+        rowArray[1] = new Cataphract("slavs");
+        rowArray[6] = new Cataphract("slavs");
+        boardState.push(rowArray);
+        continue;
+      } else if (x === 1) {
         pieceToPlace = new levy("slavs");
       } else if (x === 6) {
         pieceToPlace = new levy("thracians");
+      } else if (x === 7) {
+        const rowArray = new Array(ySize).fill(null);
+        rowArray[1] = new Cataphract("thracians");
+        rowArray[6] = new Cataphract("thracians");
+        boardState.push(rowArray);
+        continue;
       }
 
       boardState.push(new Array(ySize).fill(pieceToPlace));
