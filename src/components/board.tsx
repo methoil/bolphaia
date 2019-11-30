@@ -3,6 +3,7 @@ import * as React from "react";
 import "../index.css";
 import Square from "./square";
 import { IBoardState } from "./game";
+import { coordinate } from "./pieces/IPieces"
 
 interface ISquare {
   style: string;
@@ -11,7 +12,7 @@ interface ISquare {
 }
 interface IBoardProps {
   boardState: IBoardState;
-  onClick: (xIndex: number, yIndex: number) => void;
+  onClick: (clickedSquare: coordinate) => void;
 }
 
 export default class Board extends React.Component<IBoardProps, {}> {
@@ -56,7 +57,7 @@ export default class Board extends React.Component<IBoardProps, {}> {
         // piece = {this.props.squares[i]}
         shade={squareShade}
         style={{ backgroundImage: `url(${backgroundImage})` }}
-        onClick={() => this.props.onClick(xIdx, yIdx)}
+        onClick={() => this.props.onClick({ x: xIdx, y: yIdx })}
       />
     );
   }

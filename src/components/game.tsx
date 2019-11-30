@@ -7,6 +7,9 @@ import levy from "./pieces/levy";
 import { IPiece, coordinate } from "./pieces/IPieces";
 import Cataphract from "./pieces/cataphract";
 
+const BOARD_SIZE: number = 0;
+
+export type IPossibleMoves = boolean[][];
 export type IBoardState = (IPiece | null)[][];
 
 interface IGameState {
@@ -31,7 +34,7 @@ export default class Game extends React.Component<{}, {}> {
     super(props);
     this.state = {
       selectedPiece: { piece: null, location: { x: -1, y: -1 } },
-      boardState: this.initializeBoard(8, 8)
+      boardState: this.initializeBoard(BOARD_SIZE, BOARD_SIZE),
     };
   }
 
@@ -63,33 +66,33 @@ export default class Game extends React.Component<{}, {}> {
     return boardState;
   }
 
-  private onClick(xIndex: number, yIndex: number): void {
-    const clickedPiece = this.state.boardState[xIndex][yIndex];
+  private onClick(clickedSquare: coordinate): void {
+    const clickedPiece = this.state.boardState[clickedSquare.x][clickedSquare.y];
+    const selectedPiece = this.state.selectedPiece.piece;
 
-    if (!this.state.selectedPiece.piece && clickedPiece != null) {
+    // Select the clicked piece if none is currently selected
+    if (!selectedPiece && clickedPiece != null) {
       return this.setState({
         selectedPiece: {
           piece: clickedPiece,
-          location: { x: xIndex, y: yIndex }
+          location: { clickedSquare }
         }
       });
     }
 
+    // Move the piece if a valid move is selected
     if (
-      !!this.state.selectedPiece.piece &&
-      this.state.selectedPiece.piece.isMovePossible(
+      !!selectedPiece &&
+      selectedPiece.isMovePossible(
         this.state.selectedPiece.location,
-        {
-          x: xIndex,
-          y: yIndex
-        }
+        clickedSquare,
       )
     ) {
       const newBoardState = cloneDeep(this.state.boardState);
       newBoardState[this.state.selectedPiece.location.x][
         this.state.selectedPiece.location.y
       ] = null;
-      newBoardState[xIndex][yIndex] = this.state.selectedPiece.piece;
+      newBoardState[clickedSquare.x][clickedSquare.y] = selectedPiece;
       return this.setState({
         boardState: newBoardState,
         selectedPiece: { piece: null, location: { x: -1, y: -1 } }
@@ -98,13 +101,10 @@ export default class Game extends React.Component<{}, {}> {
 
     // unselect piece when clicking on invalid move location
     if (
-      !!this.state.selectedPiece.piece &&
-      !this.state.selectedPiece.piece.isMovePossible(
+      !!selectedPiece &&
+      !selectedPiece.isMovePossible(
         this.state.selectedPiece.location,
-        {
-          x: xIndex,
-          y: yIndex
-        }
+        clickedSquare,
       )
     ) {
       return this.setState({
