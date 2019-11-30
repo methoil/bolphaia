@@ -38,10 +38,14 @@ code {
 }
 
 .dark-square {
-  background-color: RGB(187,190,100);
+  background-color: darkcyan;
 }
   
 .light-square {
-  background-color: RGB(234,240,206);
+  background-color: lightgray;
+}
+
+.highlighted-square {
+  background-color: lightgreen;
 }
 

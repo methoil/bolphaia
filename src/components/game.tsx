@@ -7,13 +7,14 @@ import levy from "./pieces/levy";
 import { IPiece, coordinate } from "./pieces/IPieces";
 import Cataphract from "./pieces/cataphract";
 
-const BOARD_SIZE: number = 0;
+const BOARD_SIZE: number = 8;
 
 export type IPossibleMoves = boolean[][];
 export type IBoardState = (IPiece | null)[][];
 
 interface IGameState {
   boardState: IBoardState;
+  highlightedSquares: boolean[][];
   selectedPiece: { piece: IPiece | null; location: coordinate };
 }
 
@@ -24,6 +25,7 @@ export default class Game extends React.Component<{}, {}> {
     return (
       <Board
         boardState={this.state.boardState}
+        highlightedSquares={this.state.highlightedSquares}
         onClick={this.onClick.bind(this)}
       ></Board>
     );
@@ -35,6 +37,7 @@ export default class Game extends React.Component<{}, {}> {
     this.state = {
       selectedPiece: { piece: null, location: { x: -1, y: -1 } },
       boardState: this.initializeBoard(BOARD_SIZE, BOARD_SIZE),
+      highlightedSquares: [],
     };
   }
 
@@ -75,8 +78,9 @@ export default class Game extends React.Component<{}, {}> {
       return this.setState({
         selectedPiece: {
           piece: clickedPiece,
-          location: { clickedSquare }
-        }
+          location: { ...clickedSquare },
+        },
+        highlightedSquares: this.generatePossibleMovesHighlights(clickedSquare, clickedPiece.isMovePossible),
       });
     }
 
@@ -95,7 +99,8 @@ export default class Game extends React.Component<{}, {}> {
       newBoardState[clickedSquare.x][clickedSquare.y] = selectedPiece;
       return this.setState({
         boardState: newBoardState,
-        selectedPiece: { piece: null, location: { x: -1, y: -1 } }
+        selectedPiece: { piece: null, location: { x: -1, y: -1 } },
+        highlightedSquares: [],
       });
     }
 
@@ -108,8 +113,22 @@ export default class Game extends React.Component<{}, {}> {
       )
     ) {
       return this.setState({
-        selectedPiece: { piece: null, location: { x: -1, y: -1 } }
+        selectedPiece: { piece: null, location: { x: -1, y: -1 } },
+        highlightedSquares: [],
       });
     }
+  }
+
+  private generatePossibleMovesHighlights(src: coordinate, isMovePossible: any): boolean[][] {
+    const highlightedMoves = [];
+    for (let x = 0; x < BOARD_SIZE; x++) {
+      const currRow = [];
+      for (let y = 0; y < BOARD_SIZE; y++) {
+        currRow.push(isMovePossible(src, { x, y }));
+      }
+      highlightedMoves.push(currRow);
+    }
+
+    return highlightedMoves;
   }
 }

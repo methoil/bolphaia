@@ -12,6 +12,7 @@ interface ISquare {
 }
 interface IBoardProps {
   boardState: IBoardState;
+  highlightedSquares: boolean[][];
   onClick: (clickedSquare: coordinate) => void;
 }
 
@@ -25,10 +26,13 @@ export default class Board extends React.Component<IBoardProps, {}> {
     for (let i = 0; i < xLength; i++) {
       const squareRows = [];
       for (let j = 0; j < yLength; j++) {
-        const squareShade =
+        let squareShade =
           (isEven(i) && isEven(j)) || (!isEven(i) && !isEven(j))
             ? "light-square"
             : "dark-square";
+        if (this.props.highlightedSquares.length) {
+          squareShade = this.props.highlightedSquares[i][j] ? "highlighted-square" : squareShade;
+        }
 
         const squareState = this.props.boardState[i][j];
         const backgroundImage =
