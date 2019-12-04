@@ -5,6 +5,8 @@ import whiteLevyImageSvg from "../../resources/whitePawn.svg";
 import blackLevyImageSvg from "../../resources/blackPawn.svg";
 
 export default class Levy extends BasePiece {
+    moveRange = 2;
+    
     getImageUrl() {
         return this.player === 'slavs' ? whiteLevyImageSvg : blackLevyImageSvg;
     }
