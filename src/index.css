@@ -47,5 +47,7 @@ code {
 
 .highlighted-square {
   background-color: lightgreen;
+  border-style: solid;
+  border-width: 2px;
 }
 

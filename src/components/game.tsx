@@ -7,7 +7,8 @@ import levy from "./pieces/levy";
 import { IPiece, coordinate } from "./pieces/IPieces";
 import Cataphract from "./pieces/cataphract";
 
-const BOARD_SIZE: number = 8;
+const BOARD_WIDTH: number = 24;
+const BOARD_HEIGHT: number = 16;
 
 export type IPossibleMoves = boolean[][];
 export type IBoardState = (IPiece | null)[][];
@@ -36,7 +37,7 @@ export default class Game extends React.Component<{}, {}> {
     super(props);
     this.state = {
       selectedPiece: { piece: null, location: { x: -1, y: -1 } },
-      boardState: this.initializeBoard(BOARD_SIZE, BOARD_SIZE),
+      boardState: this.initializeBoard(BOARD_HEIGHT, BOARD_WIDTH),
       highlightedSquares: [],
     };
   }
@@ -121,9 +122,9 @@ export default class Game extends React.Component<{}, {}> {
 
   private generatePossibleMovesHighlights(src: coordinate, isMovePossible: any): boolean[][] {
     const highlightedMoves = [];
-    for (let x = 0; x < BOARD_SIZE; x++) {
+    for (let x = 0; x < BOARD_HEIGHT; x++) {
       const currRow = [];
-      for (let y = 0; y < BOARD_SIZE; y++) {
+      for (let y = 0; y < BOARD_WIDTH; y++) {
         currRow.push(isMovePossible(src, { x, y }));
       }
       highlightedMoves.push(currRow);
