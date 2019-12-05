@@ -132,13 +132,16 @@ export default class Game extends React.Component<{}, {}> {
   ): boolean[][] {
     const highlightedMoves = [];
     for (let x = 0; x < BOARD_HEIGHT; x++) {
-      highlightedMoves.push(new Array(BOARD_HEIGHT).fill(false));
+      highlightedMoves.push(new Array(BOARD_WIDTH).fill(false));
     }
     const dimensions: number[] = [-range, 0, range];
 
     for (let x = 0; x < 3; x++) {
       for (let y = 0; y < 3; y++) {
-        const dest = { x: src.x + dimensions[x], y: src.y + dimensions[y] };
+        const dest = {
+          x: this.getValidIndex(src.x + dimensions[x], BOARD_WIDTH - 1),
+          y: this.getValidIndex(src.y + dimensions[y], BOARD_HEIGHT)
+        };
         const movesPath = getMovesPath(src, dest, this.state.boardState);
 
         for (let i of movesPath) {
@@ -148,5 +151,15 @@ export default class Game extends React.Component<{}, {}> {
     }
 
     return highlightedMoves;
+  }
+
+  private getValidIndex(index: number, maxIndex: number): number {
+    if (index > maxIndex) {
+      return maxIndex;
+    } else if (index < 0) {
+      return 0;
+    } else {
+      return index;
+    }
   }
 }
