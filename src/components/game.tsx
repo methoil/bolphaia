@@ -91,14 +91,13 @@ export default class Game extends React.Component<{}, {}> {
       });
     }
 
+    const isMovePossible = this.generatePossibleMovesHighlights(
+      this.state.selectedPiece.location,
+      (selectedPiece && selectedPiece.moveRange) || 0
+    )[clickedSquare.x][clickedSquare.y];
+
     // Move the piece if a valid move is selected
-    if (
-      !!selectedPiece &&
-      selectedPiece.isMovePossible(
-        this.state.selectedPiece.location,
-        clickedSquare
-      )
-    ) {
+    if (!!selectedPiece && isMovePossible) {
       const newBoardState = cloneDeep(this.state.boardState);
       newBoardState[this.state.selectedPiece.location.x][
         this.state.selectedPiece.location.y
@@ -112,13 +111,7 @@ export default class Game extends React.Component<{}, {}> {
     }
 
     // unselect piece when clicking on invalid move location
-    if (
-      !!selectedPiece &&
-      !selectedPiece.isMovePossible(
-        this.state.selectedPiece.location,
-        clickedSquare
-      )
-    ) {
+    if (!!selectedPiece && !isMovePossible) {
       return this.setState({
         selectedPiece: { piece: null, location: { x: -1, y: -1 } },
         highlightedSquares: []
