@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cloneDeep } from "lodash";
+import { cloneDeep, findIndex } from "lodash";
 
 import "../index.scss";
 import Board from "./board";
@@ -7,7 +7,6 @@ import levy from "./pieces/levy";
 import { IPiece, coordinate } from "./pieces/IPieces.model";
 import Cataphract from "./pieces/cataphract";
 import { getMovesPath } from "./pieces/piece.utils";
-import { exportDefaultDeclaration } from "@babel/types";
 
 export const BOARD_WIDTH: number = 24;
 export const BOARD_HEIGHT: number = 16;
@@ -103,14 +102,37 @@ export default class Game extends React.Component<{}, {}> {
 
     // Move the piece if a valid move is selected
     if (selectedPiece && selectedSquare && isMovePossible) {
+      const newBoardState = cloneDeep(this.state.boardState);
       // combat occurs on destination arrival
       // trample will happen elsewhere?
-      if (!!clickedPiece) {
+      if (clickedPiece && clickedPiece !== selectedPiece) {
+        clickedPiece.takeDamage(selectedPiece.attack);
+        if (clickedPiece.health <= 0) {
+          // TODO: move clicked piece to graveyard
+          newBoardState[selectedSquare.x][selectedSquare.y] = null;
+          newBoardState[clickedSquare.x][clickedSquare.y] = selectedPiece;
+        } else {
+          const movesPath = getMovesPath(selectedSquare, clickedSquare, this.state.boardState);
+          const indexBeforeDest =
+            findIndex(movesPath, move => {
+              return move.x === clickedSquare.x && move.y === clickedSquare.y;
+            }) - 1;
+
+          if (indexBeforeDest < 0) {
+            // TODO: handle this... possibility..
+            console.error("something went wrong.. should not happen.. crash imminent");
+          }
+
+          const dest = movesPath[indexBeforeDest];
+          newBoardState[selectedSquare.x][selectedSquare.y] = null;
+          newBoardState[dest.x][dest.y] = selectedPiece;
+          newBoardState[clickedSquare.x][clickedSquare.y] = clickedPiece;
+        }
+      } else {
+        newBoardState[selectedSquare.x][selectedSquare.y] = null;
+        newBoardState[clickedSquare.x][clickedSquare.y] = selectedPiece;
       }
 
-      const newBoardState = cloneDeep(this.state.boardState);
-      newBoardState[selectedSquare.x][selectedSquare.y] = null;
-      newBoardState[clickedSquare.x][clickedSquare.y] = selectedPiece;
       return this.setState({
         boardState: newBoardState,
         selectedSquare: null,
@@ -119,7 +141,7 @@ export default class Game extends React.Component<{}, {}> {
     }
 
     // unselect piece when clicking on invalid move location
-    if (!!selectedPiece && !isMovePossible) {
+    if (selectedPiece && !isMovePossible) {
       return this.setState({
         selectedSquare: null,
         highlightState: this.generateEmptyHighlightedMoves()

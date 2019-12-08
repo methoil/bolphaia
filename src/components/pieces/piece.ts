@@ -12,7 +12,7 @@ export default abstract class BasePiece implements IBasePiece {
   }
 
   public takeDamage(damage: number): number {
-    this.health = this.health = damage;
+    this.health = this.health - damage;
     return this.health;
   }
 

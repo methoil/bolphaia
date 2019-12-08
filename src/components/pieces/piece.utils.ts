@@ -13,7 +13,7 @@ export function getMovesPath(src: coordinate, dest: coordinate, board: IBoardSta
   const isYNegative: boolean = yDelta < 0;
   let xOffset: number = 0;
   let yOffset: number = 0;
-  const path: coordinate[] = [];
+  const path: coordinate[] = [src];
 
   const selectedPiece = board[src.x][src.y];
   if (!selectedPiece) {
