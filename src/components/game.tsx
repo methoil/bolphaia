@@ -9,8 +9,8 @@ import Cataphract from "./pieces/cataphract";
 import { getMovesPath } from "./pieces/piece.utils";
 import { exportDefaultDeclaration } from "@babel/types";
 
-const BOARD_WIDTH: number = 24;
-const BOARD_HEIGHT: number = 16;
+export const BOARD_WIDTH: number = 24;
+export const BOARD_HEIGHT: number = 16;
 
 export type IPossibleMoves = boolean[][];
 export type IBoardState = (IPiece | null)[][];
@@ -81,9 +81,7 @@ export default class Game extends React.Component<{}, {}> {
   }
 
   private onClick(clickedSquare: coordinate): void {
-    const clickedPiece = this.state.boardState[clickedSquare.x][
-      clickedSquare.y
-    ];
+    const clickedPiece = this.state.boardState[clickedSquare.x][clickedSquare.y];
     const selectedPiece = this.state.selectedPiece.piece;
 
     // nothing to do
@@ -98,16 +96,11 @@ export default class Game extends React.Component<{}, {}> {
           piece: clickedPiece,
           location: { ...clickedSquare }
         },
-        highlightState: this.generatePossibleMovesHighlights(
-          clickedSquare,
-          clickedPiece.moveRange
-        )
+        highlightState: this.generatePossibleMovesHighlights(clickedSquare, clickedPiece.moveRange)
       });
     }
 
-    const isMovePossible = this.state.highlightState[clickedSquare.x][
-      clickedSquare.y
-    ];
+    const isMovePossible = this.state.highlightState[clickedSquare.x][clickedSquare.y];
 
     // Move the piece if a valid move is selected
     if (!!selectedPiece && isMovePossible) {
@@ -132,10 +125,7 @@ export default class Game extends React.Component<{}, {}> {
     }
   }
 
-  private generatePossibleMovesHighlights(
-    src: coordinate,
-    range: number
-  ): boolean[][] {
+  private generatePossibleMovesHighlights(src: coordinate, range: number): boolean[][] {
     const highlightedMoves = [];
     for (let x = 0; x < BOARD_HEIGHT; x++) {
       highlightedMoves.push(new Array(BOARD_WIDTH).fill(false));

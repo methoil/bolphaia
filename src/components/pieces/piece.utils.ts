@@ -1,13 +1,9 @@
 import { coordinate } from "./IPieces";
-import { IBoardState } from "../game";
+import { IBoardState, BOARD_WIDTH, BOARD_HEIGHT } from "../game";
 
 // call this 8 times to get all possible moves
-// assumes no trample; 
-export function getMovesPath(
-  src: coordinate,
-  dest: coordinate,
-  board: IBoardState
-): coordinate[] {
+// assumes no trample;
+export function getMovesPath(src: coordinate, dest: coordinate, board: IBoardState): coordinate[] {
   if (dest.x < 0 || src.x < 0 || dest.y < 0 || src.y < 0) {
     return [];
   }
@@ -35,14 +31,23 @@ export function getMovesPath(
     }
 
     const destSquare = board[src.x + xOffset][src.y + yOffset];
+    const currSquare = { x: src.x + xOffset, y: src.y + yOffset };
     if (destSquare !== null) {
       if (selectedPiece.player !== destSquare.player) {
-        path.push({ x: src.x + xOffset, y: src.y + yOffset });
+        path.push(currSquare);
       }
       break;
     }
 
-    path.push({ x: src.x + xOffset, y: src.y + yOffset });
+    path.push(currSquare);
+
+    // edge reached - stop finding path
+    if (
+      ((currSquare.x === 0 || currSquare.x === BOARD_HEIGHT - 1) && yDelta !== 0) ||
+      ((currSquare.y === 0 || currSquare.y === BOARD_WIDTH - 1) && xDelta !== 0)
+    ) {
+      break;
+    }
   }
 
   return path;
