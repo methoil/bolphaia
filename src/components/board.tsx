@@ -12,7 +12,7 @@ interface ISquare {
 }
 interface IBoardProps {
   boardState: IBoardState;
-  highlightedSquares: boolean[][];
+  highlightState: boolean[][];
   onClick: (clickedSquare: coordinate) => void;
 }
 
@@ -33,8 +33,8 @@ export default class Board extends React.Component<IBoardProps, {}> {
 
         const piece = this.props.boardState[i][j];
         if (
-          this.props.highlightedSquares.length &&
-          this.props.highlightedSquares[i][j]
+          this.props.highlightState.length &&
+          this.props.highlightState[i][j]
         ) {
           squareShade =
             piece !== null

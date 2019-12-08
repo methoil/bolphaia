@@ -8,6 +8,9 @@ export function getMovesPath(
   dest: coordinate,
   board: IBoardState
 ): coordinate[] {
+  if (dest.x < 0 || src.x < 0 || dest.y < 0 || src.y < 0) {
+    return [];
+  }
   let xDelta = dest.x - src.x;
   let yDelta = dest.y - src.y;
   const isXNegative: boolean = xDelta < 0;
