@@ -4,7 +4,7 @@ import { cloneDeep } from "lodash";
 import "../index.scss";
 import Board from "./board";
 import levy from "./pieces/levy";
-import { IPiece, coordinate } from "./pieces/IPieces";
+import { IPiece, coordinate } from "./pieces/IPieces.model";
 import Cataphract from "./pieces/cataphract";
 import { getMovesPath } from "./pieces/piece.utils";
 import { exportDefaultDeclaration } from "@babel/types";
@@ -18,7 +18,7 @@ export type IBoardState = (IPiece | null)[][];
 interface IGameState {
   boardState: IBoardState;
   highlightState: boolean[][];
-  selectedPiece: { piece: IPiece | null; location: coordinate };
+  selectedSquare: coordinate | null;
 }
 
 export default class Game extends React.Component<{}, {}> {
@@ -38,7 +38,7 @@ export default class Game extends React.Component<{}, {}> {
     // no props will be passed here?
     super(props);
     this.state = {
-      selectedPiece: { piece: null, location: { x: -1, y: -1 } },
+      selectedSquare: null,
       boardState: this.initializeBoard(BOARD_HEIGHT, BOARD_WIDTH),
       highlightState: this.generateEmptyHighlightedMoves()
     };
@@ -81,8 +81,10 @@ export default class Game extends React.Component<{}, {}> {
   }
 
   private onClick(clickedSquare: coordinate): void {
+    const selectedSquare = this.state.selectedSquare;
     const clickedPiece = this.state.boardState[clickedSquare.x][clickedSquare.y];
-    const selectedPiece = this.state.selectedPiece.piece;
+    const selectedPiece =
+      selectedSquare && this.state.boardState[selectedSquare.x][selectedSquare.y];
 
     // nothing to do
     if (!selectedPiece && !clickedPiece) {
@@ -92,10 +94,7 @@ export default class Game extends React.Component<{}, {}> {
     // Select the clicked piece if none is currently selected
     if (!selectedPiece && clickedPiece != null) {
       return this.setState({
-        selectedPiece: {
-          piece: clickedPiece,
-          location: { ...clickedSquare }
-        },
+        selectedSquare: { ...clickedSquare },
         highlightState: this.generatePossibleMovesHighlights(clickedSquare, clickedPiece.moveRange)
       });
     }
@@ -103,15 +102,18 @@ export default class Game extends React.Component<{}, {}> {
     const isMovePossible = this.state.highlightState[clickedSquare.x][clickedSquare.y];
 
     // Move the piece if a valid move is selected
-    if (!!selectedPiece && isMovePossible) {
+    if (selectedPiece && selectedSquare && isMovePossible) {
+      // combat occurs on destination arrival
+      // trample will happen elsewhere?
+      if (!!clickedPiece) {
+      }
+
       const newBoardState = cloneDeep(this.state.boardState);
-      newBoardState[this.state.selectedPiece.location.x][
-        this.state.selectedPiece.location.y
-      ] = null;
+      newBoardState[selectedSquare.x][selectedSquare.y] = null;
       newBoardState[clickedSquare.x][clickedSquare.y] = selectedPiece;
       return this.setState({
         boardState: newBoardState,
-        selectedPiece: { piece: null, location: { x: -1, y: -1 } },
+        selectedSquare: null,
         highlightState: this.generateEmptyHighlightedMoves()
       });
     }
@@ -119,7 +121,7 @@ export default class Game extends React.Component<{}, {}> {
     // unselect piece when clicking on invalid move location
     if (!!selectedPiece && !isMovePossible) {
       return this.setState({
-        selectedPiece: { piece: null, location: { x: -1, y: -1 } },
+        selectedSquare: null,
         highlightState: this.generateEmptyHighlightedMoves()
       });
     }

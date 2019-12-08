@@ -1,4 +1,4 @@
-import { playerIds, IBasePiece } from "./IPieces";
+import { playerIds, IBasePiece } from "./IPieces.model";
 
 export default abstract class BasePiece implements IBasePiece {
   public player: playerIds;

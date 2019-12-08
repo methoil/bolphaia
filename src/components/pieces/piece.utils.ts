@@ -1,4 +1,4 @@
-import { coordinate } from "./IPieces";
+import { coordinate } from "./IPieces.model";
 import { IBoardState, BOARD_WIDTH, BOARD_HEIGHT } from "../game";
 
 // call this 8 times to get all possible moves

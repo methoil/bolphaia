@@ -1,5 +1,4 @@
 import BasePiece from "./piece";
-import { coordinate } from "./IPieces";
 
 import whiteLevyImageSvg from "../../resources/whitePawn.svg";
 import blackLevyImageSvg from "../../resources/blackPawn.svg";
