@@ -16,6 +16,11 @@ export function getMovesPath(
   let yOffset: number = 0;
   const path: coordinate[] = [];
 
+  const selectedPiece = board[src.x][src.y];
+  if (!selectedPiece) {
+    return [];
+  }
+
   while (xDelta !== 0 || yDelta !== 0) {
     if (xDelta !== 0) {
       xOffset += isXNegative ? -1 : 1;
@@ -26,7 +31,11 @@ export function getMovesPath(
       yDelta += isYNegative ? 1 : -1;
     }
 
-    if (board[src.x + xOffset][src.y + yOffset] !== null) {
+    const destSquare = board[src.x + xOffset][src.y + yOffset];
+    if (destSquare !== null) {
+      if (selectedPiece.player !== destSquare.player) {
+        path.push({ x: src.x + xOffset, y: src.y + yOffset });
+      }
       break;
     }
 

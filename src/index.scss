@@ -25,7 +25,6 @@ $squareSize: 48px;
 }
 
 .square {
-  display: inline-block;
   background: transparent;
   border: 1px solid transparent;
   float: left;
@@ -41,7 +40,7 @@ $squareSize: 48px;
 }
 
 .square:focus {
-  outline: none;
+  outline: navy;
 }
 
 .dark-square {
@@ -53,8 +52,17 @@ $squareSize: 48px;
 }
 
 .highlighted-square {
-  background-color: lightgreen;
   border-style: solid;
   border-width: 2px;
+}
+
+.highlighted-square-red {
+  @extend .highlighted-square;
+  background-color: crimson;
+}
+
+.highlighted-square-green {
+  @extend .highlighted-square;
+  background-color: lightgreen;
 }
 

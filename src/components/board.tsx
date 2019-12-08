@@ -3,7 +3,7 @@ import * as React from "react";
 import "../index.scss";
 import Square from "./square";
 import { IBoardState } from "./game";
-import { coordinate } from "./pieces/IPieces"
+import { coordinate } from "./pieces/IPieces";
 
 interface ISquare {
   style: string;
@@ -30,13 +30,19 @@ export default class Board extends React.Component<IBoardProps, {}> {
           (isEven(i) && isEven(j)) || (!isEven(i) && !isEven(j))
             ? "light-square"
             : "dark-square";
-        if (this.props.highlightedSquares.length) {
-          squareShade = this.props.highlightedSquares[i][j] ? "highlighted-square" : squareShade;
+
+        const piece = this.props.boardState[i][j];
+        if (
+          this.props.highlightedSquares.length &&
+          this.props.highlightedSquares[i][j]
+        ) {
+          squareShade =
+            piece !== null
+              ? "highlighted-square-red"
+              : "highlighted-square-green";
         }
 
-        const squareState = this.props.boardState[i][j];
-        const backgroundImage =
-          squareState === null ? "none" : squareState.getImageUrl();
+        const backgroundImage = piece === null ? "none" : piece.getImageUrl();
         squareRows.push(this.renderSquare(i, j, squareShade, backgroundImage));
       }
       board.push(

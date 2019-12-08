@@ -39,7 +39,7 @@ export default class Game extends React.Component<{}, {}> {
     this.state = {
       selectedPiece: { piece: null, location: { x: -1, y: -1 } },
       boardState: this.initializeBoard(BOARD_HEIGHT, BOARD_WIDTH),
-      highlightedSquares: []
+      highlightedSquares: this.generateEmptyHighlightedMoves()
     };
   }
 
@@ -69,6 +69,14 @@ export default class Game extends React.Component<{}, {}> {
     }
 
     return boardState;
+  }
+
+  private generateEmptyHighlightedMoves(): boolean[][] {
+    const highlightedMoves = [];
+    for (let x = 0; x < BOARD_HEIGHT; x++) {
+      highlightedMoves.push(new Array(BOARD_WIDTH).fill(false));
+    }
+    return highlightedMoves;
   }
 
   private onClick(clickedSquare: coordinate): void {
@@ -106,7 +114,7 @@ export default class Game extends React.Component<{}, {}> {
       return this.setState({
         boardState: newBoardState,
         selectedPiece: { piece: null, location: { x: -1, y: -1 } },
-        highlightedSquares: []
+        highlightedSquares: this.generateEmptyHighlightedMoves()
       });
     }
 
@@ -114,7 +122,7 @@ export default class Game extends React.Component<{}, {}> {
     if (!!selectedPiece && !isMovePossible) {
       return this.setState({
         selectedPiece: { piece: null, location: { x: -1, y: -1 } },
-        highlightedSquares: []
+        highlightedSquares: this.generateEmptyHighlightedMoves()
       });
     }
   }
