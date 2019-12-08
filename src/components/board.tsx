@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import "../index.css";
+import "../index.scss";
 import Square from "./square";
 import { IBoardState } from "./game";
 import { coordinate } from "./pieces/IPieces"

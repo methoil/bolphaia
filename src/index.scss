@@ -12,6 +12,12 @@ code {
     monospace;
 }
 
+$squareSize: 48px;
+
+.board-row { 
+  width: $squareSize*24;
+}
+
 .board-row:after {
   clear: both;
   content: "";
@@ -19,18 +25,19 @@ code {
 }
 
 .square {
+  display: inline-block;
   background: transparent;
   border: 1px solid transparent;
   float: left;
   font-size: 24px;
   font-weight: bold;
   line-height: 34px;
-  height: 48px;
+  height: $squareSize;
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
   text-align: center;
-  width: 48px;
+  width: $squareSize;
 }
 
 .square:focus {

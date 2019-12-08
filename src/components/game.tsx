@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cloneDeep } from "lodash";
 
-import "../index.css";
+import "../index.scss";
 import Board from "./board";
 import levy from "./pieces/levy";
 import { IPiece, coordinate } from "./pieces/IPieces";
