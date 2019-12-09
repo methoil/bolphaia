@@ -4,7 +4,7 @@ export default function HealthBar(props: any) {
   return (
     <span className={"health-box"}>
       <span
-        class-name={"remaining-health"}
+        className={"remaining-health"}
         style={{ height: getHealthHeight(props.maxHealth, props.remainingHealth) }}
       ></span>
     </span>
@@ -12,7 +12,7 @@ export default function HealthBar(props: any) {
 }
 
 function getHealthHeight(max: number, remaining: number): string {
-  const maxHealthPx = 6;
+  const maxHealthPx = 29;
   const remainingHeight = (remaining / max) * maxHealthPx;
   return `${remainingHeight}px`;
 }

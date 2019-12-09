@@ -1,5 +1,4 @@
 import BasePiece from "./piece";
-import { coordinate } from "./IPieces.model";
 
 import whiteCataphractImageSvg from "../../resources/whiteCataphract.svg";
 import blackCataphractImageSvg from "../../resources/blackCataphract.svg";

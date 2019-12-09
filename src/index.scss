@@ -1,21 +1,19 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 $squareSize: 48px;
 
-.board-row { 
-  width: $squareSize*24;
+.board-row {
+  width: $squareSize * 24;
 }
 
 .board-row:after {
@@ -46,7 +44,7 @@ $squareSize: 48px;
 .dark-square {
   background-color: darkcyan;
 }
-  
+
 .light-square {
   background-color: lightgray;
 }
@@ -69,17 +67,22 @@ $squareSize: 48px;
 // health bar styles.. move out into separate file.. where does react comp css go?
 // probably in a file with the component?...???
 .health-box {
+  display: block;
+  left: -20px;
   position: relative;
   background-color: red;
   height: 30px;
-  width: 6px;
+  width: 4px;
   margin: 0 auto;
-  border: solid .5px #aaa;
+  border: solid 0.5px #aaa;
 }
 
 .remaining-health {
-  background-color: #007f00;
-  width: 5px;
-  // height: 30px;
+  display: block;
+  left: -46.5px;
+  top: 0.5px;
   position: relative;
+  background-color: #007f00;
+  width: 3px;
+  // height: 30px;
 }
