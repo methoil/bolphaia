@@ -3,7 +3,7 @@ import * as React from "react";
 import "../index.scss";
 import Square from "./square";
 import { IBoardState } from "./game";
-import { coordinate } from "./pieces/IPieces.model";
+import { coordinate, IPiece } from "./pieces/IPieces.model";
 
 interface ISquare {
   style: string;
@@ -27,23 +27,14 @@ export default class Board extends React.Component<IBoardProps, {}> {
       const squareRows = [];
       for (let j = 0; j < yLength; j++) {
         let squareShade =
-          (isEven(i) && isEven(j)) || (!isEven(i) && !isEven(j))
-            ? "light-square"
-            : "dark-square";
+          (isEven(i) && isEven(j)) || (!isEven(i) && !isEven(j)) ? "light-square" : "dark-square";
 
         const piece = this.props.boardState[i][j];
-        if (
-          this.props.highlightState.length &&
-          this.props.highlightState[i][j]
-        ) {
-          squareShade =
-            piece !== null
-              ? "highlighted-square-red"
-              : "highlighted-square-green";
+        if (this.props.highlightState.length && this.props.highlightState[i][j]) {
+          squareShade = piece !== null ? "highlighted-square-red" : "highlighted-square-green";
         }
 
-        const backgroundImage = piece === null ? "none" : piece.getImageUrl();
-        squareRows.push(this.renderSquare(i, j, squareShade, backgroundImage));
+        squareRows.push(this.renderSquare(i, j, squareShade, piece));
       }
       board.push(
         <div key={i} className="board-row">
@@ -55,18 +46,12 @@ export default class Board extends React.Component<IBoardProps, {}> {
     return <div>{board}</div>;
   }
 
-  renderSquare(
-    xIdx: number,
-    yIdx: number,
-    squareShade: any,
-    backgroundImage: string
-  ) {
+  renderSquare(xIdx: number, yIdx: number, squareShade: any, piece: IPiece | null) {
     return (
       <Square
         key={xIdx * 8 + yIdx}
-        // piece = {this.props.squares[i]}
         shade={squareShade}
-        style={{ backgroundImage: `url(${backgroundImage})` }}
+        piece={piece}
         onClick={() => this.props.onClick({ x: xIdx, y: yIdx })}
       />
     );

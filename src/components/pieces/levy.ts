@@ -4,9 +4,10 @@ import whiteLevyImageSvg from "../../resources/whitePawn.svg";
 import blackLevyImageSvg from "../../resources/blackPawn.svg";
 
 export default class Levy extends BasePiece {
-  moveRange = 2;
-  health = 2;
-  attack = 1;
+  moveRange: number = 2;
+  health: number = 2;
+  readonly maxHealth: number = 2;
+  attack: number = 1;
 
   getImageUrl() {
     return this.player === "slavs" ? whiteLevyImageSvg : blackLevyImageSvg;

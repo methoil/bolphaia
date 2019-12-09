@@ -4,6 +4,7 @@ export default abstract class BasePiece implements IBasePiece {
   public player: playerIds;
   public isSelected: boolean = false;
   abstract health = 0;
+  readonly abstract maxHealth: number;
   abstract attack = 0;
   abstract moveRange = 0;
 

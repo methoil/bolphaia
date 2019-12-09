@@ -7,6 +7,7 @@ import blackCataphractImageSvg from "../../resources/blackCataphract.svg";
 export default class Cataphract extends BasePiece {
   public moveRange: number = 5;
   public health: number = 10;
+  readonly maxHealth: number = 10;
   public attack: number = 5;
 
   getImageUrl() {
