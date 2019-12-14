@@ -7,6 +7,7 @@ import levy from "./pieces/levy";
 import { IPiece, coordinate } from "./pieces/IPieces.model";
 import Cataphract from "./pieces/cataphract";
 import { getMovesPath } from "./pieces/piece.utils";
+import Archer from "./pieces/archer";
 
 export const BOARD_WIDTH: number = 24;
 export const BOARD_HEIGHT: number = 16;
@@ -50,6 +51,7 @@ export default class Game extends React.Component<{}, {}> {
       if (x === 0) {
         const rowArray = new Array(ySize).fill(null);
         rowArray[1] = new Cataphract("slavs");
+        rowArray[3] = new Archer('slavs');
         rowArray[6] = new Cataphract("slavs");
         boardState.push(rowArray);
         continue;
@@ -60,6 +62,7 @@ export default class Game extends React.Component<{}, {}> {
       } else if (x === 7) {
         const rowArray = new Array(ySize).fill(null);
         rowArray[1] = new Cataphract("thracians");
+        rowArray[3] = new Archer('thracians');
         rowArray[6] = new Cataphract("thracians");
         boardState.push(rowArray);
         continue;
