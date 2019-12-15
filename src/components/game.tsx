@@ -4,7 +4,7 @@ import { cloneDeep, findIndex } from "lodash";
 import "../index.scss";
 import Board from "./board";
 import levy from "./pieces/levy";
-import { IPiece, coordinate } from "./pieces/IPieces.model";
+import { IPiece, coordinate, IRangedPiece } from "./pieces/IPieces.model";
 import Cataphract from "./pieces/cataphract";
 import { getMovesPath } from "./pieces/piece.utils";
 import Archer from "./pieces/archer";
@@ -12,12 +12,18 @@ import Archer from "./pieces/archer";
 export const BOARD_WIDTH: number = 24;
 export const BOARD_HEIGHT: number = 16;
 
-export type IPossibleMoves = boolean[][];
+export type IPossibleMove = {
+  canMove: boolean;
+  canAttack: boolean;
+  inAttackRange: boolean;
+};
+export type IPossibleMoves = IPossibleMove[][];
+export type ISelectedPiece = IPiece | IRangedPiece | null;
 export type IBoardState = (IPiece | null)[][];
 
 interface IGameState {
   boardState: IBoardState;
-  highlightState: boolean[][];
+  highlightState: IPossibleMoves;
   selectedSquare: coordinate | null;
 }
 
@@ -29,7 +35,8 @@ export default class Game extends React.Component<{}, {}> {
       <Board
         boardState={this.state.boardState}
         highlightState={this.state.highlightState}
-        onClick={this.onClick.bind(this)}
+        selectedPiece={this.getSelectedPiece()}
+        onMoveClick={this.onMoveClick.bind(this)}
       ></Board>
     );
   }
@@ -51,7 +58,7 @@ export default class Game extends React.Component<{}, {}> {
       if (x === 0) {
         const rowArray = new Array(ySize).fill(null);
         rowArray[1] = new Cataphract("slavs");
-        rowArray[3] = new Archer('slavs');
+        rowArray[3] = new Archer("slavs");
         rowArray[6] = new Cataphract("slavs");
         boardState.push(rowArray);
         continue;
@@ -62,7 +69,7 @@ export default class Game extends React.Component<{}, {}> {
       } else if (x === 7) {
         const rowArray = new Array(ySize).fill(null);
         rowArray[1] = new Cataphract("thracians");
-        rowArray[3] = new Archer('thracians');
+        rowArray[3] = new Archer("thracians");
         rowArray[6] = new Cataphract("thracians");
         boardState.push(rowArray);
         continue;
@@ -74,19 +81,39 @@ export default class Game extends React.Component<{}, {}> {
     return boardState;
   }
 
-  private generateEmptyHighlightedMoves(): boolean[][] {
+  private getSelectedPiece() {
+    return (
+      this.state.selectedSquare &&
+      this.state.boardState[this.state.selectedSquare.x][this.state.selectedSquare.y]
+    );
+  }
+
+  private generateEmptyHighlightedMoves(): IPossibleMoves {
     const highlightedMoves = [];
     for (let x = 0; x < BOARD_HEIGHT; x++) {
-      highlightedMoves.push(new Array(BOARD_WIDTH).fill(false));
+      const currRow = [];
+      for (let y = 0; y < BOARD_WIDTH; y++) {
+        const noMovesSquare: IPossibleMove = {
+          canMove: false,
+          canAttack: false,
+          inAttackRange: false
+        };
+        currRow.push(noMovesSquare);
+      }
+      highlightedMoves.push(currRow);
     }
     return highlightedMoves;
   }
 
-  private onClick(clickedSquare: coordinate): void {
+  // for now this would just be a normal do damage attack?...
+  private onRangedAttack(clickedSquare: coordinate) {
+    const clickedPiece = this.state.boardState[clickedSquare.x][clickedSquare.y];
+  }
+
+  private onMoveClick(clickedSquare: coordinate): void {
     const selectedSquare = this.state.selectedSquare;
     const clickedPiece = this.state.boardState[clickedSquare.x][clickedSquare.y];
-    const selectedPiece =
-      selectedSquare && this.state.boardState[selectedSquare.x][selectedSquare.y];
+    const selectedPiece = this.getSelectedPiece();
 
     // nothing to do
     if (!selectedPiece && !clickedPiece) {
@@ -152,7 +179,7 @@ export default class Game extends React.Component<{}, {}> {
     }
   }
 
-  private generatePossibleMovesHighlights(src: coordinate, range: number): boolean[][] {
+  private generatePossibleMovesHighlights(src: coordinate, range: number): IPossibleMoves {
     const highlightedMoves = [];
     for (let x = 0; x < BOARD_HEIGHT; x++) {
       highlightedMoves.push(new Array(BOARD_WIDTH).fill(false));

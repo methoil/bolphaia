@@ -15,3 +15,6 @@ export interface IBasePiece {
 }
 
 export interface IPiece extends IBasePiece {}
+export interface IRangedPiece extends IBasePiece {
+  range: number;
+}

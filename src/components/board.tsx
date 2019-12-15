@@ -2,7 +2,7 @@ import * as React from "react";
 
 import "../index.scss";
 import Square from "./square";
-import { IBoardState } from "./game";
+import { IBoardState, IPossibleMoves } from "./game";
 import { coordinate, IPiece } from "./pieces/IPieces.model";
 
 interface ISquare {
@@ -12,7 +12,7 @@ interface ISquare {
 }
 interface IBoardProps {
   boardState: IBoardState;
-  highlightState: boolean[][];
+  highlightState: IPossibleMoves;
   onClick: (clickedSquare: coordinate) => void;
 }
 

@@ -52,3 +52,4 @@ export function getMovesPath(src: coordinate, dest: coordinate, board: IBoardSta
 
   return path;
 }
+

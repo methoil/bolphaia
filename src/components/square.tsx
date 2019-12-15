@@ -5,7 +5,7 @@ export default function Square(props: any) {
   return (
     <button
       className={`square ${props.shade}`}
-      onClick={props.onClick}
+      onMoveClick={props.onMoveClick}
       style={{ backgroundImage: `url(${props.piece && props.piece.getImageUrl()})` || "" }}
     >
       {props.piece ? (
