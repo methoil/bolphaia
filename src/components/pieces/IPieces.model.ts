@@ -8,6 +8,7 @@ export interface IBasePiece {
   player: playerIds;
   isSelected: boolean;
   health: number;
+  maxHealth: number;
   attack: number;
   moveRange: number;
   takeDamage: (damage: number) => void;

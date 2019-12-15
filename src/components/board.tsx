@@ -8,12 +8,12 @@ import { coordinate, IPiece } from "./pieces/IPieces.model";
 interface ISquare {
   style: string;
   shade: string;
-  onClick: () => any;
+  onMoveClick: () => any;
 }
 interface IBoardProps {
   boardState: IBoardState;
   highlightState: IPossibleMoves;
-  onClick: (clickedSquare: coordinate) => void;
+  onMoveClick: (clickedSquare: coordinate) => void;
 }
 
 export default class Board extends React.Component<IBoardProps, {}> {
@@ -26,15 +26,25 @@ export default class Board extends React.Component<IBoardProps, {}> {
     for (let i = 0; i < xLength; i++) {
       const squareRows = [];
       for (let j = 0; j < yLength; j++) {
-        let squareShade =
-          (isEven(i) && isEven(j)) || (!isEven(i) && !isEven(j)) ? "light-square" : "dark-square";
+        const cssClasses = [];
+        cssClasses.push(
+          (isEven(i) && isEven(j)) || (!isEven(i) && !isEven(j)) ? "light-square" : "dark-square"
+        );
 
         const piece = this.props.boardState[i][j];
-        if (this.props.highlightState.length && this.props.highlightState[i][j]) {
-          squareShade = piece !== null ? "highlighted-square-red" : "highlighted-square-green";
+        const squareHighlight = this.props.highlightState.length && this.props.highlightState[i][j];
+        if (squareHighlight && squareHighlight.canMove) {
+          cssClasses.push(
+            squareHighlight.canAttack !== null
+              ? "highlighted-square-red"
+              : "highlighted-square-green"
+          );
+        }
+        if (squareHighlight && squareHighlight.inAttackRange) {
+          cssClasses.push("highlighted-square-in-ranged-attack");
         }
 
-        squareRows.push(this.renderSquare(i, j, squareShade, piece));
+        squareRows.push(this.renderSquare(i, j, cssClasses, piece));
       }
       board.push(
         <div key={i} className="board-row">
@@ -46,13 +56,13 @@ export default class Board extends React.Component<IBoardProps, {}> {
     return <div>{board}</div>;
   }
 
-  renderSquare(xIdx: number, yIdx: number, squareShade: any, piece: IPiece | null) {
+  renderSquare(xIdx: number, yIdx: number, cssClasses: string[], piece: IPiece | null) {
     return (
       <Square
         key={xIdx * 8 + yIdx}
-        shade={squareShade}
+        cssClasses={cssClasses}
         piece={piece}
-        onClick={() => this.props.onClick({ x: xIdx, y: yIdx })}
+        onMoveClick={() => this.props.onMoveClick({ x: xIdx, y: yIdx })}
       />
     );
   }

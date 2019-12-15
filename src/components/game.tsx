@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cloneDeep, findIndex } from "lodash";
+import { cloneDeep, findIndex, get } from "lodash";
 
 import "../index.scss";
 import Board from "./board";
@@ -35,7 +35,6 @@ export default class Game extends React.Component<{}, {}> {
       <Board
         boardState={this.state.boardState}
         highlightState={this.state.highlightState}
-        selectedPiece={this.getSelectedPiece()}
         onMoveClick={this.onMoveClick.bind(this)}
       ></Board>
     );
@@ -124,7 +123,7 @@ export default class Game extends React.Component<{}, {}> {
     if (!selectedPiece && clickedPiece != null) {
       return this.setState({
         selectedSquare: { ...clickedSquare },
-        highlightState: this.generatePossibleMovesHighlights(clickedSquare, clickedPiece.moveRange)
+        highlightState: this.generatePossibleMovesHighlights(clickedSquare, clickedPiece)
       });
     }
 
@@ -179,12 +178,15 @@ export default class Game extends React.Component<{}, {}> {
     }
   }
 
-  private generatePossibleMovesHighlights(src: coordinate, range: number): IPossibleMoves {
-    const highlightedMoves = [];
-    for (let x = 0; x < BOARD_HEIGHT; x++) {
-      highlightedMoves.push(new Array(BOARD_WIDTH).fill(false));
+  private generatePossibleMovesHighlights(
+    src: coordinate,
+    selectedPiece: ISelectedPiece
+  ): IPossibleMoves {
+    const highlightedMoves = this.generateEmptyHighlightedMoves();
+    if (!selectedPiece) {
+      return highlightedMoves;
     }
-    const dimensions: number[] = [-range, 0, range];
+    const dimensions: number[] = [-selectedPiece.moveRange, 0, selectedPiece.moveRange];
 
     for (let x = 0; x < 3; x++) {
       for (let y = 0; y < 3; y++) {
@@ -194,8 +196,25 @@ export default class Game extends React.Component<{}, {}> {
         };
         const movesPath = getMovesPath(src, dest, this.state.boardState);
 
-        for (let i of movesPath) {
-          highlightedMoves[i.x][i.y] = true;
+        for (let move of movesPath) {
+          highlightedMoves[move.x][move.y].canMove = true;
+          if (
+            get(this, "state.boardState[i.x][i.y].piece.player", selectedPiece.player) !==
+            selectedPiece.player
+          ) {
+            highlightedMoves[move.x][move.y].canAttack = true;
+          }
+          if ((selectedPiece as IRangedPiece).range) {
+            const range = (selectedPiece as IRangedPiece).range;
+            if (
+              move.x > src.x - range &&
+              move.x < src.x + range &&
+              move.y > src.y - range &&
+              move.y < src.y + range
+            ) {
+              highlightedMoves[move.x][move.y].inAttackRange = true;
+            }
+          }
         }
       }
     }
