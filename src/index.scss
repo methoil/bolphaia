@@ -64,6 +64,10 @@ $squareSize: 48px;
   background-color: lightgreen;
 }
 
+.highlighted-square-in-ranged-attack {
+  opacity: .5;
+}
+
 // health bar styles.. move out into separate file.. where does react comp css go?
 // probably in a file with the component?...???
 .health-box {

@@ -127,7 +127,7 @@ export default class Game extends React.Component<{}, {}> {
       });
     }
 
-    const isMovePossible = this.state.highlightState[clickedSquare.x][clickedSquare.y];
+    const isMovePossible = this.state.highlightState[clickedSquare.x][clickedSquare.y].canMove;
 
     // Move the piece if a valid move is selected
     if (selectedPiece && selectedSquare && isMovePossible) {
@@ -199,22 +199,22 @@ export default class Game extends React.Component<{}, {}> {
         for (let move of movesPath) {
           highlightedMoves[move.x][move.y].canMove = true;
           if (
-            get(this, "state.boardState[i.x][i.y].piece.player", selectedPiece.player) !==
+            get(this,`state.boardState[${move.x}][${move.y}].player`, selectedPiece.player) !==
             selectedPiece.player
           ) {
             highlightedMoves[move.x][move.y].canAttack = true;
           }
-          if ((selectedPiece as IRangedPiece).range) {
-            const range = (selectedPiece as IRangedPiece).range;
-            if (
-              move.x > src.x - range &&
-              move.x < src.x + range &&
-              move.y > src.y - range &&
-              move.y < src.y + range
-            ) {
-              highlightedMoves[move.x][move.y].inAttackRange = true;
-            }
-          }
+
+        }
+      }
+    }
+
+    if ((selectedPiece as IRangedPiece).range) {
+      const range = (selectedPiece as IRangedPiece).range;
+
+      for (let x = Math.max(src.x - range, 0); x <= Math.min(src.x + range, BOARD_HEIGHT); x++) {
+        for (let y = Math.max(src.y - range, 0); y <= Math.min(src.y + range, BOARD_WIDTH); y++) {
+          highlightedMoves[x][y].inAttackRange = true;
         }
       }
     }

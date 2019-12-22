@@ -35,7 +35,7 @@ export default class Board extends React.Component<IBoardProps, {}> {
         const squareHighlight = this.props.highlightState.length && this.props.highlightState[i][j];
         if (squareHighlight && squareHighlight.canMove) {
           cssClasses.push(
-            squareHighlight.canAttack !== null
+            squareHighlight.canAttack === true
               ? "highlighted-square-red"
               : "highlighted-square-green"
           );
