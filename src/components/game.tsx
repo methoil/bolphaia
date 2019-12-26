@@ -8,6 +8,7 @@ import { IPiece, coordinate, IRangedPiece } from "./pieces/IPieces.model";
 import Cataphract from "./pieces/cataphract";
 import { getMovesPath } from "./pieces/piece.utils";
 import Archer from "./pieces/archer";
+import RangedPiece from "./pieces/rangedPiece";
 
 export const BOARD_WIDTH: number = 24;
 export const BOARD_HEIGHT: number = 16;
@@ -130,6 +131,28 @@ export default class Game extends React.Component<{}, {}> {
       });
     }
 
+    // case of ranged attack
+    if (
+      this.isTargetValidRangedAttack(clickedSquare, selectedPiece as RangedPiece) &&
+      selectedPiece &&
+      clickedPiece
+    ) {
+      const newBoardState = cloneDeep(this.state.boardState);
+      clickedPiece.takeDamage(selectedPiece.attack);
+
+      if (clickedPiece.health <= 0) {
+        // TODO: move clicked piece to graveyard
+        newBoardState[clickedSquare.x][clickedSquare.y] = null;
+      } else {
+        newBoardState[clickedSquare.x][clickedSquare.y] = clickedPiece;
+      }
+      return this.setState({
+        boardState: newBoardState,
+        selectedSquare: null,
+        highlightState: this.generateEmptyHighlightedMoves()
+      });
+    }
+
     const isMovePossible = this.state.highlightState[clickedSquare.x][clickedSquare.y].canMove;
 
     // Move the piece if a valid move is selected
@@ -192,11 +215,7 @@ export default class Game extends React.Component<{}, {}> {
       return "";
     }
 
-    if (
-      (selectedPiece as IRangedPiece).range &&
-      this.state.highlightState[hoveredSquare.x][hoveredSquare.y].inAttackRange &&
-      this.squareHasEnemyPiece(hoveredSquare, selectedPiece)
-    ) {
+    if (this.isTargetValidRangedAttack(hoveredSquare, selectedPiece as RangedPiece)) {
       return "bow-icon";
     } else if (this.state.highlightState[hoveredSquare.x][hoveredSquare.y].canAttack) {
       return "sword-icon";
@@ -255,6 +274,15 @@ export default class Game extends React.Component<{}, {}> {
     } else {
       return index;
     }
+  }
+
+  private isTargetValidRangedAttack(target: coordinate, selectedPiece: RangedPiece): boolean {
+    // TODO: how could this resolve to 0??????
+    return (
+      !!(selectedPiece as IRangedPiece).range &&
+      this.state.highlightState[target.x][target.y].inAttackRange &&
+      this.squareHasEnemyPiece(target, selectedPiece)
+    );
   }
 
   private squareHasEnemyPiece(square: coordinate, selectedPiece: IPiece): boolean {
