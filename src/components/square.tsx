@@ -45,7 +45,7 @@ export default class Square extends React.Component<ISquareProps, {}> {
 
   onClick(): void {
     this.props.onMoveClick();
-    return this.resetHoverIcon();
+    return this.setHoverIconFromGameCallback();
   }
 
   resetHoverIcon(): void {
@@ -53,6 +53,8 @@ export default class Square extends React.Component<ISquareProps, {}> {
   }
 
   setHoverIconFromGameCallback(): void {
-    return this.setState({ hoverIcon: this.props.getHoverIcon() });
+    return this.setState(state => {
+      return { hoverIcon: this.props.getHoverIcon() };
+    });
   }
 }

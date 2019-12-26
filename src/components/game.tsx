@@ -183,7 +183,12 @@ export default class Game extends React.Component<{}, {}> {
 
   private getHoverIcon(hoveredSquare: coordinate): string {
     const selectedPiece = this.getSelectedPiece();
-    if (!selectedPiece) {
+    if (
+      !selectedPiece &&
+      get(this, `state.boardState[${hoveredSquare.x}][${hoveredSquare.y}]`, null)
+    ) {
+      return "pointer-icon";
+    } else if (!selectedPiece) {
       return "";
     }
 
