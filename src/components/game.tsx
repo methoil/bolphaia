@@ -25,6 +25,7 @@ interface IGameState {
   boardState: IBoardState;
   highlightState: IPossibleMoves;
   selectedSquare: coordinate | null;
+  mouseHoverIcon: string;
 }
 
 export default class Game extends React.Component<{}, {}> {
@@ -32,11 +33,20 @@ export default class Game extends React.Component<{}, {}> {
 
   render() {
     return (
+      <div
+      style={{
+        cursor: `url(${this.state.mouseHoverIcon})` || ""
+      }}>
+
+      
       <Board
         boardState={this.state.boardState}
         highlightState={this.state.highlightState}
         onMoveClick={this.onMoveClick.bind(this)}
+        getHoverIcon={this.getHoverIcon.bind(this)}
+        
       ></Board>
+      </div>
     );
   }
 
@@ -46,7 +56,8 @@ export default class Game extends React.Component<{}, {}> {
     this.state = {
       selectedSquare: null,
       boardState: this.initializeBoard(BOARD_HEIGHT, BOARD_WIDTH),
-      highlightState: this.generateEmptyHighlightedMoves()
+      highlightState: this.generateEmptyHighlightedMoves(),
+      mouseHoverIcon: '',
     };
   }
 
@@ -178,6 +189,28 @@ export default class Game extends React.Component<{}, {}> {
     }
   }
 
+  private getHoverIcon(hoveredSquare: coordinate): string {
+    const selectedPiece = this.getSelectedPiece();
+    if (!selectedPiece) {
+      return "";
+    }
+
+    const cursorsPath = "../resources/mouseHoverIcons";
+    if (
+      (selectedPiece as IRangedPiece).range &&
+      this.state.highlightState[hoveredSquare.x][hoveredSquare.y].inAttackRange &&
+      this.squareHasEnemyPiece(hoveredSquare, selectedPiece)
+    ) {
+      return `${cursorsPath}/bow.cur`;
+    } else if (this.state.highlightState[hoveredSquare.x][hoveredSquare.y].canAttack) {
+      return `${cursorsPath}/sword.cur`;
+    } else if (this.state.highlightState[hoveredSquare.x][hoveredSquare.y].canMove) {
+      return `${cursorsPath}/boots.cur`;
+    } else {
+      return "";
+    }
+  }
+
   private generatePossibleMovesHighlights(
     src: coordinate,
     selectedPiece: ISelectedPiece
@@ -198,13 +231,9 @@ export default class Game extends React.Component<{}, {}> {
 
         for (let move of movesPath) {
           highlightedMoves[move.x][move.y].canMove = true;
-          if (
-            get(this,`state.boardState[${move.x}][${move.y}].player`, selectedPiece.player) !==
-            selectedPiece.player
-          ) {
+          if (this.squareHasEnemyPiece(move, selectedPiece)) {
             highlightedMoves[move.x][move.y].canAttack = true;
           }
-
         }
       }
     }
@@ -230,5 +259,12 @@ export default class Game extends React.Component<{}, {}> {
     } else {
       return index;
     }
+  }
+
+  private squareHasEnemyPiece(square: coordinate, selectedPiece: IPiece): boolean {
+    return (
+      get(this, `state.boardState[${square.x}][${square.y}].player`, selectedPiece.player) !==
+      selectedPiece.player
+    );
   }
 }

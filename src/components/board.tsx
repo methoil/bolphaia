@@ -9,11 +9,13 @@ interface ISquare {
   style: string;
   shade: string;
   onMoveClick: () => any;
+  getHoverIcon: () => any;
 }
 interface IBoardProps {
   boardState: IBoardState;
   highlightState: IPossibleMoves;
   onMoveClick: (clickedSquare: coordinate) => void;
+  getHoverIcon: (clickedSquare: coordinate) => void;
 }
 
 export default class Board extends React.Component<IBoardProps, {}> {
@@ -63,6 +65,7 @@ export default class Board extends React.Component<IBoardProps, {}> {
         cssClasses={cssClasses}
         piece={piece}
         onMoveClick={() => this.props.onMoveClick({ x: xIdx, y: yIdx })}
+        getHoverIcon={() => this.props.getHoverIcon({ x: xIdx, y: yIdx })}
       />
     );
   }

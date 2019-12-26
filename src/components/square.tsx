@@ -6,14 +6,22 @@ interface ISquareProps {
   cssClasses: string[];
   piece: IPiece | null;
   onMoveClick: () => any;
+  getHoverIcon: () => any;
 }
+
+let hoverIcon: string = '';
 
 export default function Square(props: ISquareProps) {
   return (
     <button
-      className={`square ${props.cssClasses.join(" ")}`}
+      className={`square ${props.cssClasses.join(" ")} ${hoverIcon}`}
       onClick={props.onMoveClick}
-      style={{ backgroundImage: `url(${props.piece && props.piece.getImageUrl()})` || "" }}
+      onMouseEnter={() => {hoverIcon = props.piece ? '' : 'boots'; console.log(hoverIcon);}}
+      onMouseLeave={() => {hoverIcon = ''; console.log(hoverIcon);}}
+      style={{
+        backgroundImage: `url(${props.piece && props.piece.getImageUrl()})` || "",
+        // cursor: hoverIcon,
+      }}
     >
       {props.piece ? (
         <HealthBar
