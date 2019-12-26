@@ -9,28 +9,50 @@ interface ISquareProps {
   getHoverIcon: () => any;
 }
 
-let hoverIcon: string = '';
+let hoverIcon: string = "";
 
-export default function Square(props: ISquareProps) {
-  return (
-    <button
-      className={`square ${props.cssClasses.join(" ")} ${hoverIcon}`}
-      onClick={props.onMoveClick}
-      onMouseEnter={() => {hoverIcon = props.piece ? '' : 'boots'; console.log(hoverIcon);}}
-      onMouseLeave={() => {hoverIcon = ''; console.log(hoverIcon);}}
-      style={{
-        backgroundImage: `url(${props.piece && props.piece.getImageUrl()})` || "",
-        // cursor: hoverIcon,
-      }}
-    >
-      {props.piece ? (
-        <HealthBar
-          maxHealth={props.piece.maxHealth}
-          remainingHealth={props.piece.health}
-        ></HealthBar>
-      ) : (
-        ""
-      )}
-    </button>
-  );
+export default class Square extends React.Component<ISquareProps, {}> {
+  state: { hoverIcon: string };
+
+  constructor(props: ISquareProps) {
+    super(props);
+    this.state = {
+      hoverIcon: ""
+    };
+  }
+  render() {
+    return (
+      <button
+        className={`square ${this.props.cssClasses.join(" ")} ${this.state.hoverIcon}`}
+        onClick={this.onClick.bind(this)}
+        onMouseEnter={this.setHoverIconFromGameCallback.bind(this)}
+        onMouseLeave={this.resetHoverIcon.bind(this)}
+        style={{
+          backgroundImage: `url(${this.props.piece && this.props.piece.getImageUrl()})` || ""
+        }}
+      >
+        {this.props.piece ? (
+          <HealthBar
+            maxHealth={this.props.piece.maxHealth}
+            remainingHealth={this.props.piece.health}
+          ></HealthBar>
+        ) : (
+          ""
+        )}
+      </button>
+    );
+  }
+
+  onClick(): void {
+    this.props.onMoveClick();
+    return this.resetHoverIcon();
+  }
+
+  resetHoverIcon(): void {
+    return this.setState({ hoverIcon: "" });
+  }
+
+  setHoverIconFromGameCallback(): void {
+    return this.setState({ hoverIcon: this.props.getHoverIcon() });
+  }
 }

@@ -33,20 +33,12 @@ export default class Game extends React.Component<{}, {}> {
 
   render() {
     return (
-      <div
-      style={{
-        cursor: `url(${this.state.mouseHoverIcon})` || ""
-      }}>
-
-      
       <Board
         boardState={this.state.boardState}
         highlightState={this.state.highlightState}
         onMoveClick={this.onMoveClick.bind(this)}
         getHoverIcon={this.getHoverIcon.bind(this)}
-        
       ></Board>
-      </div>
     );
   }
 
@@ -57,7 +49,7 @@ export default class Game extends React.Component<{}, {}> {
       selectedSquare: null,
       boardState: this.initializeBoard(BOARD_HEIGHT, BOARD_WIDTH),
       highlightState: this.generateEmptyHighlightedMoves(),
-      mouseHoverIcon: '',
+      mouseHoverIcon: ""
     };
   }
 
@@ -195,17 +187,16 @@ export default class Game extends React.Component<{}, {}> {
       return "";
     }
 
-    const cursorsPath = "../resources/mouseHoverIcons";
     if (
       (selectedPiece as IRangedPiece).range &&
       this.state.highlightState[hoveredSquare.x][hoveredSquare.y].inAttackRange &&
       this.squareHasEnemyPiece(hoveredSquare, selectedPiece)
     ) {
-      return `${cursorsPath}/bow.cur`;
+      return "bow-icon";
     } else if (this.state.highlightState[hoveredSquare.x][hoveredSquare.y].canAttack) {
-      return `${cursorsPath}/sword.cur`;
+      return "sword-icon";
     } else if (this.state.highlightState[hoveredSquare.x][hoveredSquare.y].canMove) {
-      return `${cursorsPath}/boots.cur`;
+      return "boots-icon";
     } else {
       return "";
     }
