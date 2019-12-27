@@ -1,4 +1,4 @@
 export enum playerIds {
-  hitites = "hitites",
-  phrygians = "phrygians"
+  phrygians = "phrygians",
+  hitites = "hitites"
 }

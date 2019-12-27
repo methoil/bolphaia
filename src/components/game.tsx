@@ -24,6 +24,7 @@ export type ISelectedPiece = IPiece | IRangedPiece | null;
 export type IBoardState = (IPiece | null)[][];
 
 interface IGameState {
+  turn: playerIds;
   boardState: IBoardState;
   highlightState: IPossibleMoves;
   selectedSquare: coordinate | null;
@@ -35,12 +36,15 @@ export default class Game extends React.Component<{}, {}> {
 
   render() {
     return (
-      <Board
-        boardState={this.state.boardState}
-        highlightState={this.state.highlightState}
-        onMoveClick={this.onMoveClick.bind(this)}
-        getHoverIcon={this.getHoverIcon.bind(this)}
-      ></Board>
+      <div>
+        <div>{this.state.turn}</div>
+        <Board
+          boardState={this.state.boardState}
+          highlightState={this.state.highlightState}
+          onMoveClick={this.onMoveClick.bind(this)}
+          getHoverIcon={this.getHoverIcon.bind(this)}
+        ></Board>
+      </div>
     );
   }
 
@@ -48,6 +52,7 @@ export default class Game extends React.Component<{}, {}> {
     // no props will be passed here?
     super(props);
     this.state = {
+      turn: playerIds.phrygians,
       selectedSquare: null,
       boardState: this.initializeBoard(BOARD_HEIGHT, BOARD_WIDTH),
       highlightState: this.generateEmptyHighlightedMoves(),
@@ -109,11 +114,6 @@ export default class Game extends React.Component<{}, {}> {
     return highlightedMoves;
   }
 
-  // for now this would just be a normal do damage attack?...
-  private onRangedAttack(clickedSquare: coordinate) {
-    const clickedPiece = this.state.boardState[clickedSquare.x][clickedSquare.y];
-  }
-
   private onMoveClick(clickedSquare: coordinate): void {
     const selectedSquare = this.state.selectedSquare;
     const clickedPiece = this.state.boardState[clickedSquare.x][clickedSquare.y];
@@ -126,6 +126,10 @@ export default class Game extends React.Component<{}, {}> {
 
     // Select the clicked piece if none is currently selected
     if (!selectedPiece && clickedPiece != null) {
+      if (clickedPiece.player !== this.state.turn) {
+        return;
+      }
+
       return this.setState({
         selectedSquare: { ...clickedSquare },
         highlightState: this.generatePossibleMovesHighlights(clickedSquare, clickedPiece)
@@ -150,7 +154,8 @@ export default class Game extends React.Component<{}, {}> {
       return this.setState({
         boardState: newBoardState,
         selectedSquare: null,
-        highlightState: this.generateEmptyHighlightedMoves()
+        highlightState: this.generateEmptyHighlightedMoves(),
+        turn: this.getNewTurn()
       });
     }
 
@@ -192,7 +197,8 @@ export default class Game extends React.Component<{}, {}> {
       return this.setState({
         boardState: newBoardState,
         selectedSquare: null,
-        highlightState: this.generateEmptyHighlightedMoves()
+        highlightState: this.generateEmptyHighlightedMoves(),
+        turn: this.getNewTurn()
       });
     }
 
@@ -205,22 +211,29 @@ export default class Game extends React.Component<{}, {}> {
     }
   }
 
+  private getNewTurn(): playerIds {
+    return this.state.turn === playerIds.phrygians ? playerIds.hitites : playerIds.phrygians;
+  }
+
   private getHoverIcon(hoveredSquare: coordinate): string {
     const selectedPiece = this.getSelectedPiece();
-    if (
-      !selectedPiece &&
-      get(this, `state.boardState[${hoveredSquare.x}][${hoveredSquare.y}]`, null)
-    ) {
+    const hoveredPiece = get(
+      this,
+      `state.boardState[${hoveredSquare.x}][${hoveredSquare.y}]`,
+      null
+    );
+    if (!selectedPiece && hoveredPiece && hoveredPiece.player === this.state.turn) {
       return "pointer-icon";
     } else if (!selectedPiece) {
       return "";
     }
 
+    const hoveredSquareHighlights = this.state.highlightState[hoveredSquare.x][hoveredSquare.y];
     if (this.isTargetValidRangedAttack(hoveredSquare, selectedPiece as RangedPiece)) {
       return "bow-icon";
-    } else if (this.state.highlightState[hoveredSquare.x][hoveredSquare.y].canAttack) {
+    } else if (hoveredSquareHighlights.canAttack) {
       return "sword-icon";
-    } else if (this.state.highlightState[hoveredSquare.x][hoveredSquare.y].canMove) {
+    } else if (hoveredSquareHighlights.canMove) {
       return "boots-icon";
     } else {
       return "";
