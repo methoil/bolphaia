@@ -1,6 +1,7 @@
 import whiteArcherImageSvg from "../../resources/whiteArcher.svg";
 import blackArcherImageSvg from "../../resources/blackArcher.svg";
 import RangedPiece from "./rangedPiece";
+import { playerIds } from "../game.model";
 
 export default class Archer extends RangedPiece {
   moveRange: number = 2;
@@ -10,6 +11,6 @@ export default class Archer extends RangedPiece {
   range: number = 4;
 
   getImageUrl() {
-    return this.player === "slavs" ? whiteArcherImageSvg : blackArcherImageSvg;
+    return this.player === playerIds.phrygians ? whiteArcherImageSvg : blackArcherImageSvg;
   }
 }

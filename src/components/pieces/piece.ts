@@ -1,10 +1,11 @@
-import { playerIds, IBasePiece } from "./IPieces.model";
+import { IBasePiece } from "./IPieces.model";
+import { playerIds } from "../game.model";
 
 export default abstract class BasePiece implements IBasePiece {
   public player: playerIds;
   public isSelected: boolean = false;
   abstract health = 0;
-  readonly abstract maxHealth: number;
+  abstract readonly maxHealth: number;
   abstract attack = 0;
   abstract moveRange = 0;
 

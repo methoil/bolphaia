@@ -2,6 +2,7 @@ import * as React from "react";
 import { cloneDeep, findIndex, get } from "lodash";
 
 import "../index.scss";
+import { playerIds } from "./game.model";
 import Board from "./board";
 import levy from "./pieces/levy";
 import { IPiece, coordinate, IRangedPiece } from "./pieces/IPieces.model";
@@ -60,20 +61,20 @@ export default class Game extends React.Component<{}, {}> {
       let pieceToPlace: IPiece | null = null;
       if (x === 0) {
         const rowArray = new Array(ySize).fill(null);
-        rowArray[1] = new Cataphract("slavs");
-        rowArray[3] = new Archer("slavs");
-        rowArray[6] = new Cataphract("slavs");
+        rowArray[1] = new Cataphract(playerIds.phrygians);
+        rowArray[3] = new Archer(playerIds.phrygians);
+        rowArray[6] = new Cataphract(playerIds.phrygians);
         boardState.push(rowArray);
         continue;
       } else if (x === 1) {
-        pieceToPlace = new levy("slavs");
+        pieceToPlace = new levy(playerIds.phrygians);
       } else if (x === 6) {
-        pieceToPlace = new levy("thracians");
+        pieceToPlace = new levy(playerIds.hitites);
       } else if (x === 7) {
         const rowArray = new Array(ySize).fill(null);
-        rowArray[1] = new Cataphract("thracians");
-        rowArray[3] = new Archer("thracians");
-        rowArray[6] = new Cataphract("thracians");
+        rowArray[1] = new Cataphract(playerIds.hitites);
+        rowArray[3] = new Archer(playerIds.hitites);
+        rowArray[6] = new Cataphract(playerIds.hitites);
         boardState.push(rowArray);
         continue;
       }

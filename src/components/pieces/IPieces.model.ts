@@ -1,4 +1,5 @@
-export type playerIds = "slavs" | "thracians";
+import { playerIds } from "../game.model";
+
 export type coordinate = {
   x: number;
   y: number;

@@ -1,5 +1,5 @@
 import BasePiece from "./piece";
-
+import { playerIds } from "../game.model";
 import whiteLevyImageSvg from "../../resources/whitePawn.svg";
 import blackLevyImageSvg from "../../resources/blackPawn.svg";
 
@@ -10,6 +10,6 @@ export default class Levy extends BasePiece {
   attack: number = 1;
 
   getImageUrl() {
-    return this.player === "slavs" ? whiteLevyImageSvg : blackLevyImageSvg;
+    return this.player === playerIds.phrygians ? whiteLevyImageSvg : blackLevyImageSvg;
   }
 }
