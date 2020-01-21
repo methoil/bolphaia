@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/bolphaia/static/css/main.b4c04ee2.chunk.css",
+    "main.js": "/bolphaia/static/js/main.290c48d5.chunk.js",
+    "main.js.map": "/bolphaia/static/js/main.290c48d5.chunk.js.map",
+    "runtime-main.js": "/bolphaia/static/js/runtime-main.870577b0.js",
+    "runtime-main.js.map": "/bolphaia/static/js/runtime-main.870577b0.js.map",
+    "static/js/2.601097bf.chunk.js": "/bolphaia/static/js/2.601097bf.chunk.js",
+    "static/js/2.601097bf.chunk.js.map": "/bolphaia/static/js/2.601097bf.chunk.js.map",
+    "index.html": "/bolphaia/index.html",
+    "precache-manifest.9bb099152135dd0c743fba883a7560c9.js": "/bolphaia/precache-manifest.9bb099152135dd0c743fba883a7560c9.js",
+    "service-worker.js": "/bolphaia/service-worker.js",
+    "static/css/main.b4c04ee2.chunk.css.map": "/bolphaia/static/css/main.b4c04ee2.chunk.css.map",
+    "static/media/blackArcher.svg": "/bolphaia/static/media/blackArcher.ae09d6fb.svg",
+    "static/media/blackCataphract.svg": "/bolphaia/static/media/blackCataphract.d39f1d02.svg",
+    "static/media/blackPawn.svg": "/bolphaia/static/media/blackPawn.1c52d8c4.svg",
+    "static/media/index.scss": "/bolphaia/static/media/sword.2515ed29.cur",
+    "static/media/whiteArcher.svg": "/bolphaia/static/media/whiteArcher.9cbde199.svg",
+    "static/media/whiteCataphract.svg": "/bolphaia/static/media/whiteCataphract.e6294efe.svg",
+    "static/media/whitePawn.svg": "/bolphaia/static/media/whitePawn.d69014fb.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.870577b0.js",
+    "static/js/2.601097bf.chunk.js",
+    "static/css/main.b4c04ee2.chunk.css",
+    "static/js/main.290c48d5.chunk.js"
+  ]
+}
