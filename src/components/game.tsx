@@ -66,9 +66,16 @@ export default class Game extends React.Component<{}, {}> {
       let pieceToPlace: IPiece | null = null;
       if (x === 0) {
         const rowArray = new Array(ySize).fill(null);
-        rowArray[1] = new Cataphract(playerIds.phrygians);
-        rowArray[3] = new Archer(playerIds.phrygians);
-        rowArray[6] = new Cataphract(playerIds.phrygians);
+        rowArray[2] = new Cataphract(playerIds.phrygians);
+        rowArray[rowArray.length - 3] = new Cataphract(playerIds.phrygians);
+
+        rowArray[4] = new Archer(playerIds.phrygians);
+        rowArray[7] = new Archer(playerIds.phrygians);
+        rowArray[10]= new Archer(playerIds.phrygians);
+        rowArray[13] = new Archer(playerIds.phrygians);
+        rowArray[16] = new Archer(playerIds.phrygians);
+        rowArray[19] = new Archer(playerIds.phrygians);
+
         boardState.push(rowArray);
         continue;
       } else if (x === 1) {
@@ -77,9 +84,15 @@ export default class Game extends React.Component<{}, {}> {
         pieceToPlace = new levy(playerIds.hitites);
       } else if (x === 7) {
         const rowArray = new Array(ySize).fill(null);
-        rowArray[1] = new Cataphract(playerIds.hitites);
-        rowArray[3] = new Archer(playerIds.hitites);
-        rowArray[6] = new Cataphract(playerIds.hitites);
+        rowArray[2] = new Cataphract(playerIds.hitites);
+        rowArray[rowArray.length - 3] = new Cataphract(playerIds.hitites);
+
+        rowArray[4] = new Archer(playerIds.hitites);
+        rowArray[7] = new Archer(playerIds.hitites);
+        rowArray[10] = new Archer(playerIds.hitites);
+        rowArray[13] = new Archer(playerIds.hitites);
+        rowArray[16] = new Archer(playerIds.hitites);
+        rowArray[19] = new Archer(playerIds.hitites);
         boardState.push(rowArray);
         continue;
       }
