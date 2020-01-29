@@ -65,7 +65,7 @@ $squareSize: 48px;
 }
 
 .highlighted-square-in-ranged-attack {
-  opacity: .5;
+  opacity: 0.5;
 }
 
 // health bar styles.. move out into separate file.. where does react comp css go?
@@ -104,4 +104,10 @@ $squareSize: 48px;
 
 .bow-icon {
   cursor: url(./resources/mouseHoverIcons/bow.cur), auto;
+}
+
+.current-turn-text {
+  padding: 5px;
+  font-weight: bold;
+  background-color: rgb(22, 104, 89);
 }

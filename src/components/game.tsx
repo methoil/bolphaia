@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cloneDeep, findIndex, get } from "lodash";
+import { cloneDeep, findIndex, get, capitalize } from "lodash";
 
 import "../index.scss";
 import { playerIds } from "./game.model";
@@ -37,7 +37,12 @@ export default class Game extends React.Component<{}, {}> {
   render() {
     return (
       <div>
-        <div>{this.state.turn}</div>
+        <div className="current-turn-text">
+          Current turn:&nbsp;
+          <span style={{ color: this.state.turn === playerIds.phrygians ? "white" : "black" }}>
+            {capitalize(this.state.turn)}
+          </span>
+        </div>
         <Board
           boardState={this.state.boardState}
           highlightState={this.state.highlightState}
@@ -64,28 +69,28 @@ export default class Game extends React.Component<{}, {}> {
     const boardState = [];
     for (let x = 0; x < xSize; x++) {
       let pieceToPlace: IPiece | null = null;
-      if (x === 0) {
+      if (x === 1) {
         const rowArray = new Array(ySize).fill(null);
         rowArray[2] = new Cataphract(playerIds.phrygians);
         rowArray[rowArray.length - 3] = new Cataphract(playerIds.phrygians);
 
         rowArray[4] = new Archer(playerIds.phrygians);
         rowArray[7] = new Archer(playerIds.phrygians);
-        rowArray[10]= new Archer(playerIds.phrygians);
+        rowArray[10] = new Archer(playerIds.phrygians);
         rowArray[13] = new Archer(playerIds.phrygians);
         rowArray[16] = new Archer(playerIds.phrygians);
         rowArray[19] = new Archer(playerIds.phrygians);
 
         boardState.push(rowArray);
         continue;
-      } else if (x === 1) {
+      } else if (x === 2) {
         pieceToPlace = new levy(playerIds.phrygians);
-      } else if (x === 6) {
+      } else if (x === xSize - 3) {
         pieceToPlace = new levy(playerIds.hitites);
-      } else if (x === 7) {
+      } else if (x === xSize - 2) {
         const rowArray = new Array(ySize).fill(null);
         rowArray[2] = new Cataphract(playerIds.hitites);
-        rowArray[rowArray.length - 3] = new Cataphract(playerIds.hitites);
+        rowArray[ySize - 3] = new Cataphract(playerIds.hitites);
 
         rowArray[4] = new Archer(playerIds.hitites);
         rowArray[7] = new Archer(playerIds.hitites);
