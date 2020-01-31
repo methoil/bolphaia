@@ -1,8 +1,8 @@
 import React from 'react';
 import { Segment, Grid } from 'semantic-ui-react';
-import { TokenProvider, ChatManager } from '@pusher/chatkit';
+import { TokenProvider, ChatManager } from '@pusher/chatkit-client';
 import Rooms from './rooms';
-import Chat from './chat';
+// import Chat from './chat';
 
 interface ILobby {
   chatManager: any;
@@ -17,23 +17,27 @@ interface ILobbyState {
   currentUser?: any;
 }
 
-export default class Lobby extends React.Component implements ILobby {
+interface ILobbyProps {
+    username: string;
+}
+
+export default class Lobby extends React.Component<ILobbyProps, any> implements ILobby {
   state: ILobbyState = {
     joined: [],
     joinable: []
   };
   chatManager;
 
-  constructor(props: { username: string }) {
+  constructor(props) {
     super(props);
-
     this.chatManager = new ChatManager({
       instanceLocator: 'v1:us1:f3854d62-ebf2-4ee2-8a48-c62ed279fa8f', // todo: import this from global consts
       tokenProvider: new TokenProvider({
         url: 'http://localhost:4000/auth'
       }),
-      userId: props.username
+      userId: props.username,
     });
+
     this.chatManager
       .connect()
       .then(currentUser => {
@@ -101,9 +105,9 @@ export default class Lobby extends React.Component implements ILobby {
     let chat;
     if (currentUser) {
       const room = currentUser.rooms.find(room => room.id === this.state.activeRoom);
-      if (room) {
-        chat = <Chat user={currentUser} room={room} />;
-      }
+      //   if (room) {
+      //     chat = <Chat user={currentUser} room={room} />;
+      //   }
     }
     return (
       <Segment>

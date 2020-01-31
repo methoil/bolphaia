@@ -67,11 +67,11 @@ export default class Game extends React.Component<{}, {}> {
   }
 
   private initializeBoard(xSize: number, ySize: number): IBoardState {
-    const boardState = [];
+    const boardState: Array<IPiece | null>[] = [];
     for (let x = 0; x < xSize; x++) {
       let pieceToPlace: IPiece | null = null;
       if (x === 1) {
-        const rowArray = new Array(ySize).fill(null);
+        const rowArray: Array<IPiece | null> = new Array(ySize).fill(null);
         rowArray[2] = new Cataphract(playerIds.phrygians);
         rowArray[rowArray.length - 3] = new Cataphract(playerIds.phrygians);
 
@@ -121,9 +121,9 @@ export default class Game extends React.Component<{}, {}> {
   }
 
   private generateEmptyHighlightedMoves(): IPossibleMoves {
-    const highlightedMoves = [];
+    const highlightedMoves: IPossibleMove[][] = [];
     for (let x = 0; x < BOARD_HEIGHT; x++) {
-      const currRow = [];
+      const currRow: IPossibleMove[] = [];
       for (let y = 0; y < BOARD_WIDTH; y++) {
         const noMovesSquare: IPossibleMove = {
           canMove: false,
