@@ -7,13 +7,13 @@ interface IRoom {
   name: string;
 }
 
-type IEnterRoom = (roomId: string) => {};
-type ILeaveRoom = (roomId: string) => {};
+type IEnterRoom = (roomId: string) => void;
+type ILeaveRoom = (roomId: string) => void;
 
 export default function Rooms(props: {
   joined: IRoom[];
   joinable: IRoom[];
-  activeRoom: string;
+  activeRoom?: string;
   enterRoom: IEnterRoom;
   leaveRoom: ILeaveRoom;
 }) {
