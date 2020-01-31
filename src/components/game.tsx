@@ -5,6 +5,7 @@ import "../index.scss";
 import { playerIds } from "./game.model";
 import Board from "./board";
 import levy from "./pieces/levy";
+import hoplite from "./pieces/hoplite";
 import { IPiece, coordinate, IRangedPiece } from "./pieces/IPieces.model";
 import Cataphract from "./pieces/cataphract";
 import { getMovesPath } from "./pieces/piece.utils";
@@ -84,10 +85,14 @@ export default class Game extends React.Component<{}, {}> {
         boardState.push(rowArray);
         continue;
       } else if (x === 2) {
+        pieceToPlace = new hoplite(playerIds.phrygians);
+      } else if (x === 3) {
         pieceToPlace = new levy(playerIds.phrygians);
-      } else if (x === xSize - 3) {
+      } else if (x === xSize - 4) {
         pieceToPlace = new levy(playerIds.hitites);
-      } else if (x === xSize - 2) {
+      } else if (x === xSize - 3) {
+      pieceToPlace = new hoplite(playerIds.hitites);
+    } else if (x === xSize - 2) {
         const rowArray = new Array(ySize).fill(null);
         rowArray[2] = new Cataphract(playerIds.hitites);
         rowArray[ySize - 3] = new Cataphract(playerIds.hitites);
