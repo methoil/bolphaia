@@ -5,12 +5,13 @@ interface IMessage {
   id: string;
   user: string;
   message: string;
+  opponent?: string;
 }
 
 interface IUser {
   id: string;
   name: string;
-  sendMessage: (payload: { text: string; roomId: string }) => void;
+  sendMessage: (payload: { text: string; roomId: string; attachment?: any }) => void;
 }
 
 interface IChatProps {
@@ -39,48 +40,75 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
       messages: [],
       newMessage: '',
     };
-    props.user.subscribeToRoomMultipart({
-      roomId: props.room.id,
-      messageLimit: 100,
-      hooks: {
-        onUserJoined: user => {
-          this.setState({
-            users: props.room.users,
-          });
+    props.user
+      .subscribeToRoomMultipart({
+        roomId: props.room.id,
+        messageLimit: 100,
+        hooks: {
+          onUserJoined: user => {
+            this.setState({
+              users: props.room.users,
+            });
+          },
+          onUserLeft: user => {
+            this.setState({
+              users: props.room.users,
+            });
+          },
+          onMessage: message => {
+            const messages = this.state.messages;
+            let opponent;
+            if (message?.attachment?.link?.startsWith('urn:player:')) {
+              opponent = message.attachment.link.substring(11);
+              if (opponent !== props.user.id) {
+                opponent = undefined;
+              }
+            }
+            messages.push({
+              id: message.id,
+              user: message.senderId,
+              message: message?.parts?.[0]?.payload?.content ?? '',
+            });
+            this.setState({
+              messages: messages,
+            });
+          },
         },
-        onUserLeft: user => {
-          this.setState({
-            users: props.room.users,
-          });
-        },
-        onMessage: message => {
-          const messages = this.state.messages;
-          messages.push({
-            id: message.id,
-            user: message.senderId,
-            message: message?.parts?.[0]?.payload?.content ?? '',
-          });
-          this.setState({
-            messages: messages,
-          });
-        },
-      },
-    });
+      })
+      .then(() => {
+        this.setState({
+          users: props.room.users,
+        });
+      });
   }
   render() {
     const users = this.state.users
       .filter(user => user.id !== this.props.user.id)
       .map(user => (
         <List.Item key={user.id}>
+          <List.Content floated="right">
+            <a onClick={() => this._challengePlayer(user)}>Challenge</a>
+          </List.Content>
           <List.Content>{user.name}</List.Content>
         </List.Item>
       ));
     const messages = this.state.messages.map(message => {
+      let acceptGame;
+      if (message.opponent) {
+        acceptGame = (
+          <Comment.Actions>
+            <Comment.Action onClick={() => this._acceptChallenge(message.user)}>
+              Accept Challenge
+            </Comment.Action>
+          </Comment.Actions>
+        );
+      }
       return (
         <Comment key={message.id}>
           <Comment.Content>
             <Comment.Author>{message.user}</Comment.Author>
             <Comment.Text>{message.message}</Comment.Text>
+            {acceptGame}
           </Comment.Content>
         </Comment>
       );
@@ -147,5 +175,20 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
     this.setState({
       newMessage: '',
     });
+  }
+  _challengePlayer(player) {
+    const { user, room } = this.props;
+    user.sendMessage({
+      text: `I challenge ${player.name} to a game`,
+      roomId: room.id,
+      attachment: {
+        link: `urn:player:${player.id}`,
+        type: 'file',
+        fetchRequired: false,
+      },
+    });
+  }
+  _acceptChallenge(player) {
+    console.log(player);
   }
 }
