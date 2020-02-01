@@ -2,7 +2,7 @@ import React from 'react';
 import { Segment, Grid } from 'semantic-ui-react';
 import { TokenProvider, ChatManager } from '@pusher/chatkit-client';
 import Rooms from './rooms';
-// import Chat from './chat';
+import Chat from './chat';
 
 interface ILobby {
   chatManager: any;
@@ -18,7 +18,7 @@ interface ILobbyState {
 }
 
 interface ILobbyProps {
-    username: string;
+  username: string;
 }
 
 export default class Lobby extends React.Component<ILobbyProps, any> implements ILobby {
@@ -35,7 +35,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
       tokenProvider: new TokenProvider({
         url: 'http://localhost:4000/auth'
       }),
-      userId: props.username,
+      userId: props.username
     });
 
     this.chatManager
@@ -105,9 +105,9 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
     let chat;
     if (currentUser) {
       const room = currentUser.rooms.find(room => room.id === this.state.activeRoom);
-      //   if (room) {
-      //     chat = <Chat user={currentUser} room={room} />;
-      //   }
+      if (room) {
+        chat = <Chat user={currentUser} room={room} />;
+      }
     }
     return (
       <Segment>
@@ -121,7 +121,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
               leaveRoom={this._leaveRoom.bind(this)}
             />
           </Grid.Column>
-          <Grid.Column width={12}></Grid.Column>
+          <Grid.Column width={12}>{chat}</Grid.Column>
         </Grid>
       </Segment>
     );
