@@ -1,5 +1,6 @@
 import React from 'react';
 import { Grid, List, Comment, Form, Input } from 'semantic-ui-react';
+import { IRoom } from './rooms';
 
 interface IMessage {
   id: string;
@@ -12,11 +13,13 @@ interface IUser {
   id: string;
   name: string;
   sendMessage: (payload: { text: string; roomId: string; attachment?: any }) => void;
+  createRoom: (paylod: { name: string; addUserIds: string[] }) => Promise<IRoom>;
 }
 
 interface IChatProps {
   user: IUser;
   room: { id: string; users: IUser[] }; // ????????
+  startedGame: (roomId: string, white: string, black: string) => void;
 }
 
 interface IChatState {
@@ -58,8 +61,8 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
           onMessage: message => {
             const messages = this.state.messages;
             let opponent;
-            if (message?.attachment?.link?.startsWith('urn:player:')) {
-              opponent = message.attachment.link.substring(11);
+            if (message?.parts?.[1]?.payload?.url?.startsWith('urn:player:')) {
+              opponent = message?.parts?.[1]?.payload?.url?.substring(11);
               if (opponent !== props.user.id) {
                 opponent = undefined;
               }
@@ -67,6 +70,7 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
             messages.push({
               id: message.id,
               user: message.senderId,
+              opponent,
               message: message?.parts?.[0]?.payload?.content ?? '',
             });
             this.setState({
@@ -189,6 +193,14 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
     });
   }
   _acceptChallenge(player) {
-    console.log(player);
+    const { user } = this.props;
+    user
+      .createRoom({
+        name: `${user.id} vs ${player}`,
+        addUserIds: [player],
+      })
+      .then(room => {
+        this.props.startedGame(room.id, user.id, player);
+      });
   }
 }

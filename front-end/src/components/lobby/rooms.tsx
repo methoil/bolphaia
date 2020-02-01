@@ -2,7 +2,7 @@
 import React from 'react';
 import { List, Icon, Header } from 'semantic-ui-react';
 
-interface IRoom {
+export interface IRoom {
   id: string;
   name: string;
 }

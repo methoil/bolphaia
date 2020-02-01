@@ -1,6 +1,7 @@
 import React from 'react';
 import { Segment, Grid } from 'semantic-ui-react';
 import { TokenProvider, ChatManager } from '@pusher/chatkit-client';
+import axios from 'axios';
 import Rooms from './rooms';
 import Chat from './chat';
 
@@ -24,7 +25,7 @@ interface ILobbyProps {
 export default class Lobby extends React.Component<ILobbyProps, any> implements ILobby {
   state: ILobbyState = {
     joined: [],
-    joinable: []
+    joinable: [],
   };
   chatManager;
 
@@ -33,16 +34,16 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
     this.chatManager = new ChatManager({
       instanceLocator: 'v1:us1:f3854d62-ebf2-4ee2-8a48-c62ed279fa8f', // todo: import this from global consts
       tokenProvider: new TokenProvider({
-        url: 'http://localhost:4000/auth'
+        url: 'http://localhost:4000/auth',
       }),
-      userId: props.username
+      userId: props.username,
     });
 
     this.chatManager
       .connect()
       .then(currentUser => {
         this.setState({
-          currentUser: currentUser
+          currentUser: currentUser,
         });
         currentUser.getJoinableRooms().then(rooms => {
           let lobby = rooms.find(room => room.name === 'Lobby');
@@ -54,7 +55,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
           if (lobby) {
             this.setState({
               lobbyId: lobby.id,
-              activeRoom: lobby.id
+              activeRoom: lobby.id,
             });
           }
         });
@@ -71,7 +72,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
     currentUser.getJoinableRooms().then(rooms => {
       this.setState({
         joined: currentUser.rooms,
-        joinable: rooms
+        joinable: rooms,
       });
     });
   }
@@ -81,7 +82,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
       .joinRoom({ roomId: id })
       .then(() => {
         this.setState({
-          activeRoom: id
+          activeRoom: id,
         });
         this._pollRooms();
       })
@@ -100,13 +101,40 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
         console.log('Failed to leave room');
       });
   }
+
+  _startedGame(roomId, white, black) {
+    axios
+      .request({
+        url: 'http://localhost:4000/games',
+        method: 'POST',
+        data: {
+          room: roomId,
+          whitePlayer: white,
+          blackPlayer: black,
+        },
+      })
+      .then(response => {
+        this.setState({
+          activeRoom: roomId,
+        });
+        this._pollRooms();
+      });
+  }
+
   render() {
     const { currentUser } = this.state;
     let chat;
     if (currentUser) {
       const room = currentUser.rooms.find(room => room.id === this.state.activeRoom);
       if (room) {
-        chat = <Chat user={currentUser} room={room} />;
+        chat = (
+          <Chat
+            user={currentUser}
+            room={room}
+            key={room.id}
+            startedGame={this._startedGame.bind(this)}
+          />
+        );
       }
     }
     return (
