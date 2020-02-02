@@ -6,7 +6,8 @@ import Rooms from './rooms';
 import Chat from './chat';
 
 interface ILobby {
-  chatManager: any;
+  // chatManager: any;
+  _chat: HTMLElement;
 }
 
 interface ILobbyState {
@@ -27,6 +28,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
     joined: [],
     joinable: [],
   };
+  public _chat;
   chatManager;
 
   constructor(props) {
@@ -92,6 +94,13 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
   }
   _leaveRoom(id) {
     const { currentUser } = this.state;
+    // temp disable toom deletion so I can see if games persist over time
+    if (this._chat && false) {
+      const playersInRoom = this._chat.getPlayersInRoom();
+      if (playersInRoom.length === 1 && playersInRoom[0].id === currentUser.id) {
+        currentUser.deleteRoom({ roomId: id });
+      }
+    }
     currentUser
       .leaveRoom({ roomId: id })
       .then(() => {
@@ -135,6 +144,9 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
             key={room.id}
             startedGame={this._startedGame.bind(this)}
             game={game}
+            ref={child => {
+              this._chat = child;
+            }}
           />
         );
       }

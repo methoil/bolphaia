@@ -31,12 +31,14 @@ interface IChatState {
 }
 
 interface IChatComponent {
-  messagesEnd: any; // wtf is this?????
+  // messagesEnd: any; // wtf is this?????
+  _gameBoard: HTMLElement | undefined;
 }
 
 export default class Chat extends React.Component<IChatProps, any> implements IChatComponent {
   state: IChatState;
-  messagesEnd;
+  private messagesEnd;
+  public _gameBoard;
 
   constructor(props) {
     super(props);
@@ -123,7 +125,15 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
       <Grid>
         <Grid.Row>
           <Grid.Column width={12}>
-            {this.props.game && <GameBoard room={this.props.game} user={this.props.user} />}
+            {this.props.game && (
+              <GameBoard
+                room={this.props.game}
+                user={this.props.user}
+                ref={child => {
+                  this._gameBoard = child;
+                }}
+              />
+            )}
             <Comment.Group style={{ height: '20em', overflow: 'auto' }}>{messages}</Comment.Group>
             <div
               style={{ float: 'left', clear: 'both' }}
@@ -215,4 +225,11 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
         this.props.startedGame(room.id, user.id, player);
       });
   }
+
+  getPlayersInRoom() {
+    const players = this._gameBoard ? this._gameBoard.getPlayers() : [];
+    const playersInRoom = this.state.users
+        .filter((user) => players.includes(user.id));
+    return playersInRoom;
+}
 }

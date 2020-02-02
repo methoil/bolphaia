@@ -19,9 +19,11 @@ export default function Rooms(props: {
 }) {
   const joinedRooms = props.joined.map(room => (
     <List.Item key={room.id}>
-      <List.Content floated="right">
-        <a onClick={() => props.leaveRoom(room.id)}>Leave</a>
-      </List.Content>
+      {room.id === props.activeRoom && (
+        <List.Content floated="right">
+          <a onClick={() => props.leaveRoom(room.id)}>Leave</a>
+        </List.Content>
+      )}
       <Icon name={room.id === props.activeRoom ? 'angle double right' : undefined} />
       <List.Content>
         <a onClick={() => props.enterRoom(room.id)}>{room.name}</a>
@@ -38,11 +40,11 @@ export default function Rooms(props: {
   ));
   return (
     <div>
-      <Header as='h4'>Active Rooms</Header>
+      <Header as="h4">Active Rooms</Header>
       <List divided relaxed>
         {joinedRooms}
       </List>
-      <Header as='h4'>Joinable Rooms</Header>
+      <Header as="h4">Joinable Rooms</Header>
       <List divided relaxed>
         {joinableRooms}
       </List>

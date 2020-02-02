@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Pusher = require('pusher');
+var chatkit = require('./chatkit');
 
 var pusher = new Pusher({
   appId: '941125',
@@ -33,6 +34,25 @@ router.post('/', (req, res) => {
     ],
   };
   games[room] = newGame;
+  chatkit
+    .assignRoomRoleToUser({
+      userId: white,
+      name: 'Player',
+      roomId: room,
+    })
+    .then(res => {
+      console.log('success');
+      console.log(res);
+    })
+    .catch(err => {
+      console.log('no role :(');
+      console.log(err);
+    });
+  chatkit.assignRoomRoleToUser({
+    userId: black,
+    name: 'Player',
+    roomId: room,
+  });
   res.send(newGame);
 });
 
