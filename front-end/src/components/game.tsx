@@ -303,18 +303,19 @@ export default class Game extends React.Component<IGameProps, {}> {
     // execute move in one spot
     if (updateBoard) {
       if (!this.props.offlineMode) {
+        const payload: IUpdateServerPayload =  {
+          player: this.state.turn,
+          updatedSquares: this.getUpdateServerPayload(
+            selectedPiece,
+            selectedSquare,
+            clickedSquare,
+            clickedPiece,
+          ),
+        }
         axios.request({
           method: 'POST',
           url: 'http://localhost:4000/games/' + this.props.roomId,
-          data: {
-            player: this.state.turn,
-            updateSquares: this.getUpdateServerPayload(
-              selectedPiece,
-              selectedSquare,
-              clickedSquare,
-              clickedPiece,
-            ),
-          },
+          data: payload,
         });
 
         return this.setState({

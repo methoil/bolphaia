@@ -1,0 +1,18 @@
+[
+    {
+        "pieceId": "levy",
+        "maxHealth": 2
+    },
+    {
+        "pieceId": "archer",
+        "maxHealth": 2
+    },
+    {
+        "pieceId": "hoplite",
+        "maxHealth": 8
+    },
+    {
+        "pieceId": "cataphract",
+        "maxHealth": 10
+    }
+]

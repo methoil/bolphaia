@@ -11,7 +11,12 @@
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "lodash": "^4.17.15",
     "morgan": "~1.9.1",
     "pusher": "^3.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.7.x",
+    "@types/node": "^13.7.0"
   }
 }
