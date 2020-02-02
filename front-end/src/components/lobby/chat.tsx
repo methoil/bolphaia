@@ -1,7 +1,9 @@
 import React from 'react';
 import { Grid, List, Comment, Form, Input } from 'semantic-ui-react';
 import { IRoom } from './rooms';
-import GameBoard from './gameBoard';
+// import GameBoard from './gameBoard';
+import GameBoard from '../game';
+import { playerIds } from '../game.model';
 
 interface IMessage {
   id: string;
@@ -21,13 +23,14 @@ interface IChatProps {
   user: IUser;
   room: { id: string; users: IUser[] }; // ????????
   game: any;
-  startedGame: (roomId: string, white: string, black: string) => void;
+  startedGame: (roomId: string, white: string, black: string) => Promise<any>;
 }
 
 interface IChatState {
   users: IUser[];
   messages: IMessage[];
   newMessage: string;
+  playerSide?: playerIds;
 }
 
 interface IChatComponent {
@@ -127,8 +130,9 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
           <Grid.Column width={12}>
             {this.props.game && (
               <GameBoard
-                room={this.props.game}
-                user={this.props.user}
+                roomId={this.props.game}
+                offlineMode={false}
+                playerSide={this.state.playerSide}
                 ref={child => {
                   this._gameBoard = child;
                 }}
@@ -222,14 +226,17 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
         addUserIds: [player],
       })
       .then(room => {
-        this.props.startedGame(room.id, user.id, player);
+        this.props.startedGame(room.id, user.id, player).then(res => {
+          this.setState({
+            playerSide: res[this.props.user.id],
+          });
+        });
       });
   }
 
   getPlayersInRoom() {
     const players = this._gameBoard ? this._gameBoard.getPlayers() : [];
-    const playersInRoom = this.state.users
-        .filter((user) => players.includes(user.id));
+    const playersInRoom = this.state.users.filter(user => players.includes(user.id));
     return playersInRoom;
-}
+  }
 }

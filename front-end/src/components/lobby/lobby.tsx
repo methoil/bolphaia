@@ -4,6 +4,7 @@ import { TokenProvider, ChatManager } from '@pusher/chatkit-client';
 import axios from 'axios';
 import Rooms from './rooms';
 import Chat from './chat';
+import { playerIds } from '../game.model';
 
 interface ILobby {
   // chatManager: any;
@@ -112,8 +113,8 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
   }
 
   // TODO: use my custon playerIds.. doesn't really matter though
-  _startedGame(roomId, white, black) {
-    axios
+  _startedGame(roomId, white, black): Promise<any> {
+    return axios
       .request({
         url: 'http://localhost:4000/games',
         method: 'POST',
@@ -128,6 +129,10 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
           activeRoom: roomId,
         });
         this._pollRooms();
+        return {
+          [white]: playerIds.phrygians,
+          [black]: playerIds.hitites,
+        };
       });
   }
 
