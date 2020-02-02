@@ -1,9 +1,11 @@
+import { playerIds } from '../models/pieceMeta.model';
+var { pieceDefs } = require('../models.pieceMeta.model');
+
 var _ = require('lodash/core');
 var express = require('express');
 var router = express.Router();
 var Pusher = require('pusher');
 var chatkit = require('./chatkit');
-var pieceMeta = require('../res/pieceMetadata.json');
 
 var pusher = new Pusher({
   appId: '941125',
@@ -18,26 +20,27 @@ const BOARD_HEIGHT: number = 16;
 const games = {};
 
 interface IPieceMeta {
-  pieceType: string,
-  player: string,
-  health: number,
+  pieceType: string;
+  player: string;
+  health: number;
 }
 
 router.post('/', (req, res) => {
   const room = req.body.room;
-  const white = req.body.whitePlayer;
-  const black = req.body.blackPlayer;
+  const phrygianPlayerId = req.body.whitePlayer;
+  const hititePlayerId = req.body.blackPlayer;
   const newGame = {
     players: {
-      [white]: 'phyrigians',
-      [black]: 'hitites',
+      [phrygianPlayerId]: playerIds.phrygians,
+      [hititePlayerId]: playerIds.hitites,
     },
     board: initBoard(),
   };
+
   games[room] = newGame;
   chatkit
     .assignRoomRoleToUser({
-      userId: white,
+      userId: phrygianPlayerId,
       name: 'Player',
       roomId: room,
     })
@@ -50,7 +53,7 @@ router.post('/', (req, res) => {
       console.log(err);
     });
   chatkit.assignRoomRoleToUser({
-    userId: black,
+    userId: hititePlayerId,
     name: 'Player',
     roomId: room,
   });
@@ -70,27 +73,31 @@ router.get('/:room', (req, res) => {
 router.post('/:room', (req, res) => {
   const room = req.params.room;
   const player = req.body.player;
-  const fromRow = req.body.fromRow;
-  const fromColumn = req.body.fromColumn;
-  const toRow = req.body.toRow;
-  const toColumn = req.body.toColumn;
   const game = games[room];
+
+  const fromRow = req.body[0].row;
+  const fromColumn = req.body[0].col;
+  const fromPiece = req.body[0].piece;
+
+  const toRow = req.body[1].row;
+  const toColumn = req.body[1].col;
+  const toPiece = req.body[1].toColumn;
+
   if (game) {
     const piece = game.board[fromRow][fromColumn];
     const playerSide = game.players[player];
-    if (piece == '  ') {
-      res.status(400).send(`No piece in that square: ${fromRow}x${fromColumn}`);
-    } else if (!playerSide) {
+
+    if (!playerSide) {
       res.status(400).send(`Not a player: ${player}`);
-    } else if (
-      (playerSide === 'white' && piece[0] !== 'W') ||
-      (playerSide === 'black' && piece[0] !== 'B')
-    ) {
+    } else if (playerSide !== fromPiece.player) {
       res.status(400).send(`Not your piece. Player=${playerSide}, Piece=${piece}`);
     } else {
-      game.board[fromRow][fromColumn] = '  ';
-      game.board[toRow][toColumn] = piece;
-      res.send(game);
+      game.board[fromRow][fromColumn] = fromPiece;
+      game.board[toRow][toColumn] = toPiece;
+
+      // just resend the data, client will ignore if it's their move
+      // no need to resend the whole board - maybe when/if there's more validation?
+      res.send(req.body);
       pusher.trigger('game-' + room, 'board-updated', {});
     }
   } else {
@@ -100,45 +107,43 @@ router.post('/:room', (req, res) => {
 
 module.exports = router;
 
-
-
 function initBoard(): Array<IPieceMeta | null>[] {
   const boardState: Array<IPieceMeta | null>[] = [];
   for (let x = 0; x < BOARD_HEIGHT; x++) {
     let pieceToPlace: IPieceMeta | null = null;
     if (x === 1) {
       const rowArray: Array<IPieceMeta | null> = new Array(BOARD_WIDTH).fill(null);
-      rowArray[2] = makePiece('phrygians', 'cataphract');
-      rowArray[rowArray.length - 3] = rowArray[4] = makePiece('phrygians', 'cataphract');
+      rowArray[2] = makePhrygianPiece('cataphract');
+      rowArray[rowArray.length - 3] = rowArray[4] = makePhrygianPiece('cataphract');
 
-      rowArray[4] = makePiece('phrygians', 'archer');
-      rowArray[7] = makePiece('phrygians', 'archer');
-      rowArray[10] = makePiece('phrygians', 'archer');
-      rowArray[13] = makePiece('phrygians', 'archer');
-      rowArray[16] = makePiece('phrygians', 'archer');
-      rowArray[19] = makePiece('phrygians', 'archer');
+      rowArray[4] = makePhrygianPiece('archer');
+      rowArray[7] = makePhrygianPiece('archer');
+      rowArray[10] = makePhrygianPiece('archer');
+      rowArray[13] = makePhrygianPiece('archer');
+      rowArray[16] = makePhrygianPiece('archer');
+      rowArray[19] = makePhrygianPiece('archer');
 
       boardState.push(rowArray);
       continue;
     } else if (x === 2) {
-      pieceToPlace = makePiece('phrygians', 'hoplite');
+      pieceToPlace = makePhrygianPiece('hoplite');
     } else if (x === 3) {
-      pieceToPlace = makePiece('phrygians', 'levy');
+      pieceToPlace = makePhrygianPiece('levy');
     } else if (x === BOARD_HEIGHT - 4) {
-      pieceToPlace = makePiece('hitites', 'levy');
+      pieceToPlace = makeHititePiece('levy');
     } else if (x === BOARD_HEIGHT - 3) {
-      pieceToPlace = makePiece('hitites', 'hitites');
+      pieceToPlace = makeHititePiece(playerIds.hitites);
     } else if (x === BOARD_HEIGHT - 2) {
       const rowArray = new Array(BOARD_WIDTH).fill(null);
-      rowArray[2] = makePiece('hitites', 'cataphract');
-      rowArray[BOARD_WIDTH - 3] = makePiece('hitites', 'cataphract');
+      rowArray[2] = makeHititePiece('cataphract');
+      rowArray[BOARD_WIDTH - 3] = makeHititePiece('cataphract');
 
-      rowArray[4] = makePiece('hitites', 'archer');
-      rowArray[7] = makePiece('hitites', 'archer');
-      rowArray[10] = makePiece('hitites', 'archer');
-      rowArray[13] = makePiece('hitites', 'archer');
-      rowArray[16] = makePiece('hitites', 'archer');
-      rowArray[19] = makePiece('hitites', 'archer');
+      rowArray[4] = makeHititePiece('archer');
+      rowArray[7] = makeHititePiece('archer');
+      rowArray[10] = makeHititePiece('archer');
+      rowArray[13] = makeHititePiece('archer');
+      rowArray[16] = makeHititePiece('archer');
+      rowArray[19] = makeHititePiece('archer');
       boardState.push(rowArray);
       continue;
     }
@@ -148,6 +153,17 @@ function initBoard(): Array<IPieceMeta | null>[] {
   return boardState;
 }
 
-function makePiece(player: string, pieceId: string): IPieceMeta {
-  return _.extend(_.find(pieceMeta, (meta) => meta.pieceId === pieceId), {player});
+function makePhrygianPiece(pieceId: string) {
+  return makePiece(playerIds.phrygians, pieceId);
+}
+
+function makeHititePiece(pieceId: string) {
+  return makePiece(playerIds.hitites, pieceId);
+}
+
+function makePiece(player: playerIds, pieceId: string): IPieceMeta {
+  return _.extend(
+    _.find(pieceDefs, meta => meta.pieceId === pieceId),
+    { player },
+  );
 }

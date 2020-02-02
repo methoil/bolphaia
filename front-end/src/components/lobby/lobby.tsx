@@ -34,7 +34,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
   constructor(props) {
     super(props);
     this.chatManager = new ChatManager({
-      instanceLocator: 'v1:us1:f3854d62-ebf2-4ee2-8a48-c62ed279fa8f', // todo: import this from global consts
+      instanceLocator: 'v1:us1:f3854d62-ebf2-4ee2-8a48-c62ed279fa8f', // TODO: import this from global consts
       tokenProvider: new TokenProvider({
         url: 'http://localhost:4000/auth',
       }),
@@ -94,7 +94,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
   }
   _leaveRoom(id) {
     const { currentUser } = this.state;
-    // temp disable toom deletion so I can see if games persist over time
+    // TODO: temp disable toom deletion so I can see if games persist over time
     if (this._chat && false) {
       const playersInRoom = this._chat.getPlayersInRoom();
       if (playersInRoom.length === 1 && playersInRoom[0].id === currentUser.id) {
@@ -111,6 +111,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
       });
   }
 
+  // TODO: use my custon playerIds.. doesn't really matter though
   _startedGame(roomId, white, black) {
     axios
       .request({
