@@ -55,6 +55,7 @@ interface IGameState {
 
 interface IGameProps {
   offlineMode: boolean;
+  playerSide?: playerIds;
   roomId: string;
 }
 
@@ -120,12 +121,28 @@ export default class Game extends React.Component<IGameProps, {}> {
       .request({
         url: 'http://localhost:4000/games/' + this.props.roomId,
       })
-      .then(response => {
+      .then(res => {
         // use same format as the sent payload and just update the changed squares
         // TODO actually update
+        if (res.data.player === this.props.playerSide) {
+          return;
+        }
+
+        const fromRow = res.data[0].row;
+        const fromColumn = res.data[0].col;
+        const fromPiece = res.data[0].piece;
+
+        const toRow = res.data[1].row;
+        const toColumn = res.data[1].col;
+        const toPiece = res.data[1].toColumn;
+
+        const newBoardState = cloneDeep(this.state.boardState);
+        newBoardState[fromRow][fromColumn] = fromPiece;
+        newBoardState[toRow][toColumn] = toPiece;
+
         this.setState({
-          board: response.data.board,
-          players: response.data.players,
+          boardState: newBoardState,
+          turn: this.props.playerSide,
         });
       });
   }
@@ -202,6 +219,11 @@ export default class Game extends React.Component<IGameProps, {}> {
   }
 
   private onMoveClick(clickedSquare: coordinate): void {
+    // TODO: make visual indicator of this somewhere
+    if (!this.props.offlineMode && this.state.turn !== this.props.playerSide) {
+      return;
+    }
+
     const selectedSquare = this.state.selectedSquare;
     const clickedPiece = this.state.boardState[clickedSquare.x][clickedSquare.y];
     const selectedPiece = this.getSelectedPiece();
@@ -250,12 +272,6 @@ export default class Game extends React.Component<IGameProps, {}> {
         newBoardState[clickedSquare.x][clickedSquare.y] = clickedPiece;
       }
       updateBoard = true;
-      // return this.setState({
-      //   boardState: newBoardState,
-      //   selectedSquare: null,
-      //   highlightState: this.generateEmptyHighlightedMoves(),
-      //   turn: this.getNewTurn(),
-      // });
     }
 
     // Move the piece if a valid move is selected
@@ -292,12 +308,6 @@ export default class Game extends React.Component<IGameProps, {}> {
       }
 
       updateBoard = true;
-      // return this.setState({
-      //   boardState: newBoardState,
-      //   selectedSquare: null,
-      //   highlightState: this.generateEmptyHighlightedMoves(),
-      //   turn: this.getNewTurn(),
-      // });
     }
 
     // execute move in one spot
