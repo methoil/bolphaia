@@ -99,6 +99,37 @@ export default class Game extends React.Component<IGameProps, {}> {
     }
   }
 
+  componentDidMount() {
+    if (!this.props.offlineMode) {
+      const channel = pusher.subscribe(`game-${this.props.roomId}`);
+      channel.bind('board-updated', () => {
+        this.updateGame();
+      });
+      this.updateGame();
+    }
+  }
+
+  componentWillUnmount() {
+    if (!this.props.offlineMode) {
+      pusher.unsubscribe(`game-${this.props.roomId}`);
+    }
+  }
+
+  private updateGame() {
+    axios
+      .request({
+        url: 'http://localhost:4000/games/' + this.props.roomId,
+      })
+      .then(response => {
+        // use same format as the sent payload and just update the changed squares
+        // TODO actually update
+        this.setState({
+          board: response.data.board,
+          players: response.data.players,
+        });
+      });
+  }
+
   private initializeBoard(xSize: number, ySize: number): IBoardState {
     const boardState: Array<IPiece | null>[] = [];
     for (let x = 0; x < xSize; x++) {

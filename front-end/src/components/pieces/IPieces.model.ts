@@ -1,4 +1,4 @@
-import { playerIds } from "../game.model";
+import { playerIds, pieceTypes } from "../game.model";
 
 export type coordinate = {
   x: number;
@@ -6,7 +6,7 @@ export type coordinate = {
 };
 
 export interface IBasePiece {
-  pieceType: string;
+  pieceType: pieceTypes;
   player: playerIds;
   isSelected: boolean;
   health: number;
