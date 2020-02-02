@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grid, List, Comment, Form, Input } from 'semantic-ui-react';
 import { IRoom } from './rooms';
+import GameBoard from './GameBoard';
 
 interface IMessage {
   id: string;
@@ -19,6 +20,7 @@ interface IUser {
 interface IChatProps {
   user: IUser;
   room: { id: string; users: IUser[] }; // ????????
+  game: any;
   startedGame: (roomId: string, white: string, black: string) => void;
 }
 
@@ -120,6 +122,16 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
     return (
       <Grid>
         <Grid.Row>
+          <Grid.Column width={12}>
+            {this.props.game && <GameBoard room={this.props.game} user={this.props.user} />}
+            <Comment.Group style={{ height: '20em', overflow: 'auto' }}>{messages}</Comment.Group>
+            <div
+              style={{ float: 'left', clear: 'both' }}
+              ref={el => {
+                this.messagesEnd = el;
+              }}
+            />
+          </Grid.Column>
           <Grid.Column width={12}>
             <Comment.Group style={{ height: '20em', overflow: 'auto' }}>{messages}</Comment.Group>
             <div
