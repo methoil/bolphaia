@@ -4,6 +4,7 @@ import { playerIds } from "../game.model";
 export default abstract class BasePiece implements IBasePiece {
   public player: playerIds;
   public isSelected: boolean = false;
+  abstract pieceType = 'base';
   abstract health = 0;
   abstract readonly maxHealth: number;
   abstract attack = 0;

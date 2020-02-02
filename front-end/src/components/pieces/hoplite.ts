@@ -4,6 +4,7 @@ import whiteLevyImageSvg from "../../resources/hopliteWhite.svg";
 import blackLevyImageSvg from "../../resources/hopliteBlack.svg";
 
 export default class Hoplite extends BasePiece {
+  pieceType: string = 'hoplite';
   moveRange: number = 1;
   health: number = 8;
   readonly maxHealth: number = 8;

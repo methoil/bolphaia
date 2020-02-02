@@ -6,6 +6,7 @@ export type coordinate = {
 };
 
 export interface IBasePiece {
+  pieceType: string;
   player: playerIds;
   isSelected: boolean;
   health: number;
@@ -16,7 +17,9 @@ export interface IBasePiece {
   getImageUrl: () => string;
 }
 
-export interface IPiece extends IBasePiece {}
-export interface IRangedPiece extends IBasePiece {
+export interface IPiece extends IBasePiece {
+  
+}
+export interface IRangedPiece extends IPiece {
   range: number;
 }

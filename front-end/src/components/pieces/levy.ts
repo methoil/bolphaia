@@ -4,6 +4,7 @@ import whiteLevyImageSvg from "../../resources/whitePawn.svg";
 import blackLevyImageSvg from "../../resources/blackPawn.svg";
 
 export default class Levy extends BasePiece {
+  pieceType = 'levy';
   moveRange: number = 2;
   health: number = 2;
   readonly maxHealth: number = 2;

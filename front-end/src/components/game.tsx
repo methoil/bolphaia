@@ -1,16 +1,18 @@
-import * as React from "react";
-import { cloneDeep, findIndex, get, capitalize } from "lodash";
+import * as React from 'react';
+import { cloneDeep, findIndex, get, capitalize } from 'lodash';
+import Pusher from 'pusher-js';
+import axios from 'axios';
 
-import "../index.scss";
-import { playerIds } from "./game.model";
-import Board from "./board";
-import levy from "./pieces/levy";
-import hoplite from "./pieces/hoplite";
-import { IPiece, coordinate, IRangedPiece } from "./pieces/IPieces.model";
-import Cataphract from "./pieces/cataphract";
-import { getMovesPath } from "./pieces/piece.utils";
-import Archer from "./pieces/archer";
-import RangedPiece from "./pieces/rangedPiece";
+import '../index.scss';
+import { playerIds } from './game.model';
+import Board from './board';
+import levy from './pieces/levy';
+import hoplite from './pieces/hoplite';
+import { IPiece, coordinate, IRangedPiece } from './pieces/IPieces.model';
+import Cataphract from './pieces/cataphract';
+import { getMovesPath } from './pieces/piece.utils';
+import Archer from './pieces/archer';
+import RangedPiece from './pieces/rangedPiece';
 
 export const BOARD_WIDTH: number = 24;
 export const BOARD_HEIGHT: number = 16;
@@ -24,6 +26,25 @@ export type IPossibleMoves = IPossibleMove[][];
 export type ISelectedPiece = IPiece | IRangedPiece | null;
 export type IBoardState = (IPiece | null)[][];
 
+let pusher;
+
+interface IUpdateServerPayload {
+  player: playerIds;
+  updatedSquares: ISquareUpdatePayload[];
+}
+
+interface ISquareUpdatePayload {
+  row: number;
+  col: number;
+  piece: IPieceUpdatePayload | null;
+}
+
+interface IPieceUpdatePayload {
+  player: playerIds;
+  health: number;
+  pieceType: string; // TODO: add enums
+}
+
 interface IGameState {
   turn: playerIds;
   boardState: IBoardState;
@@ -32,7 +53,12 @@ interface IGameState {
   mouseHoverIcon: string;
 }
 
-export default class Game extends React.Component<{}, {}> {
+interface IGameProps {
+  offlineMode: boolean;
+  roomId: string;
+}
+
+export default class Game extends React.Component<IGameProps, {}> {
   state: IGameState;
 
   render() {
@@ -40,7 +66,7 @@ export default class Game extends React.Component<{}, {}> {
       <div>
         <div className="current-turn-text">
           Current turn:&nbsp;
-          <span style={{ color: this.state.turn === playerIds.phrygians ? "white" : "black" }}>
+          <span style={{ color: this.state.turn === playerIds.phrygians ? 'white' : 'black' }}>
             {capitalize(this.state.turn)}
           </span>
         </div>
@@ -54,7 +80,7 @@ export default class Game extends React.Component<{}, {}> {
     );
   }
 
-  constructor(props: any) {
+  constructor(props) {
     // no props will be passed here?
     super(props);
     this.state = {
@@ -62,8 +88,15 @@ export default class Game extends React.Component<{}, {}> {
       selectedSquare: null,
       boardState: this.initializeBoard(BOARD_HEIGHT, BOARD_WIDTH),
       highlightState: this.generateEmptyHighlightedMoves(),
-      mouseHoverIcon: ""
+      mouseHoverIcon: '',
     };
+
+    if (!this.props.offlineMode) {
+      pusher = new Pusher('6e48a6609db3a8a6b150', {
+        cluster: 'mt1',
+        forceTLS: true,
+      });
+    }
   }
 
   private initializeBoard(xSize: number, ySize: number): IBoardState {
@@ -91,8 +124,8 @@ export default class Game extends React.Component<{}, {}> {
       } else if (x === xSize - 4) {
         pieceToPlace = new levy(playerIds.hitites);
       } else if (x === xSize - 3) {
-      pieceToPlace = new hoplite(playerIds.hitites);
-    } else if (x === xSize - 2) {
+        pieceToPlace = new hoplite(playerIds.hitites);
+      } else if (x === xSize - 2) {
         const rowArray = new Array(ySize).fill(null);
         rowArray[2] = new Cataphract(playerIds.hitites);
         rowArray[ySize - 3] = new Cataphract(playerIds.hitites);
@@ -113,7 +146,7 @@ export default class Game extends React.Component<{}, {}> {
     return boardState;
   }
 
-  private getSelectedPiece() {
+  private getSelectedPiece(): IPiece | null {
     return (
       this.state.selectedSquare &&
       this.state.boardState[this.state.selectedSquare.x][this.state.selectedSquare.y]
@@ -128,7 +161,7 @@ export default class Game extends React.Component<{}, {}> {
         const noMovesSquare: IPossibleMove = {
           canMove: false,
           canAttack: false,
-          inAttackRange: false
+          inAttackRange: false,
         };
         currRow.push(noMovesSquare);
       }
@@ -141,6 +174,7 @@ export default class Game extends React.Component<{}, {}> {
     const selectedSquare = this.state.selectedSquare;
     const clickedPiece = this.state.boardState[clickedSquare.x][clickedSquare.y];
     const selectedPiece = this.getSelectedPiece();
+    const isMovePossible = this.state.highlightState[clickedSquare.x][clickedSquare.y].canMove;
 
     // nothing to do
     if (!selectedPiece && !clickedPiece) {
@@ -148,24 +182,34 @@ export default class Game extends React.Component<{}, {}> {
     }
 
     // Select the clicked piece if none is currently selected
-    if (!selectedPiece && clickedPiece != null) {
+    else if (!selectedPiece && clickedPiece != null) {
       if (clickedPiece.player !== this.state.turn) {
         return;
       }
 
       return this.setState({
         selectedSquare: { ...clickedSquare },
-        highlightState: this.generatePossibleMovesHighlights(clickedSquare, clickedPiece)
+        highlightState: this.generatePossibleMovesHighlights(clickedSquare, clickedPiece),
       });
     }
 
+    // unselect piece when clicking on invalid move location
+    else if (selectedPiece && !isMovePossible) {
+      return this.setState({
+        selectedSquare: null,
+        highlightState: this.generateEmptyHighlightedMoves(),
+      });
+    }
+
+    const newBoardState = cloneDeep(this.state.boardState);
+    let updateBoard = false;
+    // layout of board may be changed in these cases, need to update server
     // case of ranged attack
     if (
       this.isTargetValidRangedAttack(clickedSquare, selectedPiece as RangedPiece) &&
       selectedPiece &&
       clickedPiece
     ) {
-      const newBoardState = cloneDeep(this.state.boardState);
       clickedPiece.takeDamage(selectedPiece.attack);
 
       if (clickedPiece.health <= 0) {
@@ -174,19 +218,18 @@ export default class Game extends React.Component<{}, {}> {
       } else {
         newBoardState[clickedSquare.x][clickedSquare.y] = clickedPiece;
       }
-      return this.setState({
-        boardState: newBoardState,
-        selectedSquare: null,
-        highlightState: this.generateEmptyHighlightedMoves(),
-        turn: this.getNewTurn()
-      });
+      updateBoard = true;
+      // return this.setState({
+      //   boardState: newBoardState,
+      //   selectedSquare: null,
+      //   highlightState: this.generateEmptyHighlightedMoves(),
+      //   turn: this.getNewTurn(),
+      // });
     }
 
-    const isMovePossible = this.state.highlightState[clickedSquare.x][clickedSquare.y].canMove;
-
     // Move the piece if a valid move is selected
-    if (selectedPiece && selectedSquare && isMovePossible) {
-      const newBoardState = cloneDeep(this.state.boardState);
+    // includes doing damage
+    else if (selectedPiece && selectedSquare && isMovePossible) {
       // combat occurs on destination arrival
       // trample will happen elsewhere?
       if (clickedPiece && clickedPiece !== selectedPiece) {
@@ -204,7 +247,7 @@ export default class Game extends React.Component<{}, {}> {
 
           if (indexBeforeDest < 0) {
             // TODO: handle this... possibility..
-            console.error("something went wrong.. should not happen.. crash imminent");
+            console.error('something went wrong.. should not happen.. crash imminent');
           }
 
           const dest = movesPath[indexBeforeDest];
@@ -217,20 +260,39 @@ export default class Game extends React.Component<{}, {}> {
         newBoardState[clickedSquare.x][clickedSquare.y] = selectedPiece;
       }
 
-      return this.setState({
-        boardState: newBoardState,
-        selectedSquare: null,
-        highlightState: this.generateEmptyHighlightedMoves(),
-        turn: this.getNewTurn()
-      });
+      updateBoard = true;
+      // return this.setState({
+      //   boardState: newBoardState,
+      //   selectedSquare: null,
+      //   highlightState: this.generateEmptyHighlightedMoves(),
+      //   turn: this.getNewTurn(),
+      // });
     }
 
-    // unselect piece when clicking on invalid move location
-    if (selectedPiece && !isMovePossible) {
-      return this.setState({
-        selectedSquare: null,
-        highlightState: this.generateEmptyHighlightedMoves()
-      });
+    // execute move in one spot
+    if (updateBoard) {
+      if (!this.props.offlineMode) {
+        axios.request({
+          method: 'POST',
+          url: 'http://localhost:4000/games/' + this.props.roomId,
+          data: {
+            player: this.state.turn,
+            updateSquares: this.getUpdateServerPayload(
+              selectedPiece,
+              selectedSquare,
+              clickedSquare,
+              clickedPiece,
+            ),
+          },
+        });
+
+        return this.setState({
+          boardState: newBoardState,
+          selectedSquare: null,
+          highlightState: this.generateEmptyHighlightedMoves(),
+          turn: this.getNewTurn(),
+        });
+      }
     }
   }
 
@@ -238,34 +300,69 @@ export default class Game extends React.Component<{}, {}> {
     return this.state.turn === playerIds.phrygians ? playerIds.hitites : playerIds.phrygians;
   }
 
+  private getUpdateServerPayload(
+    selectedPiece: IPiece | null,
+    selectedSquare: coordinate | null,
+    clickedSquare: coordinate | null,
+    clickedPiece: IPiece | null,
+  ): ISquareUpdatePayload[] {
+    const fromPiecePayload =
+      (selectedPiece && {
+        player: selectedPiece?.player,
+        health: selectedPiece?.health,
+        pieceType: selectedPiece?.pieceType,
+      }) ||
+      null;
+    const fromPayload: ISquareUpdatePayload = {
+      row: selectedSquare?.x ?? -1,
+      col: selectedSquare?.y ?? -1,
+      piece: fromPiecePayload,
+    };
+
+    const toPiecePaylod =
+      (clickedPiece && {
+        player: clickedPiece?.player,
+        health: clickedPiece?.health,
+        pieceType: clickedPiece?.pieceType,
+      }) ||
+      null;
+    const toPayload: ISquareUpdatePayload = {
+      row: clickedSquare?.x ?? -1,
+      col: clickedSquare?.y ?? -1,
+      piece: toPiecePaylod,
+    };
+
+    return [fromPayload, toPayload];
+  }
+
   private getHoverIcon(hoveredSquare: coordinate): string {
     const selectedPiece = this.getSelectedPiece();
     const hoveredPiece = get(
       this,
       `state.boardState[${hoveredSquare.x}][${hoveredSquare.y}]`,
-      null
+      null,
     );
     if (!selectedPiece && hoveredPiece && hoveredPiece.player === this.state.turn) {
-      return "pointer-icon";
+      return 'pointer-icon';
     } else if (!selectedPiece) {
-      return "";
+      return '';
     }
 
     const hoveredSquareHighlights = this.state.highlightState[hoveredSquare.x][hoveredSquare.y];
     if (this.isTargetValidRangedAttack(hoveredSquare, selectedPiece as RangedPiece)) {
-      return "bow-icon";
+      return 'bow-icon';
     } else if (hoveredSquareHighlights.canAttack) {
-      return "sword-icon";
+      return 'sword-icon';
     } else if (hoveredSquareHighlights.canMove) {
-      return "boots-icon";
+      return 'boots-icon';
     } else {
-      return "";
+      return '';
     }
   }
 
   private generatePossibleMovesHighlights(
     src: coordinate,
-    selectedPiece: ISelectedPiece
+    selectedPiece: ISelectedPiece,
   ): IPossibleMoves {
     const highlightedMoves = this.generateEmptyHighlightedMoves();
     if (!selectedPiece) {
@@ -277,7 +374,7 @@ export default class Game extends React.Component<{}, {}> {
       for (let y = 0; y < 3; y++) {
         const dest = {
           x: this.getValidIndex(src.x + dimensions[x], BOARD_HEIGHT - 1),
-          y: this.getValidIndex(src.y + dimensions[y], BOARD_WIDTH - 1)
+          y: this.getValidIndex(src.y + dimensions[y], BOARD_WIDTH - 1),
         };
         const movesPath = getMovesPath(src, dest, this.state.boardState);
 
