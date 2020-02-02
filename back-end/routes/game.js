@@ -1,5 +1,15 @@
 var express = require('express');
 var router = express.Router();
+var Pusher = require('pusher');
+
+var pusher = new Pusher({
+  appId: '941125',
+  key: '6e48a6609db3a8a6b150',
+  secret: 'fb33e58cef4d8e9e574c',
+  cluster: 'mt1',
+  encrypted: true,
+});
+
 const games = {};
 
 router.post('/', (req, res) => {
@@ -60,6 +70,7 @@ router.post('/:room', (req, res) => {
       game.board[fromRow][fromColumn] = '  ';
       game.board[toRow][toColumn] = piece;
       res.send(game);
+      pusher.trigger('game-' + room, 'board-updated', {});
     }
   } else {
     res.status(404).send(`Game not found: ${room}`);

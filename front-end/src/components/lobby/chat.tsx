@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, List, Comment, Form, Input } from 'semantic-ui-react';
 import { IRoom } from './rooms';
-import GameBoard from './GameBoard';
+import GameBoard from './gameBoard';
 
 interface IMessage {
   id: string;
