@@ -2,7 +2,7 @@ var express = require('express');
 var logger = require('morgan');
 var cors = require('cors');
 var authRouter = require('./routes/auth');
-var gameRouter = require('./routes/game');
+var gameRouter = require('./routes/gameEndpoint');
 
 var app = express();
 

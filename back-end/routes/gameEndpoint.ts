@@ -1,5 +1,5 @@
-import { playerIds } from '../models/pieceMeta.model';
-var { pieceDefs } = require('../models.pieceMeta.model');
+// import { playerIds } = require('../models/pieceMeta.model');
+import { pieceDefs } from '../models/pieceMeta.model';
 
 var _ = require('lodash/core');
 var express = require('express');
@@ -15,9 +15,19 @@ var pusher = new Pusher({
   encrypted: true,
 });
 
+// TODO: import these...
+enum playerIds {
+  phrygians = 'phrygians',
+  hitites = 'hitites',
+}
+
 const BOARD_WIDTH: number = 24;
 const BOARD_HEIGHT: number = 16;
 const games = {};
+let lastUpdate = {
+  player: null,
+  updatedSquares: [],
+};
 
 interface IPieceMeta {
   pieceType: string;
@@ -64,6 +74,8 @@ router.get('/:room', (req, res) => {
   const room = req.params.room;
   const game = games[room];
   if (game) {
+    game.player = lastUpdate?.player;
+    game.updatedSquares = lastUpdate?.updatedSquares;
     res.send(game);
   } else {
     res.status(404).send(`Game not found: ${room}`);
@@ -75,13 +87,13 @@ router.post('/:room', (req, res) => {
   const player = req.body.player;
   const game = games[room];
 
-  const fromRow = req.body[0].row;
-  const fromColumn = req.body[0].col;
-  const fromPiece = req.body[0].piece;
+  const fromRow = req?.body?.updatedSquares?.[0].row;
+  const fromColumn = req?.body?.updatedSquares?.[0].col;
+  const fromPiece = req?.body?.updatedSquares?.[0].piece;
 
-  const toRow = req.body[1].row;
-  const toColumn = req.body[1].col;
-  const toPiece = req.body[1].toColumn;
+  const toRow = req?.body?.updatedSquares?.[1].row;
+  const toColumn = req?.body?.updatedSquares?.[1].col;
+  const toPiece = req?.body?.updatedSquares?.[1].toColumn;
 
   if (game) {
     const piece = game.board[fromRow][fromColumn];
@@ -89,14 +101,16 @@ router.post('/:room', (req, res) => {
 
     if (!playerSide) {
       res.status(400).send(`Not a player: ${player}`);
-    } else if (playerSide !== fromPiece.player) {
-      res.status(400).send(`Not your piece. Player=${playerSide}, Piece=${piece}`);
+      // can't rely on bc of damage but not killed
+      // } else if (playerSide !== fromPiece.player) {
+      //   res.status(400).send(`Not your piece. Player=${playerSide}, Piece=${piece}`);
     } else {
       game.board[fromRow][fromColumn] = fromPiece;
       game.board[toRow][toColumn] = toPiece;
 
       // just resend the data, client will ignore if it's their move
       // no need to resend the whole board - maybe when/if there's more validation?
+      lastUpdate = req.body;
       res.send(req.body);
       pusher.trigger('game-' + room, 'board-updated', {});
     }
@@ -104,8 +118,6 @@ router.post('/:room', (req, res) => {
     res.status(404).send(`Game not found: ${room}`);
   }
 });
-
-module.exports = router;
 
 function initBoard(): Array<IPieceMeta | null>[] {
   const boardState: Array<IPieceMeta | null>[] = [];
@@ -167,3 +179,5 @@ function makePiece(player: playerIds, pieceId: string): IPieceMeta {
     { player },
   );
 }
+
+module.exports = router;

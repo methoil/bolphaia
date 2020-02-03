@@ -5,6 +5,8 @@ import { IRoom } from './rooms';
 import GameBoard from '../game';
 import { playerIds } from '../game.model';
 
+let playerSide = playerIds.phrygians;
+
 interface IMessage {
   id: string;
   user: string;
@@ -30,18 +32,19 @@ interface IChatState {
   users: IUser[];
   messages: IMessage[];
   newMessage: string;
-  playerSide?: playerIds;
 }
 
 interface IChatComponent {
   // messagesEnd: any; // wtf is this?????
   _gameBoard: HTMLElement | undefined;
+  // playerSide: any; // TODO: get this right..
 }
 
 export default class Chat extends React.Component<IChatProps, any> implements IChatComponent {
   state: IChatState;
   private messagesEnd;
   public _gameBoard;
+
 
   constructor(props) {
     super(props);
@@ -128,25 +131,6 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
       <Grid>
         <Grid.Row>
           <Grid.Column width={12}>
-            {this.props.game && (
-              <GameBoard
-                roomId={this.props.game}
-                offlineMode={false}
-                playerSide={this.state.playerSide}
-                ref={child => {
-                  this._gameBoard = child;
-                }}
-              />
-            )}
-            <Comment.Group style={{ height: '20em', overflow: 'auto' }}>{messages}</Comment.Group>
-            <div
-              style={{ float: 'left', clear: 'both' }}
-              ref={el => {
-                this.messagesEnd = el;
-              }}
-            />
-          </Grid.Column>
-          <Grid.Column width={12}>
             <Comment.Group style={{ height: '20em', overflow: 'auto' }}>{messages}</Comment.Group>
             <div
               style={{ float: 'left', clear: 'both' }}
@@ -176,6 +160,20 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
                 onChange={this._handleNewMessageChange.bind(this)}
               />
             </Form>
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column width={16}>
+            {this.props.game && playerSide && (
+              <GameBoard
+                roomId={this.props.game}
+                offlineMode={false}
+                userId={this.props.user.id}
+                ref={child => {
+                  this._gameBoard = child;
+                }}
+              />
+            )}
           </Grid.Column>
         </Grid.Row>
       </Grid>
@@ -227,9 +225,7 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
       })
       .then(room => {
         this.props.startedGame(room.id, user.id, player).then(res => {
-          this.setState({
-            playerSide: res[this.props.user.id],
-          });
+            playerSide = res[this.props.user.id];
         });
       });
   }

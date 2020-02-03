@@ -112,7 +112,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
       });
   }
 
-  // TODO: use my custon playerIds.. doesn't really matter though
+  // TODO: this is being set so poorly.. def some sort of antipattern
   _startedGame(roomId, white, black): Promise<any> {
     return axios
       .request({

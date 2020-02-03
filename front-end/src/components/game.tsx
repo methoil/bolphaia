@@ -29,7 +29,7 @@ export type IBoardState = (IPiece | null)[][];
 let pusher;
 
 interface IUpdateServerPayload {
-  player: playerIds;
+  player: string; // userId??
   updatedSquares: ISquareUpdatePayload[];
 }
 
@@ -40,9 +40,9 @@ interface ISquareUpdatePayload {
 }
 
 interface IPieceUpdatePayload {
-  player: playerIds;
-  health: number;
-  pieceType: string; // TODO: add enums
+  player: playerIds | undefined;
+  health: number | undefined;
+  pieceType: string | undefined; // TODO: add enums
 }
 
 interface IGameState {
@@ -51,12 +51,13 @@ interface IGameState {
   highlightState: IPossibleMoves;
   selectedSquare: coordinate | null;
   mouseHoverIcon: string;
+  playerSide?: playerIds;
 }
 
 interface IGameProps {
   offlineMode: boolean;
-  playerSide?: playerIds;
-  roomId: string;
+  userId?: string;
+  roomId?: string;
 }
 
 export default class Game extends React.Component<IGameProps, {}> {
@@ -106,7 +107,7 @@ export default class Game extends React.Component<IGameProps, {}> {
       channel.bind('board-updated', () => {
         this.updateGame();
       });
-      this.updateGame();
+      this.setupGame();
     }
   }
 
@@ -116,6 +117,19 @@ export default class Game extends React.Component<IGameProps, {}> {
     }
   }
 
+  private setupGame() {
+    axios
+      .request({
+        url: 'http://localhost:4000/games/' + this.props.roomId,
+      })
+      .then(res => {
+        if (res.data.players) {
+          this.setState({ playerSide: res.data.players[this.props.userId ?? ''] });
+          return;
+        }
+      });
+  }
+
   private updateGame() {
     axios
       .request({
@@ -123,26 +137,27 @@ export default class Game extends React.Component<IGameProps, {}> {
       })
       .then(res => {
         // use same format as the sent payload and just update the changed squares
-        // TODO actually update
-        if (res.data.player === this.props.playerSide) {
+        if (res.data.player === this.props.userId) {
           return;
         }
 
-        const fromRow = res.data[0].row;
-        const fromColumn = res.data[0].col;
-        const fromPiece = res.data[0].piece;
+        // TODO: add type for this res
+        const fromRow = res?.data?.updatedSquares?.[0].row;
+        const fromColumn = res?.data?.updatedSquares?.[0].col;
+        const fromPiece = res?.data?.updatedSquares?.[0].piece;
 
-        const toRow = res.data[1].row;
-        const toColumn = res.data[1].col;
-        const toPiece = res.data[1].toColumn;
+        const toRow = res?.data?.updatedSquares?.[1].row;
+        const toColumn = res?.data?.updatedSquares?.[1].col;
+        const toPiece = res?.data?.updatedSquares?.[1].piece;
 
         const newBoardState = cloneDeep(this.state.boardState);
-        newBoardState[fromRow][fromColumn] = fromPiece;
-        newBoardState[toRow][toColumn] = toPiece;
+        // TODO: need to create corrct piece -
+        newBoardState[fromRow][fromColumn] = (fromPiece && new levy(fromPiece.player)) || null;
+        newBoardState[toRow][toColumn] = (toPiece && new levy(toPiece.player)) || null;
 
         this.setState({
           boardState: newBoardState,
-          turn: this.props.playerSide,
+          turn: this.state.playerSide,
         });
       });
   }
@@ -220,7 +235,7 @@ export default class Game extends React.Component<IGameProps, {}> {
 
   private onMoveClick(clickedSquare: coordinate): void {
     // TODO: make visual indicator of this somewhere
-    if (!this.props.offlineMode && this.state.turn !== this.props.playerSide) {
+    if (!this.props.offlineMode && this.state.turn !== this.state.playerSide) {
       return;
     }
 
@@ -314,13 +329,8 @@ export default class Game extends React.Component<IGameProps, {}> {
     if (updateBoard) {
       if (!this.props.offlineMode) {
         const payload: IUpdateServerPayload = {
-          player: this.state.turn,
-          updatedSquares: this.getUpdateServerPayload(
-            selectedPiece,
-            selectedSquare,
-            clickedSquare,
-            clickedPiece,
-          ),
+          player: this.props.userId ?? '',
+          updatedSquares: this.getUpdateServerPayload(newBoardState, selectedSquare, clickedSquare),
         };
         axios.request({
           method: 'POST',
@@ -343,17 +353,17 @@ export default class Game extends React.Component<IGameProps, {}> {
   }
 
   private getUpdateServerPayload(
-    selectedPiece: IPiece | null,
+    newBoardState: IBoardState,
     selectedSquare: coordinate | null,
     clickedSquare: coordinate | null,
-    clickedPiece: IPiece | null,
   ): ISquareUpdatePayload[] {
     const fromPiecePayload =
-      (selectedPiece && {
-        player: selectedPiece?.player,
-        health: selectedPiece?.health,
-        pieceType: selectedPiece?.pieceType,
-      }) ||
+      (selectedSquare &&
+        newBoardState[selectedSquare.x][selectedSquare.y] && {
+          player: newBoardState[selectedSquare.x][selectedSquare.y]?.player,
+          health: newBoardState[selectedSquare.x][selectedSquare.y]?.health,
+          pieceType: newBoardState[selectedSquare.x][selectedSquare.y]?.pieceType,
+        }) ||
       null;
     const fromPayload: ISquareUpdatePayload = {
       row: selectedSquare?.x ?? -1,
@@ -362,11 +372,12 @@ export default class Game extends React.Component<IGameProps, {}> {
     };
 
     const toPiecePaylod =
-      (clickedPiece && {
-        player: clickedPiece?.player,
-        health: clickedPiece?.health,
-        pieceType: clickedPiece?.pieceType,
-      }) ||
+      (clickedSquare &&
+        newBoardState[clickedSquare.x][clickedSquare.y] && {
+          player: newBoardState[clickedSquare.x][clickedSquare.y]?.player,
+          health: newBoardState[clickedSquare.x][clickedSquare.y]?.health,
+          pieceType: newBoardState[clickedSquare.x][clickedSquare.y]?.pieceType,
+        }) ||
       null;
     const toPayload: ISquareUpdatePayload = {
       row: clickedSquare?.x ?? -1,
