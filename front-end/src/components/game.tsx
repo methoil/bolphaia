@@ -4,7 +4,7 @@ import Pusher from 'pusher-js';
 import axios from 'axios';
 
 import '../index.scss';
-import { playerIds } from './game.model';
+import { playerIds, pieceTypes } from './game.model';
 import Board from './board';
 import levy from './pieces/levy';
 import hoplite from './pieces/hoplite';
@@ -13,6 +13,7 @@ import Cataphract from './pieces/cataphract';
 import { getMovesPath } from './pieces/piece.utils';
 import Archer from './pieces/archer';
 import RangedPiece from './pieces/rangedPiece';
+import BasePiece from './pieces/piece';
 
 export const BOARD_WIDTH: number = 24;
 export const BOARD_HEIGHT: number = 16;
@@ -152,8 +153,24 @@ export default class Game extends React.Component<IGameProps, {}> {
 
         const newBoardState = cloneDeep(this.state.boardState);
         // TODO: need to create corrct piece -
-        newBoardState[fromRow][fromColumn] = (fromPiece && new levy(fromPiece.player)) || null;
-        newBoardState[toRow][toColumn] = (toPiece && new levy(toPiece.player)) || null;
+        // type of uninstantiated class???
+        const pieceNameToConstructorMap: { [key: string]: any } = {
+          [pieceTypes.levy]: levy,
+          [pieceTypes.hoplite]: hoplite,
+          [pieceTypes.archer]: Archer,
+          [pieceTypes.cataphract]: Cataphract,
+        };
+        newBoardState[fromRow][fromColumn] =
+          (fromPiece &&
+            new pieceNameToConstructorMap[fromPiece.pieceType](
+              fromPiece.player,
+              fromPiece.health,
+            )) ||
+          null;
+        newBoardState[toRow][toColumn] =
+          (toPiece &&
+            new pieceNameToConstructorMap[toPiece.pieceType](toPiece.player, toPiece.health)) ||
+          null;
 
         this.setState({
           boardState: newBoardState,

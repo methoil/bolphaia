@@ -1,17 +1,20 @@
-import { IBasePiece } from "./IPieces.model";
-import { playerIds, pieceTypes } from "../game.model";
+import { IBasePiece } from './IPieces.model';
+import { playerIds, pieceTypes } from '../game.model';
 
 export default abstract class BasePiece implements IBasePiece {
   public player: playerIds;
   public isSelected: boolean = false;
   abstract pieceType = pieceTypes.levy;
-  abstract health = 0;
+  public health = -1;
   abstract readonly maxHealth: number;
   abstract attack = 0;
   abstract moveRange = 0;
 
-  constructor(player: playerIds) {
+  constructor(player: playerIds, health?: number) {
     this.player = player;
+    if (health) { // TODO: this may break health setting in child pieces
+      this.health = health || -1;
+    }
   }
 
   public takeDamage(damage: number): number {
