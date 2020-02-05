@@ -142,14 +142,15 @@ export default class Game extends React.Component<IGameProps, {}> {
           return;
         }
 
+        // TODO this code is the same thing copied twice ... make function
         // TODO: add type for this res
         const fromRow = res?.data?.updatedSquares?.[0].row;
         const fromColumn = res?.data?.updatedSquares?.[0].col;
-        const fromPiece = res?.data?.updatedSquares?.[0].piece;
+        const fromPieceMeta = res?.data?.updatedSquares?.[0].piece;
 
         const toRow = res?.data?.updatedSquares?.[1].row;
         const toColumn = res?.data?.updatedSquares?.[1].col;
-        const toPiece = res?.data?.updatedSquares?.[1].piece;
+        const toPieceMeta = res?.data?.updatedSquares?.[1].piece;
 
         const newBoardState = cloneDeep(this.state.boardState);
         // TODO: need to create corrct piece -
@@ -160,17 +161,28 @@ export default class Game extends React.Component<IGameProps, {}> {
           [pieceTypes.archer]: Archer,
           [pieceTypes.cataphract]: Cataphract,
         };
-        newBoardState[fromRow][fromColumn] =
-          (fromPiece &&
-            new pieceNameToConstructorMap[fromPiece.pieceType](
-              fromPiece.player,
-              fromPiece.health,
-            )) ||
-          null;
-        newBoardState[toRow][toColumn] =
-          (toPiece &&
-            new pieceNameToConstructorMap[toPiece.pieceType](toPiece.player, toPiece.health)) ||
-          null;
+
+        const fromPiecePlacement = fromPieceMeta
+          ? new pieceNameToConstructorMap[fromPieceMeta.pieceType](
+              fromPieceMeta.player,
+              fromPieceMeta.health,
+            )
+          : null;
+        newBoardState[fromRow][fromColumn] = fromPiecePlacement;
+        if (fromPiecePlacement) {
+          fromPiecePlacement.setHealth(fromPieceMeta.health);
+        }
+
+        const toPiecePlacement = toPieceMeta
+          ? new pieceNameToConstructorMap[toPieceMeta.pieceType](
+              toPieceMeta.player,
+              toPieceMeta.health,
+            )
+          : null;
+        newBoardState[toRow][toColumn] = toPiecePlacement;
+        if (toPiecePlacement) {
+          toPiecePlacement.setHealth(toPieceMeta.health);
+        }
 
         this.setState({
           boardState: newBoardState,
@@ -474,12 +486,7 @@ export default class Game extends React.Component<IGameProps, {}> {
           y <= Math.min(src.y + range, BOARD_WIDTH - 1);
           y++
         ) {
-          try {
-            highlightedMoves[x][y].inAttackRange = true;
-          } catch {
-            console.log(x);
-            console.log(highlightedMoves);
-          }
+          highlightedMoves[x][y].inAttackRange = true;
         }
       }
     }

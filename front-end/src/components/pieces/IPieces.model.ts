@@ -18,7 +18,7 @@ export interface IBasePiece {
 }
 
 export interface IPiece extends IBasePiece {
-  
+  setHealth: (health: number) => void;
 }
 export interface IRangedPiece extends IPiece {
   range: number;
