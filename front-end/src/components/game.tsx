@@ -279,7 +279,11 @@ export default class Game extends React.Component<IGameProps, {}> {
     }
 
     // unselect piece when clicking on invalid move location
-    else if (selectedPiece && !isMovePossible) {
+    else if (
+      selectedPiece &&
+      !isMovePossible &&
+      !this.isTargetValidRangedAttack(clickedSquare, selectedPiece as RangedPiece)
+    ) {
       return this.setState({
         selectedSquare: null,
         highlightState: this.generateEmptyHighlightedMoves(),
@@ -291,9 +295,9 @@ export default class Game extends React.Component<IGameProps, {}> {
     // layout of board may be changed in these cases, need to update server
     // case of ranged attack
     if (
-      this.isTargetValidRangedAttack(clickedSquare, selectedPiece as RangedPiece) &&
       selectedPiece &&
-      clickedPiece
+      clickedPiece &&
+      this.isTargetValidRangedAttack(clickedSquare, selectedPiece as RangedPiece)
     ) {
       clickedPiece.takeDamage(selectedPiece.attack);
 
@@ -460,9 +464,22 @@ export default class Game extends React.Component<IGameProps, {}> {
     if ((selectedPiece as IRangedPiece).range) {
       const range = (selectedPiece as IRangedPiece).range;
 
-      for (let x = Math.max(src.x - range, 0); x <= Math.min(src.x + range, BOARD_HEIGHT); x++) {
-        for (let y = Math.max(src.y - range, 0); y <= Math.min(src.y + range, BOARD_WIDTH); y++) {
-          highlightedMoves[x][y].inAttackRange = true;
+      for (
+        let x = Math.max(src.x - range, 0);
+        x <= Math.min(src.x + range, BOARD_HEIGHT - 1);
+        x++
+      ) {
+        for (
+          let y = Math.max(src.y - range, 0);
+          y <= Math.min(src.y + range, BOARD_WIDTH - 1);
+          y++
+        ) {
+          try {
+            highlightedMoves[x][y].inAttackRange = true;
+          } catch {
+            console.log(x);
+            console.log(highlightedMoves);
+          }
         }
       }
     }
@@ -484,7 +501,7 @@ export default class Game extends React.Component<IGameProps, {}> {
     // TODO: how could this resolve to 0??????
     return (
       !!(selectedPiece as IRangedPiece).range &&
-      this.state.highlightState[target.x][target.y].inAttackRange &&
+      (this.state.highlightState[target.x][target.y]?.inAttackRange ?? false) &&
       this.squareHasEnemyPiece(target, selectedPiece)
     );
   }
