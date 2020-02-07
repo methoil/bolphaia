@@ -30,6 +30,7 @@ export default function Rooms(props: {
       </List.Content>
     </List.Item>
   ));
+  
   const joinableRooms = props.joinable.map(room => (
     <List.Item key={room.id}>
       <Icon name={undefined} />
@@ -38,6 +39,7 @@ export default function Rooms(props: {
       </List.Content>
     </List.Item>
   ));
+
   return (
     <div>
       <Header as="h4">Active Rooms</Header>

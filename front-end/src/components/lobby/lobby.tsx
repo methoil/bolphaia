@@ -6,11 +6,6 @@ import Rooms from './rooms';
 import Chat from './chat';
 import { playerIds } from '../game.model';
 
-interface ILobby {
-  // chatManager: any;
-  _chat: HTMLElement;
-}
-
 interface ILobbyState {
   joined: [];
   joinable: [];
@@ -24,12 +19,12 @@ interface ILobbyProps {
   username: string;
 }
 
-export default class Lobby extends React.Component<ILobbyProps, any> implements ILobby {
+export default class Lobby extends React.Component<ILobbyProps, any> {
   state: ILobbyState = {
     joined: [],
     joinable: [],
   };
-  public _chat;
+  chat;
   chatManager;
 
   constructor(props) {
@@ -62,15 +57,16 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
             });
           }
         });
-        setInterval(this._pollRooms.bind(this), 5000);
-        this._pollRooms();
+        setInterval(this.pollRooms.bind(this), 5000);
+        this.pollRooms();
       })
       .catch(e => {
         console.log('Failed to connect to Chatkit');
         console.log(e);
       });
   }
-  private _pollRooms() {
+
+  private pollRooms() {
     const { currentUser } = this.state;
     currentUser.getJoinableRooms().then(rooms => {
       this.setState({
@@ -79,7 +75,8 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
       });
     });
   }
-  _enterRoom(id) {
+
+  private enterRoom(id) {
     const { currentUser } = this.state;
     currentUser
       .joinRoom({ roomId: id })
@@ -87,17 +84,18 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
         this.setState({
           activeRoom: id,
         });
-        this._pollRooms();
+        this.pollRooms();
       })
       .catch(() => {
         console.log('Failed to enter room');
       });
   }
-  _leaveRoom(id) {
+
+  private leaveRoom(id) {
     const { currentUser } = this.state;
     // TODO: temp disable toom deletion so I can see if games persist over time
-    if (this._chat) {
-      const playersInRoom = this._chat.getPlayersInRoom();
+    if (this.chat) {
+      const playersInRoom = this.chat.getPlayersInRoom();
       if (playersInRoom.length === 1 && playersInRoom[0].id === currentUser.id) {
         currentUser.deleteRoom({ roomId: id });
       }
@@ -105,7 +103,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
     currentUser
       .leaveRoom({ roomId: id })
       .then(() => {
-        this._pollRooms();
+        this.pollRooms();
       })
       .catch(() => {
         console.log('Failed to leave room');
@@ -113,7 +111,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
   }
 
   // TODO: this is being set so poorly.. def some sort of antipattern
-  _startedGame(roomId, white, black): Promise<any> {
+  private startedGame(roomId, white, black): Promise<any> {
     return axios
       .request({
         url: 'http://localhost:4000/games',
@@ -128,7 +126,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
         this.setState({
           activeRoom: roomId,
         });
-        this._pollRooms();
+        this.pollRooms();
         return {
           [white]: playerIds.phrygians,
           [black]: playerIds.hitites,
@@ -148,15 +146,16 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
             user={currentUser}
             room={room}
             key={room.id}
-            startedGame={this._startedGame.bind(this)}
+            startedGame={this.startedGame.bind(this)}
             game={game}
             ref={child => {
-              this._chat = child;
+              this.chat = child;
             }}
           />
         );
       }
     }
+
     return (
       <Segment className={'segment-grid-container'}>
         <Grid>
@@ -165,8 +164,8 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
               joined={this.state.joined}
               joinable={this.state.joinable}
               activeRoom={this.state.activeRoom}
-              enterRoom={this._enterRoom.bind(this)}
-              leaveRoom={this._leaveRoom.bind(this)}
+              enterRoom={this.enterRoom.bind(this)}
+              leaveRoom={this.leaveRoom.bind(this)}
             />
           </Grid.Column>
           <Grid.Column width={12}>{chat}</Grid.Column>

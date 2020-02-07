@@ -35,14 +35,14 @@ interface IChatState {
 
 interface IChatComponent {
   // messagesEnd: any;
-  _gameBoard: HTMLElement | undefined;
+  gameBoard: HTMLElement | undefined;
   // playerSide: any; // TODO: get this working instead of global var
 }
 
 export default class Chat extends React.Component<IChatProps, any> implements IChatComponent {
   state: IChatState;
   private messagesEnd;
-  public _gameBoard;
+  public gameBoard;
 
   constructor(props) {
     super(props);
@@ -101,7 +101,7 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
       .map(user => (
         <List.Item key={user.id}>
           <List.Content floated="right">
-            <a onClick={() => this._challengePlayer(user)}>Challenge</a>
+            <a onClick={() => this.challengePlayer(user)}>Challenge</a>
           </List.Content>
           <List.Content>{user.name}</List.Content>
         </List.Item>
@@ -112,7 +112,7 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
       if (message.opponent) {
         acceptGame = (
           <Comment.Actions>
-            <Comment.Action onClick={() => this._acceptChallenge(message.user)}>
+            <Comment.Action onClick={() => this.acceptChallenge(message.user)}>
               Accept Challenge
             </Comment.Action>
           </Comment.Actions>
@@ -136,7 +136,7 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
           offlineMode={false}
           userId={this.props.user.id}
           ref={child => {
-            this._gameBoard = child;
+            this.gameBoard = child;
           }}
         />
       ) : null;
@@ -168,14 +168,14 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
         </Grid.Row>
         <Grid.Row>
           <Grid.Column width={16}>
-            <Form onSubmit={this._handleSubmit.bind(this)}>
+            <Form onSubmit={this.handleSubmit.bind(this)}>
               <Input
                 action="Post"
                 placeholder="New Message..."
                 value={this.state.newMessage}
                 fluid
                 autoFocus
-                onChange={this._handleNewMessageChange.bind(this)}
+                onChange={this.handleNewMessageChange.bind(this)}
               />
             </Form>
           </Grid.Column>
@@ -185,24 +185,24 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
   }
 
   componentDidMount() {
-    // this._scrollToBottom();
+    // this.scrollToBottom();
   }
 
   componentDidUpdate() {
-    // this._scrollToBottom();
+    // this.scrollToBottom();
   }
 
-  _scrollToBottom() {
+  private scrollToBottom() {
     this.messagesEnd.scrollIntoView({ behavior: 'smooth' });
   }
 
-  _handleNewMessageChange(e) {
+  private handleNewMessageChange(e) {
     this.setState({
       newMessage: e.target.value,
     });
   }
 
-  _handleSubmit() {
+  private handleSubmit() {
     const { newMessage } = this.state;
     const { user, room } = this.props;
     user.sendMessage({
@@ -214,7 +214,7 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
     });
   }
 
-  _challengePlayer(player) {
+  private challengePlayer(player) {
     const { user, room } = this.props;
     user.sendMessage({
       text: `I challenge ${player.name} to a game`,
@@ -227,7 +227,7 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
     });
   }
 
-  _acceptChallenge(player) {
+  private acceptChallenge(player) {
     const { user } = this.props;
     user
       .createRoom({
@@ -242,7 +242,7 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
   }
 
   getPlayersInRoom() {
-    const players = this._gameBoard ? this._gameBoard.getPlayers() : [];
+    const players = this.gameBoard ? this.gameBoard.getPlayers() : [];
     const playersInRoom = this.state.users.filter(user => players.includes(user.id));
     return playersInRoom;
   }
