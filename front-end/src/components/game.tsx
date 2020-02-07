@@ -13,7 +13,6 @@ import Cataphract from './pieces/cataphract';
 import { getMovesPath } from './pieces/piece.utils';
 import Archer from './pieces/archer';
 import RangedPiece from './pieces/rangedPiece';
-import BasePiece from './pieces/piece';
 
 export const BOARD_WIDTH: number = 24;
 export const BOARD_HEIGHT: number = 16;
@@ -53,6 +52,7 @@ interface IGameState {
   selectedSquare: coordinate | null;
   mouseHoverIcon: string;
   playerSide?: playerIds;
+  players?: { [key: string]: playerIds };
 }
 
 interface IGameProps {
@@ -118,6 +118,10 @@ export default class Game extends React.Component<IGameProps, {}> {
     }
   }
 
+  public getPlayers() {
+    return Object.keys(this.state.players || {});
+  }
+
   private setupGame() {
     axios
       .request({
@@ -125,6 +129,7 @@ export default class Game extends React.Component<IGameProps, {}> {
       })
       .then(res => {
         if (res.data.players) {
+          this.setState({ players: res.data.players });
           this.setState({ playerSide: res.data.players[this.props.userId ?? ''] });
           return;
         }

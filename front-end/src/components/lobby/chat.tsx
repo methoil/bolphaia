@@ -1,7 +1,6 @@
 import React from 'react';
 import { Grid, List, Comment, Form, Input } from 'semantic-ui-react';
 import { IRoom } from './rooms';
-// import GameBoard from './gameBoard';
 import GameBoard from '../game';
 import { playerIds } from '../game.model';
 
@@ -45,7 +44,6 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
   private messagesEnd;
   public _gameBoard;
 
-
   constructor(props) {
     super(props);
     this.state = {
@@ -53,6 +51,7 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
       messages: [],
       newMessage: '',
     };
+
     props.user
       .subscribeToRoomMultipart({
         roomId: props.room.id,
@@ -95,6 +94,7 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
         });
       });
   }
+
   render() {
     const users = this.state.users
       .filter(user => user.id !== this.props.user.id)
@@ -106,6 +106,7 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
           <List.Content>{user.name}</List.Content>
         </List.Item>
       ));
+
     const messages = this.state.messages.map(message => {
       let acceptGame;
       if (message.opponent) {
@@ -116,6 +117,7 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
             </Comment.Action>
           </Comment.Actions>
         );
+
       }
       return (
         <Comment key={message.id}>
@@ -127,8 +129,23 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
         </Comment>
       );
     });
+
     return (
       <Grid>
+        <Grid.Row>
+          <Grid.Column width={16}>
+            {this.props.game && playerSide && (
+              <GameBoard
+                roomId={this.props.game}
+                offlineMode={false}
+                userId={this.props.user.id}
+                ref={child => {
+                  this._gameBoard = child;
+                }}
+              />
+            )}
+          </Grid.Column>
+        </Grid.Row>
         <Grid.Row>
           <Grid.Column width={12}>
             <Comment.Group style={{ height: '20em', overflow: 'auto' }}>{messages}</Comment.Group>
@@ -162,37 +179,28 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
             </Form>
           </Grid.Column>
         </Grid.Row>
-        <Grid.Row>
-          <Grid.Column width={16}>
-            {this.props.game && playerSide && (
-              <GameBoard
-                roomId={this.props.game}
-                offlineMode={false}
-                userId={this.props.user.id}
-                ref={child => {
-                  this._gameBoard = child;
-                }}
-              />
-            )}
-          </Grid.Column>
-        </Grid.Row>
       </Grid>
     );
   }
+
   componentDidMount() {
     this._scrollToBottom();
   }
+
   componentDidUpdate() {
-    this._scrollToBottom();
+    // this._scrollToBottom();
   }
+
   _scrollToBottom() {
     this.messagesEnd.scrollIntoView({ behavior: 'smooth' });
   }
+
   _handleNewMessageChange(e) {
     this.setState({
       newMessage: e.target.value,
     });
   }
+
   _handleSubmit() {
     const { newMessage } = this.state;
     const { user, room } = this.props;
@@ -204,6 +212,7 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
       newMessage: '',
     });
   }
+
   _challengePlayer(player) {
     const { user, room } = this.props;
     user.sendMessage({
@@ -216,6 +225,7 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
       },
     });
   }
+
   _acceptChallenge(player) {
     const { user } = this.props;
     user

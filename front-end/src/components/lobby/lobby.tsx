@@ -96,7 +96,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
   _leaveRoom(id) {
     const { currentUser } = this.state;
     // TODO: temp disable toom deletion so I can see if games persist over time
-    if (this._chat && false) {
+    if (this._chat) {
       const playersInRoom = this._chat.getPlayersInRoom();
       if (playersInRoom.length === 1 && playersInRoom[0].id === currentUser.id) {
         currentUser.deleteRoom({ roomId: id });
