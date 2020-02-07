@@ -1,4 +1,4 @@
-import { playerIds } from "../game.model";
+import { playerIds, pieceTypes } from "../game.model";
 
 export type coordinate = {
   x: number;
@@ -6,6 +6,7 @@ export type coordinate = {
 };
 
 export interface IBasePiece {
+  pieceType: pieceTypes;
   player: playerIds;
   isSelected: boolean;
   health: number;
@@ -16,7 +17,9 @@ export interface IBasePiece {
   getImageUrl: () => string;
 }
 
-export interface IPiece extends IBasePiece {}
-export interface IRangedPiece extends IBasePiece {
+export interface IPiece extends IBasePiece {
+  setHealth: (health: number) => void;
+}
+export interface IRangedPiece extends IPiece {
   range: number;
 }

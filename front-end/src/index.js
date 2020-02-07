@@ -3,9 +3,11 @@ import ReactDOM from "react-dom";
 import "./index.scss";
 import * as serviceWorker from "./serviceWorker";
 import Game from "./components/game";
+import App from "./App";
 
 ReactDOM.render(
-    <Game />,
+    // <Game />,
+    <App />,
   document.getElementById("root")
 );
 
@@ -13,3 +15,4 @@ ReactDOM.render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
+

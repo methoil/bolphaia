@@ -1,9 +1,9 @@
-import * as React from "react";
+import * as React from 'react';
 
-import "../index.scss";
-import Square from "./square";
-import { IBoardState, IPossibleMoves } from "./game";
-import { coordinate, IPiece } from "./pieces/IPieces.model";
+import '../index.scss';
+import Square from './square';
+import { IBoardState, IPossibleMoves } from './game';
+import { coordinate, IPiece } from './pieces/IPieces.model';
 
 interface ISquare {
   style: string;
@@ -20,17 +20,17 @@ interface IBoardProps {
 
 export default class Board extends React.Component<IBoardProps, {}> {
   render() {
-    const board = [];
+    const board: JSX.Element[] = [];
 
     const xLength = this.props.boardState.length;
     const yLength = this.props.boardState[0].length;
 
     for (let i = 0; i < xLength; i++) {
-      const squareRows = [];
+      const squareRows: JSX.Element[] = [];
       for (let j = 0; j < yLength; j++) {
-        const cssClasses = [];
+        const cssClasses: string[] = [];
         cssClasses.push(
-          (isEven(i) && isEven(j)) || (!isEven(i) && !isEven(j)) ? "light-square" : "dark-square"
+          (isEven(i) && isEven(j)) || (!isEven(i) && !isEven(j)) ? 'light-square' : 'dark-square'
         );
 
         const piece = this.props.boardState[i][j];
@@ -38,12 +38,12 @@ export default class Board extends React.Component<IBoardProps, {}> {
         if (squareHighlight && squareHighlight.canMove) {
           cssClasses.push(
             squareHighlight.canAttack === true
-              ? "highlighted-square-red"
-              : "highlighted-square-green"
+              ? 'highlighted-square-red'
+              : 'highlighted-square-green'
           );
         }
         if (squareHighlight && squareHighlight.inAttackRange) {
-          cssClasses.push("highlighted-square-in-ranged-attack");
+          cssClasses.push('highlighted-square-in-ranged-attack');
         }
 
         squareRows.push(this.renderSquare(i, j, cssClasses, piece));

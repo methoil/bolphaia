@@ -28,7 +28,7 @@ export default class Square extends React.Component<ISquareProps, {}> {
         onMouseEnter={this.setHoverIconFromGameCallback.bind(this)}
         onMouseLeave={this.resetHoverIcon.bind(this)}
         style={{
-          backgroundImage: `url(${this.props.piece && this.props.piece.getImageUrl()})` || ""
+          backgroundImage: `url(${this.props?.piece?.getImageUrl()})` || ""
         }}
       >
         {this.props.piece ? (
