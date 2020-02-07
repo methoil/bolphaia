@@ -158,9 +158,9 @@ export default class Lobby extends React.Component<ILobbyProps, any> implements 
       }
     }
     return (
-      <Segment>
+      <Segment className={'segment-grid-container'}>
         <Grid>
-          <Grid.Column width={4}>
+          <Grid.Column width={2}>
             <Rooms
               joined={this.state.joined}
               joinable={this.state.joinable}

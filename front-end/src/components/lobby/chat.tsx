@@ -22,7 +22,7 @@ interface IUser {
 
 interface IChatProps {
   user: IUser;
-  room: { id: string; users: IUser[] }; // ????????
+  room: { id: string; users: IUser[] };
   game: any;
   startedGame: (roomId: string, white: string, black: string) => Promise<any>;
 }
@@ -34,9 +34,9 @@ interface IChatState {
 }
 
 interface IChatComponent {
-  // messagesEnd: any; // wtf is this?????
+  // messagesEnd: any;
   _gameBoard: HTMLElement | undefined;
-  // playerSide: any; // TODO: get this right..
+  // playerSide: any; // TODO: get this working instead of global var
 }
 
 export default class Chat extends React.Component<IChatProps, any> implements IChatComponent {
@@ -117,7 +117,6 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
             </Comment.Action>
           </Comment.Actions>
         );
-
       }
       return (
         <Comment key={message.id}>
@@ -130,22 +129,24 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
       );
     });
 
+    let gameBoard =
+      this.props.game && playerSide ? (
+        <GameBoard
+          roomId={this.props.game}
+          offlineMode={false}
+          userId={this.props.user.id}
+          ref={child => {
+            this._gameBoard = child;
+          }}
+        />
+      ) : null;
+
+    if (gameBoard) {
+      return gameBoard;
+    }
+
     return (
       <Grid>
-        <Grid.Row>
-          <Grid.Column width={16}>
-            {this.props.game && playerSide && (
-              <GameBoard
-                roomId={this.props.game}
-                offlineMode={false}
-                userId={this.props.user.id}
-                ref={child => {
-                  this._gameBoard = child;
-                }}
-              />
-            )}
-          </Grid.Column>
-        </Grid.Row>
         <Grid.Row>
           <Grid.Column width={12}>
             <Comment.Group style={{ height: '20em', overflow: 'auto' }}>{messages}</Comment.Group>
@@ -184,7 +185,7 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
   }
 
   componentDidMount() {
-    this._scrollToBottom();
+    // this._scrollToBottom();
   }
 
   componentDidUpdate() {
@@ -235,7 +236,7 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
       })
       .then(room => {
         this.props.startedGame(room.id, user.id, player).then(res => {
-            playerSide = res[this.props.user.id];
+          playerSide = res[this.props.user.id];
         });
       });
   }

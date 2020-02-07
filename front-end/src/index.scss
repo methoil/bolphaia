@@ -11,9 +11,15 @@ code {
 }
 
 $squareSize: 48px;
+$boardWidth: $squareSize * 24 - 23;
+
+.segment-grid-container {
+  border: none;
+  box-shadow: none;
+}
 
 .board-row {
-  width: $squareSize * 24;
+  width: $boardWidth;
 }
 
 .board-row:after {
@@ -107,6 +113,7 @@ $squareSize: 48px;
 }
 
 .current-turn-text {
+  width: $boardWidth;
   padding: 5px;
   font-weight: bold;
   background-color: rgb(22, 104, 89);
