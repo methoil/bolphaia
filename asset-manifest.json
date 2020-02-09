@@ -1,28 +1,35 @@
 {
   "files": {
-    "main.css": "/bolphaia/static/css/main.b4c04ee2.chunk.css",
-    "main.js": "/bolphaia/static/js/main.290c48d5.chunk.js",
-    "main.js.map": "/bolphaia/static/js/main.290c48d5.chunk.js.map",
-    "runtime-main.js": "/bolphaia/static/js/runtime-main.870577b0.js",
-    "runtime-main.js.map": "/bolphaia/static/js/runtime-main.870577b0.js.map",
-    "static/js/2.601097bf.chunk.js": "/bolphaia/static/js/2.601097bf.chunk.js",
-    "static/js/2.601097bf.chunk.js.map": "/bolphaia/static/js/2.601097bf.chunk.js.map",
+    "main.css": "/bolphaia/static/css/main.5e0e60c3.chunk.css",
+    "main.js": "/bolphaia/static/js/main.ace5c95e.chunk.js",
+    "main.js.map": "/bolphaia/static/js/main.ace5c95e.chunk.js.map",
+    "runtime-main.js": "/bolphaia/static/js/runtime-main.5345b786.js",
+    "runtime-main.js.map": "/bolphaia/static/js/runtime-main.5345b786.js.map",
+    "static/css/2.7dcca762.chunk.css": "/bolphaia/static/css/2.7dcca762.chunk.css",
+    "static/js/2.7df03ef6.chunk.js": "/bolphaia/static/js/2.7df03ef6.chunk.js",
+    "static/js/2.7df03ef6.chunk.js.map": "/bolphaia/static/js/2.7df03ef6.chunk.js.map",
     "index.html": "/bolphaia/index.html",
-    "precache-manifest.9bb099152135dd0c743fba883a7560c9.js": "/bolphaia/precache-manifest.9bb099152135dd0c743fba883a7560c9.js",
+    "precache-manifest.5bb8fddd31ffc387f790113139a737f3.js": "/bolphaia/precache-manifest.5bb8fddd31ffc387f790113139a737f3.js",
     "service-worker.js": "/bolphaia/service-worker.js",
-    "static/css/main.b4c04ee2.chunk.css.map": "/bolphaia/static/css/main.b4c04ee2.chunk.css.map",
+    "static/css/2.7dcca762.chunk.css.map": "/bolphaia/static/css/2.7dcca762.chunk.css.map",
+    "static/css/main.5e0e60c3.chunk.css.map": "/bolphaia/static/css/main.5e0e60c3.chunk.css.map",
+    "static/js/2.7df03ef6.chunk.js.LICENSE": "/bolphaia/static/js/2.7df03ef6.chunk.js.LICENSE",
     "static/media/blackArcher.svg": "/bolphaia/static/media/blackArcher.ae09d6fb.svg",
     "static/media/blackCataphract.svg": "/bolphaia/static/media/blackCataphract.d39f1d02.svg",
     "static/media/blackPawn.svg": "/bolphaia/static/media/blackPawn.1c52d8c4.svg",
     "static/media/index.scss": "/bolphaia/static/media/sword.2515ed29.cur",
+    "static/media/semantic.min.css": "/bolphaia/static/media/outline-icons.ef60a4f6.woff",
+    "static/media/hopliteBlack.svg": "/bolphaia/static/media/hopliteBlack.295d049a.svg",
+    "static/media/hopliteWhite.svg": "/bolphaia/static/media/hopliteWhite.57f58823.svg",
     "static/media/whiteArcher.svg": "/bolphaia/static/media/whiteArcher.9cbde199.svg",
     "static/media/whiteCataphract.svg": "/bolphaia/static/media/whiteCataphract.e6294efe.svg",
     "static/media/whitePawn.svg": "/bolphaia/static/media/whitePawn.d69014fb.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.870577b0.js",
-    "static/js/2.601097bf.chunk.js",
-    "static/css/main.b4c04ee2.chunk.css",
-    "static/js/main.290c48d5.chunk.js"
+    "static/js/runtime-main.5345b786.js",
+    "static/css/2.7dcca762.chunk.css",
+    "static/js/2.7df03ef6.chunk.js",
+    "static/css/main.5e0e60c3.chunk.css",
+    "static/js/main.ace5c95e.chunk.js"
   ]
 }
