@@ -5,6 +5,7 @@ import axios from 'axios';
 import Rooms from './rooms';
 import Chat from './chat';
 import { playerIds } from '../game.model';
+import {BACKEND_URL} from '../../app-constants';
 
 interface ILobbyState {
   joined: [];
@@ -32,7 +33,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> {
     this.chatManager = new ChatManager({
       instanceLocator: 'v1:us1:f3854d62-ebf2-4ee2-8a48-c62ed279fa8f', // TODO: import this from global consts
       tokenProvider: new TokenProvider({
-        url: 'http://localhost:4000/auth',
+        url: `${BACKEND_URL}/auth`,
       }),
       userId: props.username,
     });
@@ -114,7 +115,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> {
   private startedGame(roomId, white, black): Promise<any> {
     return axios
       .request({
-        url: 'http://localhost:4000/games',
+        url: `${BACKEND_URL}/games`,
         method: 'POST',
         data: {
           room: roomId,

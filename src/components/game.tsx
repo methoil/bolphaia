@@ -13,6 +13,7 @@ import Cataphract from './pieces/cataphract';
 import { getMovesPath } from './pieces/piece.utils';
 import Archer from './pieces/archer';
 import RangedPiece from './pieces/rangedPiece';
+import {BACKEND_URL} from '../app-constants';
 
 export const BOARD_WIDTH: number = 24;
 export const BOARD_HEIGHT: number = 16;
@@ -125,7 +126,7 @@ export default class Game extends React.Component<IGameProps, {}> {
   private setupGame() {
     axios
       .request({
-        url: 'http://localhost:4000/games/' + this.props.roomId,
+        url: this.urlToGameServer,
       })
       .then(res => {
         if (res.data.players) {
@@ -139,7 +140,7 @@ export default class Game extends React.Component<IGameProps, {}> {
   private updateGame() {
     axios
       .request({
-        url: 'http://localhost:4000/games/' + this.props.roomId,
+        url: this.urlToGameServer,
       })
       .then(res => {
         // use same format as the sent payload and just update the changed squares
@@ -194,6 +195,10 @@ export default class Game extends React.Component<IGameProps, {}> {
           turn: this.state.playerSide,
         });
       });
+  }
+
+  private get urlToGameServer() {
+    return `${BACKEND_URL}/games/${this.props.roomId}`;
   }
 
   private initializeBoard(xSize: number, ySize: number): IBoardState {
@@ -372,7 +377,7 @@ export default class Game extends React.Component<IGameProps, {}> {
         };
         axios.request({
           method: 'POST',
-          url: 'http://localhost:4000/games/' + this.props.roomId,
+          url: this.urlToGameServer,
           data: payload,
         });
 
