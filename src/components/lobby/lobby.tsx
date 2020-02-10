@@ -5,7 +5,7 @@ import axios from 'axios';
 import Rooms from './rooms';
 import Chat from './chat';
 import { playerIds } from '../game.model';
-import {BACKEND_URL} from '../../app-constants';
+import { BACKEND_URL } from '../../app-constants';
 
 interface ILobbyState {
   joined: [];
