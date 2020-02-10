@@ -1,27 +1,27 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "dcf8b414b650e96b106297b72b65c77f",
+    "revision": "43474e60b2b2937264a6f50314f12990",
     "url": "/bolphaia/index.html"
   },
   {
-    "revision": "5aace305d0764612d663",
-    "url": "/bolphaia/static/css/2.7dcca762.chunk.css"
+    "revision": "516ddeca8c422554d439",
+    "url": "/bolphaia/static/css/2.663665b4.chunk.css"
   },
   {
-    "revision": "44474837c80a5cb8c416",
-    "url": "/bolphaia/static/css/main.5e0e60c3.chunk.css"
+    "revision": "ae04bcaf50bf40185524",
+    "url": "/bolphaia/static/css/main.401324eb.chunk.css"
   },
   {
-    "revision": "5aace305d0764612d663",
-    "url": "/bolphaia/static/js/2.7df03ef6.chunk.js"
+    "revision": "516ddeca8c422554d439",
+    "url": "/bolphaia/static/js/2.2deda6bb.chunk.js"
   },
   {
-    "revision": "833c689300841480beaa912263a3b9a8",
-    "url": "/bolphaia/static/js/2.7df03ef6.chunk.js.LICENSE"
+    "revision": "c0e177608469e66d2da5e86e70b2e34d",
+    "url": "/bolphaia/static/js/2.2deda6bb.chunk.js.LICENSE"
   },
   {
-    "revision": "44474837c80a5cb8c416",
-    "url": "/bolphaia/static/js/main.ace5c95e.chunk.js"
+    "revision": "ae04bcaf50bf40185524",
+    "url": "/bolphaia/static/js/main.0a52e528.chunk.js"
   },
   {
     "revision": "b2f881f25512d8060304",
