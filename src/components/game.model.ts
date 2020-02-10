@@ -1,6 +1,6 @@
 export enum playerIds {
   phrygians = 'phrygians',
-  hitites = 'hitites',
+  hittites = 'hittites',
 }
 
 export enum pieceTypes {

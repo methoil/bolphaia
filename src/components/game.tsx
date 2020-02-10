@@ -224,20 +224,20 @@ export default class Game extends React.Component<IGameProps, {}> {
       } else if (x === 3) {
         pieceToPlace = new levy(playerIds.phrygians);
       } else if (x === xSize - 4) {
-        pieceToPlace = new levy(playerIds.hitites);
+        pieceToPlace = new levy(playerIds.hittites);
       } else if (x === xSize - 3) {
-        pieceToPlace = new hoplite(playerIds.hitites);
+        pieceToPlace = new hoplite(playerIds.hittites);
       } else if (x === xSize - 2) {
         const rowArray = new Array(ySize).fill(null);
-        rowArray[2] = new Cataphract(playerIds.hitites);
-        rowArray[ySize - 3] = new Cataphract(playerIds.hitites);
+        rowArray[2] = new Cataphract(playerIds.hittites);
+        rowArray[ySize - 3] = new Cataphract(playerIds.hittites);
 
-        rowArray[4] = new Archer(playerIds.hitites);
-        rowArray[7] = new Archer(playerIds.hitites);
-        rowArray[10] = new Archer(playerIds.hitites);
-        rowArray[13] = new Archer(playerIds.hitites);
-        rowArray[16] = new Archer(playerIds.hitites);
-        rowArray[19] = new Archer(playerIds.hitites);
+        rowArray[4] = new Archer(playerIds.hittites);
+        rowArray[7] = new Archer(playerIds.hittites);
+        rowArray[10] = new Archer(playerIds.hittites);
+        rowArray[13] = new Archer(playerIds.hittites);
+        rowArray[16] = new Archer(playerIds.hittites);
+        rowArray[19] = new Archer(playerIds.hittites);
         boardState.push(rowArray);
         continue;
       }
@@ -392,7 +392,7 @@ export default class Game extends React.Component<IGameProps, {}> {
   }
 
   private getNewTurn(): playerIds {
-    return this.state.turn === playerIds.phrygians ? playerIds.hitites : playerIds.phrygians;
+    return this.state.turn === playerIds.phrygians ? playerIds.hittites : playerIds.phrygians;
   }
 
   private getUpdateServerPayload(
