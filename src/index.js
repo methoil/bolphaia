@@ -8,7 +8,7 @@ import App from './App';
 
 ReactDOM.render(
   // <Game />,
-  <BrowserRouter>
+  <BrowserRouter basename={process.env.PUBLIC_URL}`>
     <App />
   </BrowserRouter>,
   document.getElementById('root'),
