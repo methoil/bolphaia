@@ -13,7 +13,7 @@ import Cataphract from './pieces/cataphract';
 import { getMovesPath } from './pieces/piece.utils';
 import Archer from './pieces/archer';
 import RangedPiece from './pieces/rangedPiece';
-import {BACKEND_URL} from '../app-constants';
+import { BACKEND_URL } from '../app-constants';
 
 export const BOARD_WIDTH: number = 24;
 export const BOARD_HEIGHT: number = 16;
@@ -380,14 +380,14 @@ export default class Game extends React.Component<IGameProps, {}> {
           url: this.urlToGameServer,
           data: payload,
         });
-
-        return this.setState({
-          boardState: newBoardState,
-          selectedSquare: null,
-          highlightState: this.generateEmptyHighlightedMoves(),
-          turn: this.getNewTurn(),
-        });
       }
+
+      return this.setState({
+        boardState: newBoardState,
+        selectedSquare: null,
+        highlightState: this.generateEmptyHighlightedMoves(),
+        turn: this.getNewTurn(),
+      });
     }
   }
 
