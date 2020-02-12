@@ -1,4 +1,4 @@
-import { playerIds, pieceTypes } from "../game.model";
+import { playerIds, pieceTypes } from "../game/game.model";
 
 export type coordinate = {
   x: number;

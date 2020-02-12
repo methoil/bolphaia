@@ -1,5 +1,5 @@
 import BasePiece from './piece';
-import { playerIds, pieceTypes } from '../game.model';
+import { playerIds, pieceTypes } from '../game/game.model';
 import whiteLevyImageSvg from '../../resources/hopliteWhite.svg';
 import blackLevyImageSvg from '../../resources/hopliteBlack.svg';
 

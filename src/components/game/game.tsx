@@ -3,17 +3,17 @@ import { cloneDeep, findIndex, get, capitalize } from 'lodash';
 import Pusher from 'pusher-js';
 import axios from 'axios';
 
-import '../index.scss';
+import '../../index.scss';
 import { playerIds, pieceTypes } from './game.model';
 import Board from './board';
-import levy from './pieces/levy';
-import hoplite from './pieces/hoplite';
-import { IPiece, coordinate, IRangedPiece } from './pieces/IPieces.model';
-import Cataphract from './pieces/cataphract';
-import { getMovesPath } from './pieces/piece.utils';
-import Archer from './pieces/archer';
-import RangedPiece from './pieces/rangedPiece';
-import {BACKEND_URL} from '../app-constants';
+import levy from '../pieces/levy';
+import hoplite from '../pieces/hoplite';
+import { IPiece, coordinate, IRangedPiece } from '../pieces/IPieces.model';
+import Cataphract from '../pieces/cataphract';
+import { getMovesPath } from '../pieces/piece.utils';
+import Archer from '../pieces/archer';
+import RangedPiece from '../pieces/rangedPiece';
+import { BACKEND_URL } from '../../app-constants';
 
 export const BOARD_WIDTH: number = 24;
 export const BOARD_HEIGHT: number = 16;
@@ -69,6 +69,18 @@ export default class Game extends React.Component<IGameProps, {}> {
     return (
       <div>
         <div className="current-turn-text">
+          {this.state.playerSide ? (
+            <span style={{ marginRight: '10px' }}>
+              You are {this.props.userId} of the
+              <span
+                style={{ color: this.state.playerSide === playerIds.phrygians ? 'white' : 'black' }}
+              >
+                &nbsp;{capitalize(this.state.playerSide)}
+              </span>{' '}
+            </span>
+          ) : (
+            ''
+          )}
           Current turn:&nbsp;
           <span style={{ color: this.state.turn === playerIds.phrygians ? 'white' : 'black' }}>
             {capitalize(this.state.turn)}
@@ -380,14 +392,14 @@ export default class Game extends React.Component<IGameProps, {}> {
           url: this.urlToGameServer,
           data: payload,
         });
-
-        return this.setState({
-          boardState: newBoardState,
-          selectedSquare: null,
-          highlightState: this.generateEmptyHighlightedMoves(),
-          turn: this.getNewTurn(),
-        });
       }
+
+      return this.setState({
+        boardState: newBoardState,
+        selectedSquare: null,
+        highlightState: this.generateEmptyHighlightedMoves(),
+        turn: this.getNewTurn(),
+      });
     }
   }
 

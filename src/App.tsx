@@ -1,29 +1,41 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import { Container } from 'semantic-ui-react';
-import Login from './components/lobby/login';
-import Games from './components/lobby/lobby';
+import Game from './components/game/game';
+import Home from './components/game/home';
+import OnlineModeEntry from './components/game/onlineModeEntry';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 interface IAppState {
-  username: string,
+  username: string;
 }
 
 class App extends React.Component {
-  state: IAppState = {username: ''};
-  
+  state: IAppState = { username: '' };
+
   render() {
-    let contents;
-    if (this.state.username) {
-      contents = <Games username={this.state.username} />;
-    } else {
-      contents = <Login login={this.enterGame.bind(this)} />;
-    }
-    return <Container>{contents}</Container>;
+    return (
+        <div>
+          {/* A <Switch> looks through its children <Route>s and
+              renders the first one that matches the current URL. */}
+          <Switch>
+            <Route path="/offline-mode">
+              <Game offlineMode={true} />
+            </Route>
+            <Route path="/online-mode">
+              <OnlineModeEntry />
+            </Route>
+            <Route path="/" component={Home} exact />
+          </Switch>
+        </div>
+    );
   }
+
   enterGame(username) {
     this.setState({
-      username: username
+      username: username,
     });
   }
 }
+
 export default App;

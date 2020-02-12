@@ -1,7 +1,7 @@
 import whiteArcherImageSvg from "../../resources/whiteArcher.svg";
 import blackArcherImageSvg from "../../resources/blackArcher.svg";
 import RangedPiece from "./rangedPiece";
-import { playerIds, pieceTypes } from "../game.model";
+import { playerIds, pieceTypes } from "../game/game.model";
 
 export default class Archer extends RangedPiece {
   readonly pieceType: pieceTypes = pieceTypes.archer;

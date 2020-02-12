@@ -1,5 +1,5 @@
 import { IBasePiece } from './IPieces.model';
-import { playerIds, pieceTypes } from '../game.model';
+import { playerIds, pieceTypes } from '../game/game.model';
 
 export default abstract class BasePiece implements IBasePiece {
   public player: playerIds;
