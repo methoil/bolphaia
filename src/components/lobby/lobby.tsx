@@ -130,7 +130,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> {
         this.pollRooms();
         return {
           [white]: playerIds.phrygians,
-          [black]: playerIds.hitites,
+          [black]: playerIds.hittites,
         };
       });
   }

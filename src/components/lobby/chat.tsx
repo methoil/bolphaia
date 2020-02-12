@@ -107,27 +107,29 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
         </List.Item>
       ));
 
-    const messages = this.state.messages.map(message => {
-      let acceptGame;
-      if (message.opponent) {
-        acceptGame = (
-          <Comment.Actions>
-            <Comment.Action onClick={() => this.acceptChallenge(message.user)}>
-              Accept Challenge
-            </Comment.Action>
-          </Comment.Actions>
+    const messages = this.state.messages
+      .map(message => {
+        let acceptGame;
+        if (message.opponent) {
+          acceptGame = (
+            <Comment.Actions>
+              <Comment.Action onClick={() => this.acceptChallenge(message.user)}>
+                Accept Challenge
+              </Comment.Action>
+            </Comment.Actions>
+          );
+        }
+        return (
+          <Comment key={message.id}>
+            <Comment.Content>
+              <Comment.Author>{message.user}</Comment.Author>
+              <Comment.Text>{message.message}</Comment.Text>
+              {acceptGame}
+            </Comment.Content>
+          </Comment>
         );
-      }
-      return (
-        <Comment key={message.id}>
-          <Comment.Content>
-            <Comment.Author>{message.user}</Comment.Author>
-            <Comment.Text>{message.message}</Comment.Text>
-            {acceptGame}
-          </Comment.Content>
-        </Comment>
-      );
-    });
+      })
+      .reverse();
 
     let gameBoard =
       this.props.game && playerSide ? (
