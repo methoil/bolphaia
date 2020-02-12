@@ -1,5 +1,5 @@
 import BasePiece from "./piece";
-import { playerIds, pieceTypes } from "../game.model";
+import { playerIds, pieceTypes } from "../game/game.model";
 import whiteCataphractImageSvg from "../../resources/whiteCataphract.svg";
 import blackCataphractImageSvg from "../../resources/blackCataphract.svg";
 

@@ -1,9 +1,9 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import { Container } from 'semantic-ui-react';
-import Game from './components/game';
-import Home from './components/home';
-import OnlineModeEntry from './components/onlineModeEntry';
+import Game from './components/game/game';
+import Home from './components/game/home';
+import OnlineModeEntry from './components/game/onlineModeEntry';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 interface IAppState {

@@ -4,7 +4,7 @@ import { TokenProvider, ChatManager } from '@pusher/chatkit-client';
 import axios from 'axios';
 import Rooms from './rooms';
 import Chat from './chat';
-import { playerIds } from '../game.model';
+import { playerIds } from '../game/game.model';
 import { BACKEND_URL } from '../../app-constants';
 
 interface ILobbyState {

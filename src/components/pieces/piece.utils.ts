@@ -1,5 +1,5 @@
 import { coordinate } from "./IPieces.model";
-import { IBoardState, BOARD_WIDTH, BOARD_HEIGHT } from "../game";
+import { IBoardState, BOARD_WIDTH, BOARD_HEIGHT } from "../game/game";
 
 // call this 8 times to get all possible moves
 // assumes no trample;

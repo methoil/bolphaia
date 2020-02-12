@@ -1,8 +1,8 @@
 import React from 'react';
 import { Grid, List, Comment, Form, Input } from 'semantic-ui-react';
 import { IRoom } from './rooms';
-import GameBoard from '../game';
-import { playerIds } from '../game.model';
+import GameBoard from '../game/game';
+import { playerIds } from '../game/game.model';
 
 let playerSide = playerIds.phrygians;
 

@@ -3,17 +3,17 @@ import { cloneDeep, findIndex, get, capitalize } from 'lodash';
 import Pusher from 'pusher-js';
 import axios from 'axios';
 
-import '../index.scss';
+import '../../index.scss';
 import { playerIds, pieceTypes } from './game.model';
 import Board from './board';
-import levy from './pieces/levy';
-import hoplite from './pieces/hoplite';
-import { IPiece, coordinate, IRangedPiece } from './pieces/IPieces.model';
-import Cataphract from './pieces/cataphract';
-import { getMovesPath } from './pieces/piece.utils';
-import Archer from './pieces/archer';
-import RangedPiece from './pieces/rangedPiece';
-import { BACKEND_URL } from '../app-constants';
+import levy from '../pieces/levy';
+import hoplite from '../pieces/hoplite';
+import { IPiece, coordinate, IRangedPiece } from '../pieces/IPieces.model';
+import Cataphract from '../pieces/cataphract';
+import { getMovesPath } from '../pieces/piece.utils';
+import Archer from '../pieces/archer';
+import RangedPiece from '../pieces/rangedPiece';
+import { BACKEND_URL } from '../../app-constants';
 
 export const BOARD_WIDTH: number = 24;
 export const BOARD_HEIGHT: number = 16;
