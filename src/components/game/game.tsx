@@ -69,6 +69,18 @@ export default class Game extends React.Component<IGameProps, {}> {
     return (
       <div>
         <div className="current-turn-text">
+          {this.state.playerSide ? (
+            <span style={{ marginRight: '10px' }}>
+              You are {this.props.userId} of the
+              <span
+                style={{ color: this.state.playerSide === playerIds.phrygians ? 'white' : 'black' }}
+              >
+                &nbsp;{capitalize(this.state.playerSide)}
+              </span>{' '}
+            </span>
+          ) : (
+            ''
+          )}
           Current turn:&nbsp;
           <span style={{ color: this.state.turn === playerIds.phrygians ? 'white' : 'black' }}>
             {capitalize(this.state.turn)}
