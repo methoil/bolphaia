@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/bolphaia/static/css/main.401324eb.chunk.css",
-    "main.js": "/bolphaia/static/js/main.f7c0e88b.chunk.js",
-    "main.js.map": "/bolphaia/static/js/main.f7c0e88b.chunk.js.map",
+    "main.js": "/bolphaia/static/js/main.85e0de54.chunk.js",
+    "main.js.map": "/bolphaia/static/js/main.85e0de54.chunk.js.map",
     "runtime-main.js": "/bolphaia/static/js/runtime-main.5345b786.js",
     "runtime-main.js.map": "/bolphaia/static/js/runtime-main.5345b786.js.map",
     "static/css/2.663665b4.chunk.css": "/bolphaia/static/css/2.663665b4.chunk.css",
     "static/js/2.583fb4b5.chunk.js": "/bolphaia/static/js/2.583fb4b5.chunk.js",
     "static/js/2.583fb4b5.chunk.js.map": "/bolphaia/static/js/2.583fb4b5.chunk.js.map",
     "index.html": "/bolphaia/index.html",
-    "precache-manifest.cc25a5840317f7ed4d71c24804e82726.js": "/bolphaia/precache-manifest.cc25a5840317f7ed4d71c24804e82726.js",
+    "precache-manifest.b860fddeff96d7ee0f600d7889809238.js": "/bolphaia/precache-manifest.b860fddeff96d7ee0f600d7889809238.js",
     "service-worker.js": "/bolphaia/service-worker.js",
     "static/css/2.663665b4.chunk.css.map": "/bolphaia/static/css/2.663665b4.chunk.css.map",
     "static/css/main.401324eb.chunk.css.map": "/bolphaia/static/css/main.401324eb.chunk.css.map",
@@ -30,6 +30,6 @@
     "static/css/2.663665b4.chunk.css",
     "static/js/2.583fb4b5.chunk.js",
     "static/css/main.401324eb.chunk.css",
-    "static/js/main.f7c0e88b.chunk.js"
+    "static/js/main.85e0de54.chunk.js"
   ]
 }
