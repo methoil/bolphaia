@@ -1,8 +1,7 @@
-import { coordinate } from "./IPieces.model";
-import { IBoardState, BOARD_WIDTH, BOARD_HEIGHT } from "../game/game";
+import { coordinate } from './IPieces.model';
+import { IBoardState, BOARD_WIDTH, BOARD_HEIGHT } from '../game/game';
 
-// call this 8 times to get all possible moves
-// assumes no trample;
+// call this 8 times for each direction to get all possible moves
 export function getMovesPath(src: coordinate, dest: coordinate, board: IBoardState): coordinate[] {
   if (dest.x < 0 || src.x < 0 || dest.y < 0 || src.y < 0) {
     return [];
@@ -20,6 +19,8 @@ export function getMovesPath(src: coordinate, dest: coordinate, board: IBoardSta
     return [];
   }
 
+  const onHorizontalEdge = src.x === 0 || src.x === BOARD_HEIGHT - 1;
+  const onVerticalEdge = src.y === 0 || src.y === BOARD_WIDTH - 1;
   while (xDelta !== 0 || yDelta !== 0) {
     if (xDelta !== 0) {
       xOffset += isXNegative ? -1 : 1;
@@ -43,8 +44,12 @@ export function getMovesPath(src: coordinate, dest: coordinate, board: IBoardSta
 
     // edge reached - stop finding path
     if (
-      ((currSquare.x === 0 || currSquare.x === BOARD_HEIGHT - 1) && yDelta !== 0) ||
-      ((currSquare.y === 0 || currSquare.y === BOARD_WIDTH - 1) && xDelta !== 0)
+      (!onHorizontalEdge &&
+        (currSquare.x === 0 || currSquare.x === BOARD_HEIGHT - 1) &&
+        (xDelta !== 0 || yDelta !== 0)) ||
+      (!onVerticalEdge &&
+        (currSquare.y === 0 || currSquare.y === BOARD_WIDTH - 1) &&
+        (yDelta !== 0 || xDelta !== 0))
     ) {
       break;
     }
@@ -52,4 +57,3 @@ export function getMovesPath(src: coordinate, dest: coordinate, board: IBoardSta
 
   return path;
 }
-

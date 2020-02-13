@@ -476,10 +476,14 @@ export default class Game extends React.Component<IGameProps, {}> {
     if (!selectedPiece) {
       return highlightedMoves;
     }
-    const dimensions: number[] = [-selectedPiece.moveRange, 0, selectedPiece.moveRange];
 
+    // get possible moves for vectors in all directions a piece can move; detect blocks and board end
+    const dimensions: number[] = [-selectedPiece.moveRange, 0, selectedPiece.moveRange];
     for (let x = 0; x < 3; x++) {
       for (let y = 0; y < 3; y++) {
+        if (x === 1 && y === 1) {
+          continue; // just the square the piece is on
+        }
         const dest = {
           x: this.getValidIndex(src.x + dimensions[x], BOARD_HEIGHT - 1),
           y: this.getValidIndex(src.y + dimensions[y], BOARD_WIDTH - 1),
