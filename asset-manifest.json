@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "/bolphaia/static/css/main.401324eb.chunk.css",
-    "main.js": "/bolphaia/static/js/main.85e0de54.chunk.js",
-    "main.js.map": "/bolphaia/static/js/main.85e0de54.chunk.js.map",
+    "main.js": "/bolphaia/static/js/main.2f9d0e65.chunk.js",
+    "main.js.map": "/bolphaia/static/js/main.2f9d0e65.chunk.js.map",
     "runtime-main.js": "/bolphaia/static/js/runtime-main.5345b786.js",
     "runtime-main.js.map": "/bolphaia/static/js/runtime-main.5345b786.js.map",
-    "static/css/2.663665b4.chunk.css": "/bolphaia/static/css/2.663665b4.chunk.css",
-    "static/js/2.583fb4b5.chunk.js": "/bolphaia/static/js/2.583fb4b5.chunk.js",
-    "static/js/2.583fb4b5.chunk.js.map": "/bolphaia/static/js/2.583fb4b5.chunk.js.map",
+    "static/css/2.c3acddf0.chunk.css": "/bolphaia/static/css/2.c3acddf0.chunk.css",
+    "static/js/2.ebefbee5.chunk.js": "/bolphaia/static/js/2.ebefbee5.chunk.js",
+    "static/js/2.ebefbee5.chunk.js.map": "/bolphaia/static/js/2.ebefbee5.chunk.js.map",
     "index.html": "/bolphaia/index.html",
-    "precache-manifest.b860fddeff96d7ee0f600d7889809238.js": "/bolphaia/precache-manifest.b860fddeff96d7ee0f600d7889809238.js",
+    "precache-manifest.d9c5a1f65beebc05b4c4926a381a2054.js": "/bolphaia/precache-manifest.d9c5a1f65beebc05b4c4926a381a2054.js",
     "service-worker.js": "/bolphaia/service-worker.js",
-    "static/css/2.663665b4.chunk.css.map": "/bolphaia/static/css/2.663665b4.chunk.css.map",
+    "static/css/2.c3acddf0.chunk.css.map": "/bolphaia/static/css/2.c3acddf0.chunk.css.map",
     "static/css/main.401324eb.chunk.css.map": "/bolphaia/static/css/main.401324eb.chunk.css.map",
-    "static/js/2.583fb4b5.chunk.js.LICENSE": "/bolphaia/static/js/2.583fb4b5.chunk.js.LICENSE",
+    "static/js/2.ebefbee5.chunk.js.LICENSE": "/bolphaia/static/js/2.ebefbee5.chunk.js.LICENSE",
     "static/media/blackArcher.svg": "/bolphaia/static/media/blackArcher.ae09d6fb.svg",
     "static/media/blackCataphract.svg": "/bolphaia/static/media/blackCataphract.d39f1d02.svg",
     "static/media/blackPawn.svg": "/bolphaia/static/media/blackPawn.1c52d8c4.svg",
@@ -27,9 +27,9 @@
   },
   "entrypoints": [
     "static/js/runtime-main.5345b786.js",
-    "static/css/2.663665b4.chunk.css",
-    "static/js/2.583fb4b5.chunk.js",
+    "static/css/2.c3acddf0.chunk.css",
+    "static/js/2.ebefbee5.chunk.js",
     "static/css/main.401324eb.chunk.css",
-    "static/js/main.85e0de54.chunk.js"
+    "static/js/main.2f9d0e65.chunk.js"
   ]
 }
