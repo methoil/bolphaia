@@ -4,7 +4,7 @@ import whiteWarElephantImageSvg from "../../resources/warElephantWhite.svg";
 import blackWarElephantImageSvg from "../../resources/warElephantBlack.svg";
 
 export default class WarElephant extends BasePiece {
-  public pieceType = pieceTypes.WarElephant;
+  public pieceType = pieceTypes.warElephant;
   public moveRange: number = 4;
   public health: number = 20;
   readonly maxHealth: number = 20;

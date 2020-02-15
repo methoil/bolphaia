@@ -4,7 +4,7 @@ import whiteChariotImageSvg from "../../resources/chariotWhite.svg";
 import blackChariotImageSvg from "../../resources/chariotBlack.svg";
 
 export default class Chariot extends BasePiece {
-  public pieceType = pieceTypes.Chariot;
+  public pieceType = pieceTypes.chariot;
   public moveRange: number = 3;
   public health: number = 10;
   readonly maxHealth: number = 10;

@@ -4,7 +4,7 @@ import whiteLightCavalryImageSvg from "../../resources/lightCavalryWhite.svg";
 import blackLightCavalryImageSvg from "../../resources/lightCavalryBlack.svg";
 
 export default class LightCavalry extends BasePiece {
-  public pieceType = pieceTypes.LightCavalry;
+  public pieceType = pieceTypes.lightCavalry;
   public moveRange: number = 7;
   public health: number = 4;
   readonly maxHealth: number = 4;

@@ -4,7 +4,7 @@ import RangedPiece from "./rangedPiece";
 import { playerIds, pieceTypes } from "../game/game.model";
 
 export default class Centaur extends RangedPiece {
-  readonly pieceType: pieceTypes = pieceTypes.archer;
+  readonly pieceType: pieceTypes = pieceTypes.centaur;
   moveRange: number = 6;
   health: number = 4;
   readonly maxHealth: number = 4;

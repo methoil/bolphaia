@@ -1,19 +1,24 @@
-import * as React from 'react';
-import { cloneDeep, findIndex, get, capitalize } from 'lodash';
-import Pusher from 'pusher-js';
 import axios from 'axios';
-
-import '../../index.scss';
-import { playerIds, pieceTypes } from './game.model';
-import Board from './board';
-import levy from '../pieces/levy';
-import hoplite from '../pieces/hoplite';
-import { IPiece, coordinate, IRangedPiece } from '../pieces/IPieces.model';
-import Cataphract from '../pieces/cataphract';
-import { getMovesPath } from '../pieces/piece.utils';
-import Archer from '../pieces/archer';
-import RangedPiece from '../pieces/rangedPiece';
+import { capitalize, cloneDeep, findIndex, get } from 'lodash';
+import Pusher from 'pusher-js';
+import * as React from 'react';
 import { BACKEND_URL } from '../../app-constants';
+import '../../index.scss';
+import Archer from '../pieces/archer';
+import Cataphract from '../pieces/cataphract';
+import hoplite from '../pieces/hoplite';
+import { coordinate, IPiece, IRangedPiece } from '../pieces/IPieces.model';
+import levy from '../pieces/levy';
+import { getMovesPath } from '../pieces/piece.utils';
+import RangedPiece from '../pieces/rangedPiece';
+import Board from './board';
+import { pieceTypes, playerIds } from './game.model';
+import General from '../pieces/general';
+import Chariot from '../pieces/chariot';
+import Centaur from '../pieces/centaur';
+import LightCavalry from '../pieces/lightCavalry';
+import WarElephant from '../pieces/warElephant';
+
 
 export const BOARD_WIDTH: number = 24;
 export const BOARD_HEIGHT: number = 16;
@@ -227,7 +232,13 @@ export default class Game extends React.Component<IGameProps, {}> {
         rowArray[10] = new Archer(playerIds.phrygians);
         rowArray[13] = new Archer(playerIds.phrygians);
         rowArray[16] = new Archer(playerIds.phrygians);
-        rowArray[19] = new Archer(playerIds.phrygians);
+        rowArray[17] = new Chariot(playerIds.hittites);
+        rowArray[18] = new General(playerIds.hittites);
+        rowArray[19] = new Centaur(playerIds.hittites);
+        rowArray[20] = new LightCavalry(playerIds.hittites);
+        rowArray[21] = new WarElephant(playerIds.hittites);
+
+        // rowArray[19] = new Archer(playerIds.phrygians);
 
         boardState.push(rowArray);
         continue;

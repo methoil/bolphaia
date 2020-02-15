@@ -8,4 +8,9 @@ export enum pieceTypes {
   archer = 'archer',
   cataphract = 'cataphract',
   hoplite = 'hoplite',
+  chariot = 'chariot',
+  warElephant = 'warElephant',
+  centaur = 'centaur',
+  lightCavalry = 'lightCavalry',
+  general = 'general',
 }

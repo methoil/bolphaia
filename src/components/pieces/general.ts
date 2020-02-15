@@ -4,7 +4,7 @@ import whiteGeneralImageSvg from "../../resources/generalWhite.svg";
 import blackGeneralImageSvg from "../../resources/generalBlack.svg";
 
 export default class General extends BasePiece {
-  public pieceType = pieceTypes.General;
+  public pieceType = pieceTypes.general;
   public moveRange: number = 5;
   public health: number = 10;
   readonly maxHealth: number = 10;
