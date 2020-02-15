@@ -4,24 +4,16 @@ import Pusher from 'pusher-js';
 import * as React from 'react';
 import { BACKEND_URL } from '../../app-constants';
 import '../../index.scss';
-import Archer from '../pieces/archer';
-import Cataphract from '../pieces/cataphract';
-import hoplite from '../pieces/hoplite';
 import { coordinate, IPiece, IRangedPiece } from '../pieces/IPieces.model';
-import levy from '../pieces/levy';
 import { getMovesPath } from '../pieces/piece.utils';
 import RangedPiece from '../pieces/rangedPiece';
 import Board from './board';
 import { pieceTypes, playerIds } from './game.model';
-import General from '../pieces/general';
-import Chariot from '../pieces/chariot';
-import Centaur from '../pieces/centaur';
-import LightCavalry from '../pieces/lightCavalry';
-import WarElephant from '../pieces/warElephant';
+import {generateNewBoard, pieceNameToConstructorMap, IPieceMeta } from './boardSetup';
 
 
-export const BOARD_WIDTH: number = 24;
-export const BOARD_HEIGHT: number = 16;
+export const BOARD_WIDTH: number = 18;
+export const BOARD_HEIGHT: number = 12;
 
 export type IPossibleMove = {
   canMove: boolean;
@@ -176,14 +168,6 @@ export default class Game extends React.Component<IGameProps, {}> {
         const toPieceMeta = res?.data?.updatedSquares?.[1].piece;
 
         const newBoardState = cloneDeep(this.state.boardState);
-        // TODO: need to create corrct piece -
-        // type of uninstantiated class???
-        const pieceNameToConstructorMap: { [key: string]: any } = {
-          [pieceTypes.levy]: levy,
-          [pieceTypes.hoplite]: hoplite,
-          [pieceTypes.archer]: Archer,
-          [pieceTypes.cataphract]: Cataphract,
-        };
 
         const fromPiecePlacement = fromPieceMeta
           ? new pieceNameToConstructorMap[fromPieceMeta.pieceType](
@@ -219,60 +203,33 @@ export default class Game extends React.Component<IGameProps, {}> {
   }
 
   private initializeBoard(xSize: number, ySize: number): IBoardState {
+    // const boardState: Array<IPiece | null>[] = Array.fill(Array.fill(null,0,BOARD_HEIGHT - 1), 0, BOARD_WIDTH - 1);
     const boardState: Array<IPiece | null>[] = [];
-    for (let x = 0; x < xSize; x++) {
-      let pieceToPlace: IPiece | null = null;
-      if (x === 1) {
-        const rowArray: Array<IPiece | null> = new Array(ySize).fill(null);
-        rowArray[2] = new Cataphract(playerIds.phrygians);
-        rowArray[rowArray.length - 3] = new Cataphract(playerIds.phrygians);
-
-        rowArray[4] = new Archer(playerIds.phrygians);
-        rowArray[7] = new Archer(playerIds.phrygians);
-        rowArray[10] = new Archer(playerIds.phrygians);
-        rowArray[13] = new Archer(playerIds.phrygians);
-        rowArray[16] = new Archer(playerIds.phrygians);
-        rowArray[17] = new Chariot(playerIds.phrygians);
-        rowArray[18] = new General(playerIds.phrygians);
-        rowArray[19] = new Centaur(playerIds.phrygians);
-        rowArray[20] = new LightCavalry(playerIds.phrygians);
-        rowArray[21] = new WarElephant(playerIds.phrygians);
-
-        // rowArray[19] = new Archer(playerIds.phrygians);
-
-        boardState.push(rowArray);
-        continue;
-      } else if (x === 2) {
-        pieceToPlace = new hoplite(playerIds.phrygians);
-      } else if (x === 3) {
-        pieceToPlace = new levy(playerIds.phrygians);
-      } else if (x === xSize - 4) {
-        pieceToPlace = new levy(playerIds.hittites);
-      } else if (x === xSize - 3) {
-        pieceToPlace = new hoplite(playerIds.hittites);
-      } else if (x === xSize - 2) {
-        const rowArray = new Array(ySize).fill(null);
-        rowArray[2] = new Cataphract(playerIds.hittites);
-        rowArray[ySize - 3] = new Cataphract(playerIds.hittites);
-
-        rowArray[4] = new Archer(playerIds.hittites);
-        rowArray[7] = new Archer(playerIds.hittites);
-        rowArray[10] = new Archer(playerIds.hittites);
-        rowArray[13] = new Archer(playerIds.hittites);
-        rowArray[16] = new Archer(playerIds.hittites);
-        rowArray[17] = new Chariot(playerIds.hittites);
-        rowArray[18] = new General(playerIds.hittites);
-        rowArray[19] = new Centaur(playerIds.hittites);
-        rowArray[20] = new LightCavalry(playerIds.hittites);
-        rowArray[21] = new WarElephant(playerIds.hittites);
-        boardState.push(rowArray);
-        continue;
+    
+    const newBoardMeta = generateNewBoard();
+    for (let x = 0; x < BOARD_HEIGHT; x++) {
+      const row: Array<IPiece | null> = [];
+      for (let y = 0; y < BOARD_WIDTH; y++) {
+        row[y] = this.makePieceFromMeta(newBoardMeta[x][y]);
       }
-
-      boardState.push(new Array(ySize).fill(pieceToPlace));
+      boardState.push(row);
     }
 
     return boardState;
+  }
+
+  private makePieceFromMeta(squareMata: IPieceMeta  | null): IPiece | null {
+    const fromPiecePlacement = squareMata
+      ? new pieceNameToConstructorMap[squareMata.pieceType](
+        squareMata.player,
+        )
+      : null;
+    // newBoardState[fromRow][fromColumn] = fromPiecePlacement;
+    if (fromPiecePlacement) {
+      fromPiecePlacement.setHealth(squareMata?.health && 1);
+    }
+
+    return fromPiecePlacement;
   }
 
   private getSelectedPiece(): IPiece | null {
