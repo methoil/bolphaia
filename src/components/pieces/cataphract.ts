@@ -1,7 +1,7 @@
 import BasePiece from "./piece";
 import { playerIds, pieceTypes } from "../game/game.model";
-import whiteCataphractImageSvg from "../../resources/whiteCataphract.svg";
-import blackCataphractImageSvg from "../../resources/blackCataphract.svg";
+import whiteCataphractImageSvg from "../../resources/cataphractWhite.svg";
+import blackCataphractImageSvg from "../../resources/cataphractBlack.svg";
 
 export default class Cataphract extends BasePiece {
   public pieceType = pieceTypes.cataphract;

@@ -1,7 +1,7 @@
 import BasePiece from "./piece";
 import { playerIds, pieceTypes } from "../game/game.model";
-import whiteLevyImageSvg from "../../resources/whitePawn.svg";
-import blackLevyImageSvg from "../../resources/blackPawn.svg";
+import whiteLevyImageSvg from "../../resources/levyWhite.svg";
+import blackLevyImageSvg from "../../resources/levyBlack.svg";
 
 export default class Levy extends BasePiece {
   pieceType = pieceTypes.levy;

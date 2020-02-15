@@ -41,6 +41,7 @@ $boardWidth: $squareSize * 24 - 23;
   padding: 0;
   text-align: center;
   width: $squareSize;
+  background-repeat: no-repeat;
 }
 
 .square:focus {

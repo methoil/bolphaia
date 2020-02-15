@@ -1,5 +1,5 @@
-import whiteArcherImageSvg from "../../resources/whiteArcher.svg";
-import blackArcherImageSvg from "../../resources/blackArcher.svg";
+import whiteArcherImageSvg from "../../resources/archerWhite.svg";
+import blackArcherImageSvg from "../../resources/archerBlack.svg";
 import RangedPiece from "./rangedPiece";
 import { playerIds, pieceTypes } from "../game/game.model";
 
