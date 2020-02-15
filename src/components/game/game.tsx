@@ -232,11 +232,11 @@ export default class Game extends React.Component<IGameProps, {}> {
         rowArray[10] = new Archer(playerIds.phrygians);
         rowArray[13] = new Archer(playerIds.phrygians);
         rowArray[16] = new Archer(playerIds.phrygians);
-        rowArray[17] = new Chariot(playerIds.hittites);
-        rowArray[18] = new General(playerIds.hittites);
-        rowArray[19] = new Centaur(playerIds.hittites);
-        rowArray[20] = new LightCavalry(playerIds.hittites);
-        rowArray[21] = new WarElephant(playerIds.hittites);
+        rowArray[17] = new Chariot(playerIds.phrygians);
+        rowArray[18] = new General(playerIds.phrygians);
+        rowArray[19] = new Centaur(playerIds.phrygians);
+        rowArray[20] = new LightCavalry(playerIds.phrygians);
+        rowArray[21] = new WarElephant(playerIds.phrygians);
 
         // rowArray[19] = new Archer(playerIds.phrygians);
 
@@ -260,7 +260,11 @@ export default class Game extends React.Component<IGameProps, {}> {
         rowArray[10] = new Archer(playerIds.hittites);
         rowArray[13] = new Archer(playerIds.hittites);
         rowArray[16] = new Archer(playerIds.hittites);
-        rowArray[19] = new Archer(playerIds.hittites);
+        rowArray[17] = new Chariot(playerIds.hittites);
+        rowArray[18] = new General(playerIds.hittites);
+        rowArray[19] = new Centaur(playerIds.hittites);
+        rowArray[20] = new LightCavalry(playerIds.hittites);
+        rowArray[21] = new WarElephant(playerIds.hittites);
         boardState.push(rowArray);
         continue;
       }
