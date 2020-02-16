@@ -2,18 +2,30 @@ import React from 'react';
 import { Segment, Grid } from 'semantic-ui-react';
 import { TokenProvider, ChatManager } from '@pusher/chatkit-client';
 import axios from 'axios';
-import Rooms from './rooms';
+import Rooms, { IRoom } from './rooms';
 import Chat from './chat';
 import { playerIds } from '../game/game.model';
 import { BACKEND_URL } from '../../app-constants';
 
+export interface IUser {
+  id: string;
+  name: string;
+  rooms: IRoom [];
+  sendMessage: (payload: { text: string; roomId: string; attachment?: any }) => void;
+  createRoom: (paylod: { name: string; addUserIds: string[] }) => Promise<IRoom>;
+  deleteRoom: any;
+  joinRoom: any;
+  leaveRoom: any;
+  getJoinableRooms: any;
+}
+
 interface ILobbyState {
-  joined: [];
-  joinable: [];
+  joined: IRoom [];
+  joinable: IRoom [];
   chatManager?: any;
   lobbyId?: string;
   activeRoom?: string;
-  currentUser?: any;
+  currentUser?: IUser;
 }
 
 interface ILobbyProps {
@@ -69,7 +81,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> {
 
   private pollRooms() {
     const { currentUser } = this.state;
-    currentUser.getJoinableRooms().then(rooms => {
+    currentUser?.getJoinableRooms().then(rooms => {
       this.setState({
         joined: currentUser.rooms,
         joinable: rooms,
@@ -80,7 +92,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> {
   private enterRoom(id) {
     const { currentUser } = this.state;
     currentUser
-      .joinRoom({ roomId: id })
+      ?.joinRoom({ roomId: id })
       .then(() => {
         this.setState({
           activeRoom: id,
@@ -97,12 +109,12 @@ export default class Lobby extends React.Component<ILobbyProps, any> {
     // TODO: temp disable toom deletion so I can see if games persist over time
     if (this.chat) {
       const playersInRoom = this.chat.getPlayersInRoom();
-      if (playersInRoom.length === 1 && playersInRoom[0].id === currentUser.id) {
-        currentUser.deleteRoom({ roomId: id });
+      if (playersInRoom.length === 1 && playersInRoom[0].id === currentUser?.id) {
+        currentUser?.deleteRoom({ roomId: id });
       }
     }
     currentUser
-      .leaveRoom({ roomId: id })
+      ?.leaveRoom({ roomId: id })
       .then(() => {
         this.pollRooms();
       })
@@ -141,14 +153,17 @@ export default class Lobby extends React.Component<ILobbyProps, any> {
     if (currentUser) {
       const room = currentUser.rooms.find(room => room.id == this.state.activeRoom);
       if (room) {
-        const game = this.state.activeRoom !== this.state.lobbyId && this.state.activeRoom;
+        const gameGameRoomId =
+          this.state.activeRoom && this.state.activeRoom !== this.state.lobbyId
+            ? this.state.activeRoom
+            : '';
         chat = (
           <Chat
             user={currentUser}
             room={room}
             key={room.id}
             startedGame={this.startedGame.bind(this)}
-            game={game}
+            gameGameRoomId={gameGameRoomId}
             ref={child => {
               this.chat = child;
             }}

@@ -5,18 +5,21 @@ import { List, Icon, Header } from 'semantic-ui-react';
 export interface IRoom {
   id: string;
   name: string;
+  users: any[]; // todo: IUser[]
 }
 
 type IEnterRoom = (roomId: string) => void;
 type ILeaveRoom = (roomId: string) => void;
 
-export default function Rooms(props: {
+interface IRoomsProps  {
   joined: IRoom[];
   joinable: IRoom[];
   activeRoom?: string;
   enterRoom: IEnterRoom;
   leaveRoom: ILeaveRoom;
-}) {
+}
+
+export default function Rooms(props: IRoomsProps) {
   const joinedRooms = props.joined.map(room => (
     <List.Item key={room.id}>
       {room.id === props.activeRoom && (

@@ -1,10 +1,12 @@
 import React from 'react';
 import { Grid, List, Comment, Form, Input } from 'semantic-ui-react';
 import { IRoom } from './rooms';
+import { IUser } from './lobby';
 import GameBoard from '../game/game';
 import { playerIds } from '../game/game.model';
 
 let playerSide = playerIds.phrygians;
+let opponentId = '';
 
 interface IMessage {
   id: string;
@@ -13,17 +15,10 @@ interface IMessage {
   opponent?: string;
 }
 
-interface IUser {
-  id: string;
-  name: string;
-  sendMessage: (payload: { text: string; roomId: string; attachment?: any }) => void;
-  createRoom: (paylod: { name: string; addUserIds: string[] }) => Promise<IRoom>;
-}
-
 interface IChatProps {
   user: IUser;
-  room: { id: string; users: IUser[] };
-  game: any;
+  room: IRoom;
+  gameGameRoomId: string;
   startedGame: (roomId: string, white: string, black: string) => Promise<any>;
 }
 
@@ -131,15 +126,17 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
       })
       .reverse();
 
+      const roomId = this.props.gameGameRoomId;
     let gameBoard =
-      this.props.game && playerSide ? (
+    roomId && playerSide ? (
         <GameBoard
-          roomId={this.props.game}
+          roomId={roomId}
           offlineMode={false}
           userId={this.props.user.id}
           ref={child => {
             this.gameBoard = child;
           }}
+          startGameCallback = {() => this.startGameCallback(roomId, opponentId)}
         />
       ) : null;
 
@@ -216,7 +213,7 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
     });
   }
 
-  private challengePlayer(player) {
+  private challengePlayer(player: IUser) {
     const { user, room } = this.props;
     user.sendMessage({
       text: `I challenge ${player.name} to a game`,
@@ -229,18 +226,20 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
     });
   }
 
-  private acceptChallenge(player) {
+  private async acceptChallenge(opponent: string) {
     const { user } = this.props;
-    user
-      .createRoom({
-        name: `${user.id} vs ${player}`,
-        addUserIds: [player],
+    opponentId = opponent;
+    const room = await user.createRoom({
+        name: `${user.id} vs ${opponent}`,
+        addUserIds: [opponent],
       })
-      .then(room => {
-        this.props.startedGame(room.id, user.id, player).then(res => {
-          playerSide = res[this.props.user.id];
-        });
-      });
+    return this.startGameCallback(room.id, opponent);
+  }
+
+  public async startGameCallback(roomId: string, opponent: string): Promise<void> {
+    const res = await this.props.startedGame(roomId, this.props.user.id, opponent);
+    playerSide = res[this.props.user.id];
+    // opponentSide = res[opponent];
   }
 
   getPlayersInRoom() {

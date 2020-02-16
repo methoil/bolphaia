@@ -1,8 +1,8 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import { Container } from 'semantic-ui-react';
-import Login from '../lobby/login';
-import Games from '../lobby/lobby';
+import Login from './login';
+import Games from './lobby';
 
 interface IAppState {
   username: string,

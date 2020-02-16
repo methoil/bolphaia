@@ -9,8 +9,7 @@ import { getMovesPath } from '../pieces/piece.utils';
 import RangedPiece from '../pieces/rangedPiece';
 import Board from './board';
 import { pieceTypes, playerIds } from './game.model';
-import {generateNewBoard, pieceNameToConstructorMap, IPieceMeta } from './boardSetup';
-
+import { generateNewBoard, pieceNameToConstructorMap, IPieceMeta } from './boardSetup';
 
 export const BOARD_WIDTH: number = 18;
 export const BOARD_HEIGHT: number = 12;
@@ -57,6 +56,7 @@ interface IGameProps {
   offlineMode: boolean;
   userId?: string;
   roomId?: string;
+  startGameCallback?: () => Promise<void>
 }
 
 export default class Game extends React.Component<IGameProps, {}> {
@@ -94,12 +94,11 @@ export default class Game extends React.Component<IGameProps, {}> {
   }
 
   constructor(props) {
-    // no props will be passed here?
     super(props);
     this.state = {
       turn: playerIds.phrygians,
       selectedSquare: null,
-      boardState: this.initializeBoard(BOARD_HEIGHT, BOARD_WIDTH),
+      boardState: props.offlineMode ? this.initializeBoard(generateNewBoard()) : [[]],
       highlightState: this.generateEmptyHighlightedMoves(),
       mouseHoverIcon: '',
     };
@@ -141,7 +140,13 @@ export default class Game extends React.Component<IGameProps, {}> {
         if (res.data.players) {
           this.setState({ players: res.data.players });
           this.setState({ playerSide: res.data.players[this.props.userId ?? ''] });
-          return;
+        }
+        if (res.data.board) {
+          this.setState({ boardState: this.initializeBoard(res.data.board) });
+        } else {
+          this.props.startGameCallback();
+          this.setState({ boardState: this.initializeBoard(generateNewBoard()) });
+          console.error('Error fetching board data from server');
         }
       });
   }
@@ -160,7 +165,7 @@ export default class Game extends React.Component<IGameProps, {}> {
         const newBoardState = cloneDeep(this.state.boardState);
         for (let square of res?.data?.updatedSquares ?? []) {
           const pieceMeta = square.piece;
-          newBoardState[square.row][square.col] = this.makePieceFromMeta(pieceMeta)
+          newBoardState[square.row][square.col] = this.makePieceFromMeta(pieceMeta);
         }
 
         this.setState({
@@ -174,10 +179,9 @@ export default class Game extends React.Component<IGameProps, {}> {
     return `${BACKEND_URL}/games/${this.props.roomId}`;
   }
 
-  private initializeBoard(xSize: number, ySize: number): IBoardState {
+  private initializeBoard(newBoardMeta: Array<IPieceMeta | null>[]): IBoardState {
     const boardState: Array<IPiece | null>[] = [];
-    
-    const newBoardMeta = generateNewBoard();
+
     for (let x = 0; x < BOARD_HEIGHT; x++) {
       const row: Array<IPiece | null> = [];
       for (let y = 0; y < BOARD_WIDTH; y++) {
@@ -189,12 +193,12 @@ export default class Game extends React.Component<IGameProps, {}> {
     return boardState;
   }
 
-  private makePieceFromMeta(squareMata: IPieceMeta  | null): IPiece | null {
-    const fromPiecePlacement = squareMata
-      ? new pieceNameToConstructorMap[squareMata.pieceType] (
-        squareMata.player,
-        )
-      : null;
+  private makePieceFromMeta(squareMata: IPieceMeta | null): IPiece | null {
+    let fromPiecePlacement: IPiece | null = null;
+    if (squareMata?.pieceType) {
+      fromPiecePlacement = new pieceNameToConstructorMap[squareMata.pieceType](squareMata?.player);
+    }
+
     if (fromPiecePlacement && squareMata?.health) {
       fromPiecePlacement.setHealth(squareMata.health);
     }
@@ -268,12 +272,14 @@ export default class Game extends React.Component<IGameProps, {}> {
 
     const newBoardState = cloneDeep(this.state.boardState);
     let updateBoard = false;
-    const squaresToUpdate: coordinate [] = [];
+    const squaresToUpdate: coordinate[] = [];
     // layout of board may be changed in these cases, need to update server
     // case of ranged attack
     if (
-      selectedPiece && selectedSquare &&
-      clickedPiece && clickedSquare &&
+      selectedPiece &&
+      selectedSquare &&
+      clickedPiece &&
+      clickedSquare &&
       this.isTargetValidRangedAttack(clickedSquare, selectedPiece as RangedPiece)
     ) {
       clickedPiece.takeDamage(selectedPiece.attack);
@@ -353,7 +359,7 @@ export default class Game extends React.Component<IGameProps, {}> {
 
   private getUpdateServerPayload(
     newBoardState: IBoardState,
-    squaresToUpdate: coordinate [],
+    squaresToUpdate: coordinate[],
   ): ISquareUpdatePayload[] {
     const payloads: ISquareUpdatePayload[] = [];
     for (let square of squaresToUpdate) {
