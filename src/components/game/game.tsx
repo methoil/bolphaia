@@ -26,7 +26,8 @@ export type IBoardState = (IPiece | null)[][];
 let pusher;
 
 interface IUpdateServerPayload {
-  player: string; // userId??
+  player: string; // userId
+  newTurn: playerIds;
   updatedSquares: ISquareUpdatePayload[];
 }
 
@@ -56,7 +57,7 @@ interface IGameProps {
   offlineMode: boolean;
   userId?: string;
   roomId?: string;
-  startGameCallback?: () => Promise<void>
+  startGameCallback?: () => Promise<void>;
 }
 
 export default class Game extends React.Component<IGameProps, {}> {
@@ -141,10 +142,13 @@ export default class Game extends React.Component<IGameProps, {}> {
           this.setState({ players: res.data.players });
           this.setState({ playerSide: res.data.players[this.props.userId ?? ''] });
         }
+        if (res.data.nextTurn) {
+          this.setState({ turn: res.data.nextTurn });
+        }
         if (res.data.board) {
           this.setState({ boardState: this.initializeBoard(res.data.board) });
         } else {
-          this.props.startGameCallback();
+          // this.props.startGameCallback();
           this.setState({ boardState: this.initializeBoard(generateNewBoard()) });
           console.error('Error fetching board data from server');
         }
@@ -170,7 +174,7 @@ export default class Game extends React.Component<IGameProps, {}> {
 
         this.setState({
           boardState: newBoardState,
-          turn: this.state.playerSide,
+          turn: res.data.nextTurn || this.state.playerSide,
         });
       });
   }
@@ -335,6 +339,7 @@ export default class Game extends React.Component<IGameProps, {}> {
       if (!this.props.offlineMode) {
         const payload: IUpdateServerPayload = {
           player: this.props.userId ?? '',
+          newTurn: this.getNewTurn(),
           updatedSquares: this.getUpdateServerPayload(newBoardState, squaresToUpdate),
         };
         axios.request({
