@@ -9,7 +9,7 @@ export default class Archer extends RangedPiece {
   health: number = 2;
   readonly maxHealth: number = 2;
   attack: number = 1;
-  range: number = 4;
+  range: number = 3;
 
   getImageUrl() {
     return this.player === playerIds.phrygians ? whiteArcherImageSvg : blackArcherImageSvg;

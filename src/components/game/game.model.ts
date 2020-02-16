@@ -7,7 +7,7 @@ export enum pieceTypes {
   levy = 'levy',
   archer = 'archer',
   cataphract = 'cataphract',
-  hoplite = 'hoplite',
+  legion = 'legion',
   chariot = 'chariot',
   warElephant = 'warElephant',
   centaur = 'centaur',
