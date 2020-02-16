@@ -225,8 +225,8 @@ export default class Game extends React.Component<IGameProps, {}> {
         )
       : null;
     // newBoardState[fromRow][fromColumn] = fromPiecePlacement;
-    if (fromPiecePlacement) {
-      fromPiecePlacement.setHealth(squareMata?.health && 1);
+    if (fromPiecePlacement && squareMata?.health) {
+      fromPiecePlacement.setHealth(squareMata.health);
     }
 
     return fromPiecePlacement;

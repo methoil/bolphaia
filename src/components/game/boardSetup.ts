@@ -1,5 +1,5 @@
 // TODO: temp file, result of this should be json
-import {extend, find} from 'lodash';
+import {extend, find, clone} from 'lodash';
 import General from '../pieces/general';
 import Chariot from '../pieces/chariot';
 import Centaur from '../pieces/centaur';
@@ -95,7 +95,7 @@ export function generateNewBoard(): Array<IPieceMeta | null>[] {
   for (let x = 0; x < BOARD_HEIGHT; x++) {
     const rowArray: Array<IPieceMeta | null> = new Array(BOARD_WIDTH).fill(null);
     // phrygian side
-    if (x === 1) {
+    if (x === 0) {
       rowArray[5] = makePhrygianPiece('cataphract');
       rowArray[rowArray.length - 5] = makePhrygianPiece('cataphract');
       rowArray[7] = makePhrygianPiece('general');
@@ -104,9 +104,7 @@ export function generateNewBoard(): Array<IPieceMeta | null>[] {
       rowArray[2] = makePhrygianPiece('archer');
       rowArray[10] = makePhrygianPiece('archer');
       rowArray[13] = makePhrygianPiece('archer');
-
-      boardState.push(rowArray);
-    } else if (x === 2) {
+    } else if (x === 1) {
       rowArray[6] = makePhrygianPiece('chariot');
       rowArray[rowArray.length - 6] = makePhrygianPiece('chariot');
       rowArray[4] = makePhrygianPiece('archer');
@@ -114,7 +112,7 @@ export function generateNewBoard(): Array<IPieceMeta | null>[] {
       rowArray[12] = makePhrygianPiece('archer');
       rowArray[2] = makePhrygianPiece('centaur');
       rowArray[rowArray.length - 2] = makePhrygianPiece('centaur');
-    } else if (x === 3) {
+    } else if (x === 2) {
       rowArray[1] = makePhrygianPiece('lightCavalry');
       rowArray.fill(makePhrygianPiece('hoplite'), 3, 6);
       rowArray.fill(makePhrygianPiece('hoplite'), 7, 10);
@@ -132,7 +130,7 @@ export function generateNewBoard(): Array<IPieceMeta | null>[] {
       rowArray[rowArray.length - 5] = makePhrygianPiece('lightCavalry');
     }
     // hittite side
-    else if (x === BOARD_HEIGHT - 2) {
+    else if (x === BOARD_HEIGHT - 1) {
       rowArray[5] = makeHittitePiece('cataphract');
       rowArray[rowArray.length - 5] = makeHittitePiece('cataphract');
       rowArray[7] = makeHittitePiece('general');
@@ -141,9 +139,7 @@ export function generateNewBoard(): Array<IPieceMeta | null>[] {
       rowArray[2] = makeHittitePiece('archer');
       rowArray[10] = makeHittitePiece('archer');
       rowArray[13] = makeHittitePiece('archer');
-
-      boardState.push(rowArray);
-    } else if (x === BOARD_HEIGHT - 3) {
+    } else if (x === BOARD_HEIGHT - 2) {
       rowArray[6] = makeHittitePiece('chariot');
       rowArray[rowArray.length - 6] = makeHittitePiece('chariot');
       rowArray[4] = makeHittitePiece('archer');
@@ -151,17 +147,17 @@ export function generateNewBoard(): Array<IPieceMeta | null>[] {
       rowArray[12] = makeHittitePiece('archer');
       rowArray[2] = makeHittitePiece('centaur');
       rowArray[rowArray.length - 2] = makeHittitePiece('centaur');
-    } else if (x === BOARD_HEIGHT - 4) {
+    } else if (x === BOARD_HEIGHT - 3) {
       rowArray[1] = makeHittitePiece('lightCavalry');
       rowArray.fill(makeHittitePiece('hoplite'), 3, 6);
       rowArray.fill(makeHittitePiece('hoplite'), 7, 10);
       rowArray.fill(makeHittitePiece('hoplite'), 11, 14);
       rowArray[rowArray.length - 2] = makeHittitePiece('lightCavalry');
-    } else if (x === BOARD_HEIGHT - 5) {
+    } else if (x === BOARD_HEIGHT - 4) {
       rowArray.fill(makeHittitePiece('levy'), 2, 4);
       rowArray.fill(makeHittitePiece('levy'), 7, 11);
       rowArray.fill(makeHittitePiece('levy'), 12, 14);
-    } else if (x === BOARD_HEIGHT - 6) {
+    } else if (x === BOARD_HEIGHT - 5) {
       rowArray[4] = makeHittitePiece('lightCavalry');
       rowArray.fill(makeHittitePiece('levy'), 2, 6);
       rowArray.fill(makeHittitePiece('levy'), 8, 10);
@@ -183,8 +179,8 @@ function makeHittitePiece(pieceType: string) {
 }
 
 function makePiece(player: playerIds, pieceType: string): IPieceMeta {
-  return extend(
+  return clone(extend(
     find(pieceDefs, meta => meta.pieceType === pieceType),
     { player },
-  );
+  ));
 }
