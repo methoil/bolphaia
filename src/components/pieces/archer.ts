@@ -8,7 +8,7 @@ export default class Archer extends RangedPiece {
   moveRange: number = 2;
   health: number = 2;
   readonly maxHealth: number = 2;
-  attack: number = 1;
+  attack: number = 2;
   range: number = 3;
 
   getImageUrl() {

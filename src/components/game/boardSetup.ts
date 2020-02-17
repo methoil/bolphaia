@@ -51,7 +51,7 @@ export interface IPieceMeta extends IPieceDef {
 export const pieceDefs: IPieceDef[] = [
   {
     pieceType: 'levy',
-    health: 2,
+    health: 3,
   },
   {
     pieceType: 'archer',

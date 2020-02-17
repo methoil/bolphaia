@@ -8,14 +8,14 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "smallLogo.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "150x220"
     },
     {
-      "src": "logo512.png",
+      "src": "largeLogo.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "400x693"
     }
   ],
   "start_url": ".",
