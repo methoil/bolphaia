@@ -15,7 +15,7 @@ export default {
     health: 3,
     attack: 1,
     lore:
-      'Peasants and laborers are often conscripted into the army or forced to join out of sheer desparation. Armed with a small shield and spear, they are even more poorly trained than they are armed.',
+      'Peasants and laborers are often conscripted into the army or join out of sheer desparation. Armed with a small shield and spear, they are even more poorly trained than they are armed.',
     gameplay:
       'Levies are best used to protect more valuable soldiers by distracting enemies. They have, however, been known to suprise careless foes with their disorienting mob tactics.',
   },
@@ -63,7 +63,7 @@ export default {
     svgSource: blackLightCavalryImageSvg,
     health: 4,
     lore:
-      'Migrant barbarians and more reckless youths of the nobility not yet old enough to join elite units often join our ranks as irregular cavalry. What they lack in discipline and amor, they make up for with speed and daring.',
+      'Migrant barbarians and more reckless youths of the nobility not yet old enough to join elite units often serve as irregular cavalry. What they lack in discipline and amor, they make up for with speed and daring.',
     gameplay: '',
   },
   centaur: {
@@ -71,7 +71,7 @@ export default {
     svgSource: blackCentaurImageSvg,
     health: 4,
     lore:
-      'Centaurs are reclusive, forest folk who rarely venture into the realm of men; in fact, most ration people do not believe they exist. They do make outstanding marksman and for the right price, they can potentially be hired as mercenaries.',
+      'Centaurs are reclusive forest folk who rarely venture into the realms of men; in fact, most rational people do not believe they exist. They do make outstanding marksman and for the right price, they can potentially be hired as mercenaries.',
     gameplay: '',
   },
   general: {
