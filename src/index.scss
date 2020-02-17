@@ -20,6 +20,17 @@ $boardWidth: $squareSize * 18 - 17;
   box-shadow: none;
 }
 
+.login-segment {
+  margin: 0 auto;
+  margin-top: 50px; 
+  width: 700px;
+  padding: 20px;
+  border: solid;
+  border-width: 1px;
+  border-color: lightgray;
+  border-radius: 7px;
+}
+
 .game-container {
   display: inline-block;
   height: 599px;
@@ -27,7 +38,6 @@ $boardWidth: $squareSize * 18 - 17;
   overflow-x: none;
   border-style: solid;
   border-color: darkslateblue;
-
 }
 
 .turn-status-ribbon {

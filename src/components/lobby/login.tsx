@@ -16,7 +16,7 @@ export default class Login extends React.Component<ILoginProps, any> {
 
   render() {
     return (
-      <Segment>
+      <div className="login-segment">
         <Form onSubmit={this.handleFormSubmit.bind(this)}>
           <Form.Field>
             <label>Username</label>
@@ -29,7 +29,7 @@ export default class Login extends React.Component<ILoginProps, any> {
           </Form.Field>
           <Button type="submit">Log in</Button>
         </Form>
-      </Segment>
+      </div>
     );
   }
 

@@ -1,18 +1,17 @@
-
 import React from 'react';
-import {Link} from 'react-router-dom';
+import { Button } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 
 export default function Home() {
-    return (
-        <nav>
-        <ul>
-          <li>
-            <Link to="/offline-mode">Play offline on this screen</Link>
-          </li>
-          <li>
-            <Link to="/online-mode">Enter lobby to play online</Link>
-          </li>
-        </ul>
-      </nav>
-    );
-  };
+  return (
+    <div>
+      <Link to="/offline-mode">
+        <Button>Play offline on this screen</Button>
+      </Link>
+
+      <Link to="/online-mode">
+        <Button>Enter lobby to play online</Button>
+      </Link>
+    </div>
+  );
+}
