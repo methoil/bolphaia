@@ -7,7 +7,7 @@ import Chat from './chat';
 import { playerIds } from '../game/game.model';
 import { BACKEND_URL } from '../../app-constants';
 
-const LOBBY_NAME = 'Lobby';
+export const LOBBY_NAME = 'Lobby';
 
 export interface IUser {
   id: string;
@@ -59,11 +59,11 @@ export default class Lobby extends React.Component<ILobbyProps, any> {
           currentUser: currentUser,
         });
         currentUser.getJoinableRooms().then(rooms => {
-          let lobby = rooms.find(room => room.name === LOBBY_NAME);
+          let lobby = this.findLobby(rooms);
           if (lobby) {
             currentUser.joinRoom({ roomId: lobby.id });
           } else {
-            lobby = currentUser.rooms.find(room => room.name === LOBBY_NAME);
+            lobby = this.findLobby(currentUser.rooms);
           }
           if (lobby) {
             this.setState({
@@ -149,6 +149,10 @@ export default class Lobby extends React.Component<ILobbyProps, any> {
           [black]: playerIds.hittites,
         };
       });
+  }
+
+  private findLobby(rooms: IRoom[]): IRoom | null {
+    return rooms.filter(room => room.name === LOBBY_NAME)?.[0] ?? null;
   }
 
   render() {
