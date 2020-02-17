@@ -30,7 +30,7 @@ export default class Board extends React.Component<IBoardProps, {}> {
       for (let j = 0; j < yLength; j++) {
         const cssClasses: string[] = [];
         cssClasses.push(
-          (isEven(i) && isEven(j)) || (!isEven(i) && !isEven(j)) ? 'light-square' : 'dark-square'
+          (isEven(i) && isEven(j)) || (!isEven(i) && !isEven(j)) ? 'light-square' : 'dark-square',
         );
 
         const piece = this.props.boardState[i][j];
@@ -39,7 +39,7 @@ export default class Board extends React.Component<IBoardProps, {}> {
           cssClasses.push(
             squareHighlight.canAttack === true
               ? 'highlighted-square-red'
-              : 'highlighted-square-green'
+              : 'highlighted-square-green',
           );
         }
         if (squareHighlight && squareHighlight.inAttackRange) {
@@ -51,11 +51,11 @@ export default class Board extends React.Component<IBoardProps, {}> {
       board.push(
         <div key={i} className="board-row">
           {squareRows}
-        </div>
+        </div>,
       );
     }
 
-    return <div>{board}</div>;
+    return <div className="board">{board}</div>;
   }
 
   renderSquare(xIdx: number, yIdx: number, cssClasses: string[], piece: IPiece | null) {

@@ -1,21 +1,43 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  overflow-x: auto !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 $squareSize: 48px;
-$boardWidth: $squareSize * 24 - 23;
+$gameContainerWidth: $squareSize * 24;
+$boardWidth: $squareSize * 18 - 17;
 
 .segment-grid-container {
   border: none;
   box-shadow: none;
+}
+
+.game-container {
+  display: inline-block;
+  height: 599px;
+  width: $gameContainerWidth;
+  overflow-x: none;
+  border-style: solid;
+  border-color: darkslateblue;
+
+}
+
+.turn-status-ribbon {
+  width: $gameContainerWidth - 6;
+  padding: 5px;
+  font-weight: bold;
+  background-color: rgb(22, 104, 89);
+}
+
+.board {
 }
 
 .board-row {
@@ -24,7 +46,7 @@ $boardWidth: $squareSize * 24 - 23;
 
 .board-row:after {
   clear: both;
-  content: "";
+  content: '';
   display: table;
 }
 
@@ -111,11 +133,4 @@ $boardWidth: $squareSize * 24 - 23;
 
 .bow-icon {
   cursor: url(./resources/mouseHoverIcons/bow.cur), auto;
-}
-
-.current-turn-text {
-  width: $boardWidth;
-  padding: 5px;
-  font-weight: bold;
-  background-color: rgb(22, 104, 89);
 }

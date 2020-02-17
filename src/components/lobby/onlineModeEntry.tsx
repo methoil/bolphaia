@@ -1,6 +1,5 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
-import { Container } from 'semantic-ui-react';
 import Login from './login';
 import Games from './lobby';
 
@@ -18,7 +17,7 @@ class OnlineModeEntry extends React.Component {
     } else {
       contents = <Login login={this.enterGame.bind(this)} />;
     }
-    return <Container>{contents}</Container>;
+    return contents;
   }
   enterGame(username) {
     this.setState({

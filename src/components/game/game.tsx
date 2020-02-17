@@ -65,8 +65,8 @@ export default class Game extends React.Component<IGameProps, {}> {
 
   render() {
     return (
-      <div>
-        <div className="current-turn-text">
+      <div className="game-container">
+        <div className="turn-status-ribbon">
           {this.state.playerSide ? (
             <span style={{ marginRight: '10px' }}>
               You are {this.props.userId} of the
