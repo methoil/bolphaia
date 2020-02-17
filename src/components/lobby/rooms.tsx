@@ -11,7 +11,8 @@ export interface IRoom {
 type IEnterRoom = (roomId: string) => void;
 type ILeaveRoom = (roomId: string) => void;
 
-interface IRoomsProps  {
+interface IRoomsProps {
+  // lobby: IRoom;
   joined: IRoom[];
   joinable: IRoom[];
   activeRoom?: string;
@@ -33,7 +34,7 @@ export default function Rooms(props: IRoomsProps) {
       </List.Content>
     </List.Item>
   ));
-  
+
   const joinableRooms = props.joinable.map(room => (
     <List.Item key={room.id}>
       <Icon name={undefined} />
@@ -45,6 +46,10 @@ export default function Rooms(props: IRoomsProps) {
 
   return (
     <div>
+      {/* <Header as="h4">Matchmaking Lobby</Header>
+      <List divided relaxed>
+        {lobby}
+      </List> */}
       <Header as="h4">Active Rooms</Header>
       <List divided relaxed>
         {joinedRooms}

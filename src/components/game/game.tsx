@@ -147,11 +147,30 @@ export default class Game extends React.Component<IGameProps, {}> {
         }
         if (res.data.board) {
           this.setState({ boardState: this.initializeBoard(res.data.board) });
-        } else {
-          // this.props.startGameCallback();
-          this.setState({ boardState: this.initializeBoard(generateNewBoard()) });
-          console.error('Error fetching board data from server');
         }
+      })
+      .catch(err => {
+        console.error('Error fetching board data from server, creating new game', err);
+        // TODO: use TS argument types: https://stackoverflow.com/questions/52771626/typescript-react-conditionally-optional-props-based-on-the-type-of-another-prop
+        this.props.startGameCallback &&
+          this.props.startGameCallback().then(() => {
+            return axios
+              .request({
+                url: this.urlToGameServer,
+              })
+              .then(res => {
+                if (res.data.players) {
+                  this.setState({ players: res.data.players });
+                  this.setState({ playerSide: res.data.players[this.props.userId ?? ''] });
+                }
+                if (res.data.nextTurn) {
+                  this.setState({ turn: res.data.nextTurn });
+                }
+                if (res.data.board) {
+                  this.setState({ boardState: this.initializeBoard(res.data.board) });
+                }
+              });
+          });
       });
   }
 
@@ -161,6 +180,10 @@ export default class Game extends React.Component<IGameProps, {}> {
         url: this.urlToGameServer,
       })
       .then(res => {
+        if ((res.data.players && !this.state.players) || !this.state.playerSide) {
+          this.setState({ players: res.data.players });
+          this.setState({ playerSide: res.data.players[this.props.userId ?? ''] });
+        }
         // use same format as the sent payload and just update the changed squares
         if (res.data.player === this.props.userId) {
           return;

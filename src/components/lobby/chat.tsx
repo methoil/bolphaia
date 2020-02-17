@@ -126,9 +126,9 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
       })
       .reverse();
 
-      const roomId = this.props.gameGameRoomId;
+    const roomId = this.props.gameGameRoomId;
     let gameBoard =
-    roomId && playerSide ? (
+      roomId && playerSide ? (
         <GameBoard
           roomId={roomId}
           offlineMode={false}
@@ -136,7 +136,7 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
           ref={child => {
             this.gameBoard = child;
           }}
-          startGameCallback = {() => this.startGameCallback(roomId, opponentId)}
+          startGameCallback={() => this.startGameCallback(roomId, opponentId)}
         />
       ) : null;
 
@@ -228,15 +228,21 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
 
   private async acceptChallenge(opponent: string) {
     const { user } = this.props;
-    opponentId = opponent;
     const room = await user.createRoom({
-        name: `${user.id} vs ${opponent}`,
-        addUserIds: [opponent],
-      })
+      name: `${user.id} vs ${opponent}`,
+      addUserIds: [opponent],
+    });
     return this.startGameCallback(room.id, opponent);
   }
 
-  public async startGameCallback(roomId: string, opponent: string): Promise<void> {
+  public async startGameCallback(roomId: string, opponent?: string): Promise<void> {
+    if (!opponent) {
+      const playersInRoom = this.props.room.name.split('vs');
+      opponent =
+        playersInRoom[0].trim() === this.props.user.name
+          ? playersInRoom[1].trim()
+          : playersInRoom[0].trim();
+    }
     const res = await this.props.startedGame(roomId, this.props.user.id, opponent);
     playerSide = res[this.props.user.id];
     // opponentSide = res[opponent];

@@ -7,10 +7,12 @@ import Chat from './chat';
 import { playerIds } from '../game/game.model';
 import { BACKEND_URL } from '../../app-constants';
 
+const LOBBY_NAME = 'Lobby';
+
 export interface IUser {
   id: string;
   name: string;
-  rooms: IRoom [];
+  rooms: IRoom[];
   sendMessage: (payload: { text: string; roomId: string; attachment?: any }) => void;
   createRoom: (paylod: { name: string; addUserIds: string[] }) => Promise<IRoom>;
   deleteRoom: any;
@@ -20,8 +22,8 @@ export interface IUser {
 }
 
 interface ILobbyState {
-  joined: IRoom [];
-  joinable: IRoom [];
+  joined: IRoom[];
+  joinable: IRoom[];
   chatManager?: any;
   lobbyId?: string;
   activeRoom?: string;
@@ -57,11 +59,11 @@ export default class Lobby extends React.Component<ILobbyProps, any> {
           currentUser: currentUser,
         });
         currentUser.getJoinableRooms().then(rooms => {
-          let lobby = rooms.find(room => room.name === 'Lobby');
+          let lobby = rooms.find(room => room.name === LOBBY_NAME);
           if (lobby) {
             currentUser.joinRoom({ roomId: lobby.id });
           } else {
-            lobby = currentUser.rooms.find(room => room.name === 'Lobby');
+            lobby = currentUser.rooms.find(room => room.name === LOBBY_NAME);
           }
           if (lobby) {
             this.setState({
@@ -84,7 +86,9 @@ export default class Lobby extends React.Component<ILobbyProps, any> {
     currentUser?.getJoinableRooms().then(rooms => {
       this.setState({
         joined: currentUser.rooms,
-        joinable: rooms,
+        joinable: rooms.filter(room => {
+          return room.name.includes(this.state.currentUser?.name);
+        }),
       });
     });
   }
@@ -110,6 +114,7 @@ export default class Lobby extends React.Component<ILobbyProps, any> {
     if (this.chat) {
       const playersInRoom = this.chat.getPlayersInRoom();
       if (playersInRoom.length === 1 && playersInRoom[0].id === currentUser?.id) {
+        // TODO: when to delete?
         currentUser?.deleteRoom({ roomId: id });
       }
     }
@@ -123,7 +128,6 @@ export default class Lobby extends React.Component<ILobbyProps, any> {
       });
   }
 
-  // TODO: this is being set so poorly.. def some sort of antipattern
   private startedGame(roomId, white, black): Promise<any> {
     return axios
       .request({
