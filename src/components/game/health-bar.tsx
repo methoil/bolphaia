@@ -1,10 +1,15 @@
-import * as React from "react";
+import * as React from 'react';
 
-export default function HealthBar(props: any) {
+interface IHealthBarProps {
+  maxHealth: number;
+  remainingHealth: number;
+}
+
+export default function HealthBar(props: IHealthBarProps) {
   return (
-    <span className={"health-box"}>
+    <span className={'health-box'}>
       <span
-        className={"remaining-health"}
+        className={'remaining-health'}
         style={{ height: getHealthHeight(props.maxHealth, props.remainingHealth) }}
       ></span>
     </span>

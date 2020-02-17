@@ -55,7 +55,7 @@ export default class Board extends React.Component<IBoardProps, {}> {
       );
     }
 
-    return <div className="board">{board}</div>;
+    return <span className="board">{board}</span>;
   }
 
   renderSquare(xIdx: number, yIdx: number, cssClasses: string[], piece: IPiece | null) {

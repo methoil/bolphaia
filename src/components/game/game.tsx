@@ -10,6 +10,7 @@ import RangedPiece from '../pieces/rangedPiece';
 import Board from './board';
 import { pieceTypes, playerIds } from './game.model';
 import { generateNewBoard, pieceNameToConstructorMap, IPieceMeta } from './boardSetup';
+import SelectedPieceStats from './selectedPieceStats';
 
 export const BOARD_WIDTH: number = 18;
 export const BOARD_HEIGHT: number = 12;
@@ -90,6 +91,7 @@ export default class Game extends React.Component<IGameProps, {}> {
           onMoveClick={this.onMoveClick.bind(this)}
           getHoverIcon={this.getHoverIcon.bind(this)}
         ></Board>
+        <SelectedPieceStats piece={this.getSelectedPiece()}></SelectedPieceStats>
       </div>
     );
   }

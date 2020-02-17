@@ -10,8 +10,8 @@ export default function Home() {
         <div className="main-title-intro">
           <h3>Bolphaia</h3>
           <div>
-            Bolphaia is a board game inspired by chess wil additional mechanics. Each player makes
-            one move per turn, and the aim is to capture the oponents general. An overview of the
+            Bolphaia is a board game inspired by chess with additional mechanics. Each player makes
+            one move per turn, and the aim is to capture the oponent's general. An overview of the
             pieces can be seen below, and more detailed stats will be shown within the game.
           </div>
           <br></br>
@@ -23,7 +23,7 @@ export default function Home() {
         <div className="game-mode-button">
           <img src={require('../../resources/warRoom.jpg')} width="349" height="222"></img>
           <Link to="/offline-mode">
-            <Button>Play offline on this screen</Button>
+            <Button>Play offline on one screen</Button>
           </Link>
         </div>
 

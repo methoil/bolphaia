@@ -15,9 +15,9 @@ export default {
     health: 3,
     attack: 1,
     lore:
-      'Peasants and laborers are often conscripted into the army or join out of sheer desparation. Armed with a small shield and spear, they are even more poorly trained than they are armed.',
+      'Peasants and laborers are often conscripted into the army or join out of sheer desparation. Armed with a small shield and spear, they are even more poorly trained than they are armed. They can none the less overwhelm careless foes in sufficient numbers.',
     gameplay:
-      'Levies are best used to protect more valuable soldiers by distracting enemies. They have, however, been known to suprise careless foes with their disorienting mob tactics.',
+      'Levies are best used to protect more valuable soldiers by distracting enemies.',
   },
   archer: {
     displayName: 'Archer',
@@ -79,7 +79,7 @@ export default {
     svgSource: blackGeneralImageSvg,
     health: 10,
     lore:
-      "You have been given command of one of The Empire's grandest armies and are protected by a bodyguard of elite cataphracts. While a formidable warrior yourself, you are needed to issue orders, and if you fall, your army will fall into disarray and route.",
+      "You have been given command of one of The Empire's grandest armies and are protected by a bodyguard of elite cataphracts. While a formidable warrior yourself, you are needed to issue orders, and if you fall, your army will fall into disarray and rout.",
     gameplay: '',
   },
 };

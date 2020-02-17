@@ -43,6 +43,7 @@ $boardWidth: $squareSize * 18 - 17;
   max-height: 270px;
 }
 
+// TODO: inherit from .home-piece-description
 .home-piece-title-bar {
   min-width: 400px;
   max-width: 400px;
@@ -68,8 +69,16 @@ $boardWidth: $squareSize * 18 - 17;
 }
 
 .lore-text {
-  color: black;
   font-size: 12px;
+}
+
+.selected-piece-stats {
+  height: 564px;
+  display: inline-block;
+  width: $gameContainerWidth - $boardWidth - 6px;
+  background-color: darkslategray;
+  color: white;
+  vertical-align: top;
 }
 
 .segment-grid-container {
@@ -105,6 +114,7 @@ $boardWidth: $squareSize * 18 - 17;
 }
 
 .board {
+  display: inline-block;
 }
 
 .board-row {
