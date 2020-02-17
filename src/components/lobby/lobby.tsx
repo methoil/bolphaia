@@ -13,6 +13,7 @@ export interface IUser {
   id: string;
   name: string;
   rooms: IRoom[];
+  presence: { state: 'online' | 'offline' };
   sendMessage: (payload: { text: string; roomId: string; attachment?: any }) => void;
   createRoom: (paylod: { name: string; addUserIds: string[] }) => Promise<IRoom>;
   deleteRoom: any;

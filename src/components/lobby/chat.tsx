@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, List, Comment, Form, Input } from 'semantic-ui-react';
+import { Grid, List, Comment, Form, Input, Icon } from 'semantic-ui-react';
 import { IRoom } from './rooms';
 import { IUser } from './lobby';
 import GameBoard from '../game/game';
@@ -91,16 +91,31 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
   }
 
   render() {
-    const users = this.state.users
+    const usersListItems = this.state.users
       .filter(user => user.id !== this.props.user.id)
-      .map(user => (
-        <List.Item key={user.id}>
-          <List.Content floated="right">
-            <a onClick={() => this.challengePlayer(user)}>Challenge</a>
-          </List.Content>
-          <List.Content>{user.name}</List.Content>
-        </List.Item>
-      ));
+      .map(user => {
+        const statusIcon =
+          user.presence.state === 'online' ? (
+            <Icon name="circle" color="green"></Icon>
+          ) : (
+            <Icon name="circle outline"></Icon>
+          );
+        return (
+          <List.Item key={user.id}>
+            <List.Content floated="right">
+              <a
+                onClick={() => this.challengePlayer(user)}
+                title="The player must be online to see and accept your challenge"
+              >
+                Challenge
+              </a>
+            </List.Content>
+            <List.Content>
+              {statusIcon} {user.name}
+            </List.Content>
+          </List.Item>
+        );
+      });
 
     const messages = this.state.messages
       .map(message => {
@@ -159,9 +174,19 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
           <Grid.Column width={4}>
             <List style={{ maxHeight: '20em', overflow: 'auto' }}>
               <List.Item>
-                <b>{this.props.user.name}</b>
+                <strong>You are logged in as:</strong>
               </List.Item>
-              {users}
+              <List.Item>
+                <Icon name="circle" color="green"></Icon>
+                &nbsp;{this.props.user.name}
+              </List.Item>
+              <List.Item>
+                <hr></hr>
+              </List.Item>
+              <List.Item>
+                <strong>Other players:</strong>
+              </List.Item>
+              {usersListItems}
             </List>
           </Grid.Column>
         </Grid.Row>
