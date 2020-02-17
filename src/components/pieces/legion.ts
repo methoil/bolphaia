@@ -1,7 +1,7 @@
 import BasePiece from './piece';
 import { playerIds, pieceTypes } from '../game/game.model';
-import whiteLevyImageSvg from '../../resources/legionWhite.svg';
-import blackLevyImageSvg from '../../resources/legionBlack.svg';
+import whiteLegionImageSvg from '../../resources/legionWhite.svg';
+import blackLegionImageSvg from '../../resources/legionBlack.svg';
 
 export default class Legion extends BasePiece {
   pieceType: pieceTypes = pieceTypes.legion;
@@ -11,6 +11,6 @@ export default class Legion extends BasePiece {
   attack: number = 3;
 
   getImageUrl() {
-    return this.player === playerIds.phrygians ? whiteLevyImageSvg : blackLevyImageSvg;
+    return this.player === playerIds.phrygians ? whiteLegionImageSvg : blackLegionImageSvg;
   }
 }

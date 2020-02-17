@@ -11,6 +11,40 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+.home-flex-wrapper {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.home-flex-wrapper > div {
+  color: white;
+  // background: gray;
+  margin: .1em;
+  padding: .3em;
+  border-radius: 3px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.game-mode-button {
+  max-width: 200px;
+  position: relative;
+}
+
+.home-piece-description {
+  width: 350px;
+  height: 200px;
+  color: black;
+  font-size: 16px;
+}
+
+.lore-text {
+  color: black;
+  font-size: 12px;
+}
+
 $squareSize: 48px;
 $gameContainerWidth: $squareSize * 24;
 $boardWidth: $squareSize * 18 - 17;
@@ -67,11 +101,11 @@ $boardWidth: $squareSize * 18 - 17;
   font-size: 24px;
   font-weight: bold;
   line-height: 34px;
-  height: $squareSize;
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
   text-align: center;
+  height: $squareSize;
   width: $squareSize;
   background-repeat: no-repeat;
 }
