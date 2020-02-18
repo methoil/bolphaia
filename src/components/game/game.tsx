@@ -11,6 +11,7 @@ import Board from './board';
 import { pieceTypes, playerIds } from './game.model';
 import { generateNewBoard, pieceNameToConstructorMap, IPieceMeta } from './boardSetup';
 import SelectedPieceStats from './selectedPieceStats';
+import Cemetery from './cemetery';
 
 export const BOARD_WIDTH: number = 18;
 export const BOARD_HEIGHT: number = 12;
@@ -95,9 +96,12 @@ export default class Game extends React.Component<IGameProps, {}> {
           onMoveClick={this.onMoveClick.bind(this)}
           getHoverIcon={this.getHoverIcon.bind(this)}
         ></Board>
-        <SelectedPieceStats
-          piece={this.getSelectedPiece() || this.state.hoveredPiece || null}
-        ></SelectedPieceStats>
+        <span className="board-sidebar">
+          <SelectedPieceStats
+            piece={this.getSelectedPiece() || this.state.hoveredPiece || null}
+          ></SelectedPieceStats>
+          <Cemetery fallenPieces={this.state.fallenPieces}></Cemetery>
+        </span>
       </div>
     );
   }
@@ -274,7 +278,6 @@ export default class Game extends React.Component<IGameProps, {}> {
   }
 
   private onMoveClick(clickedSquare: coordinate): void {
-    // TODO: make visual indicator of this somewhere
     if (!this.props.offlineMode && this.state.turn !== this.state.playerSide) {
       return;
     }
@@ -314,6 +317,7 @@ export default class Game extends React.Component<IGameProps, {}> {
     }
 
     const newBoardState = cloneDeep(this.state.boardState);
+    const newFallenPieces = cloneDeep(this.state.fallenPieces);
     let updateBoard = false;
     const squaresToUpdate: coordinate[] = [];
     // layout of board may be changed in these cases, need to update server
@@ -328,7 +332,7 @@ export default class Game extends React.Component<IGameProps, {}> {
       clickedPiece.takeDamage(selectedPiece.attack);
 
       if (clickedPiece.health <= 0) {
-        // TODO: move clicked piece to graveyard
+        newFallenPieces[clickedPiece.player][clickedPiece.pieceType] += 1;
         newBoardState[clickedSquare.x][clickedSquare.y] = null;
       } else {
         newBoardState[clickedSquare.x][clickedSquare.y] = clickedPiece;
@@ -344,7 +348,7 @@ export default class Game extends React.Component<IGameProps, {}> {
       if (clickedPiece && clickedPiece !== selectedPiece) {
         clickedPiece.takeDamage(selectedPiece.attack);
         if (clickedPiece.health <= 0) {
-          // TODO: move clicked piece to graveyard
+          newFallenPieces[clickedPiece.player][clickedPiece.pieceType] += 1;
           newBoardState[selectedSquare.x][selectedSquare.y] = null;
           newBoardState[clickedSquare.x][clickedSquare.y] = selectedPiece;
         } else {
@@ -392,6 +396,7 @@ export default class Game extends React.Component<IGameProps, {}> {
         boardState: newBoardState,
         selectedSquare: null,
         highlightState: this.generateEmptyHighlightedMoves(),
+        fallenPieces: newFallenPieces,
         turn: this.getNewTurn(),
       });
     }

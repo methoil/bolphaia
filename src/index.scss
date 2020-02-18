@@ -72,19 +72,37 @@ $boardWidth: $squareSize * 18 - 17;
   font-size: 12px;
 }
 
-.selected-piece-stats {
+.board-sidebar {
   height: 564px;
   display: inline-block;
   width: $gameContainerWidth - $boardWidth - 6px;
-  padding: 10px;
+  // padding: 10px;
   background-color: darkslategray;
   color: white;
   vertical-align: top;
 }
 
-.cemetery-grid-container {
-  display: flex;
-  flex-direction: column;
+.selected-piece-stats {
+  height: 246px;
+  display: inline-block;
+  width: $gameContainerWidth - $boardWidth - 6px;
+  padding: 10px;
+  background-color: darkslategray;
+  color: white;
+  // vertical-align: top;
+}
+
+.cemetery-container {
+  height: 312px;
+  // display: flex;
+  // flex-direction: column;
+  // display: inline-block;
+  width: $gameContainerWidth - $boardWidth - 6px;
+  padding: 10px;
+  background-color: darkslategray;
+  color: white;
+  vertical-align: bottom;
+  display: table-cell;
 }
 
 .lobby-grid-container {
@@ -143,7 +161,8 @@ $boardWidth: $squareSize * 18 - 17;
   display: table;
 }
 
-.square {
+.square,
+.cemetery-square {
   background: transparent;
   border: 1px solid transparent;
   float: left;
@@ -157,6 +176,10 @@ $boardWidth: $squareSize * 18 - 17;
   height: $squareSize;
   width: $squareSize;
   background-repeat: no-repeat;
+}
+
+.cemetery-square {
+  margin: 5px;
 }
 
 .square:focus {

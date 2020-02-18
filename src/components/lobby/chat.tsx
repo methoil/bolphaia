@@ -96,9 +96,9 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
       .map(user => {
         const statusIcon =
           user.presence.state === 'online' ? (
-            <Icon name="circle" color="green"></Icon>
+            <Icon title="online" name="circle" color="green"></Icon>
           ) : (
-            <Icon name="circle outline"></Icon>
+            <Icon title="offline" name="circle outline"></Icon>
           );
         return (
           <List.Item key={user.id}>
@@ -177,7 +177,7 @@ export default class Chat extends React.Component<IChatProps, any> implements IC
                 <strong>You are logged in as:</strong>
               </List.Item>
               <List.Item>
-                <Icon name="circle" color="green"></Icon>
+                <Icon title="online" name="circle" color="green"></Icon>
                 &nbsp;{this.props.user.name}
               </List.Item>
               <List.Item>
