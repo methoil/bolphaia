@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { capitalize, cloneDeep, findIndex, get } from 'lodash';
+import { capitalize, cloneDeep, findIndex, get, isEqual } from 'lodash';
 import Pusher from 'pusher-js';
 import * as React from 'react';
 import { BACKEND_URL } from '../../app-constants';
@@ -329,7 +329,13 @@ export default class Game extends React.Component<IGameProps, {}> {
       clickedSquare &&
       this.isTargetValidRangedAttack(clickedSquare, selectedPiece as RangedPiece)
     ) {
-      clickedPiece.takeDamage(selectedPiece.attack);
+      if (clickedPiece.pieceType === pieceTypes.legion) {
+        clickedPiece.takeDamage(1);
+      } else if (clickedPiece.pieceType === pieceTypes.warElephant) {
+        clickedPiece.takeDamage(selectedPiece.attack * 2);
+      } else {
+        clickedPiece.takeDamage(selectedPiece.attack);
+      }
 
       if (clickedPiece.health <= 0) {
         newFallenPieces[clickedPiece.player][clickedPiece.pieceType] += 1;
@@ -344,9 +350,51 @@ export default class Game extends React.Component<IGameProps, {}> {
     // Move the piece if a valid move is selected
     // includes doing damage
     else if (selectedPiece && selectedSquare && isMovePossible) {
+      if (isEqual(selectedSquare, clickedSquare)) {
+        // do not skip turn if you don't move the piece
+        return this.setState({
+          selectedSquare: null,
+          highlightState: this.generateEmptyHighlightedMoves(),
+        });
+      }
       // combat occurs on destination arrival
       if (clickedPiece && clickedPiece !== selectedPiece) {
-        clickedPiece.takeDamage(selectedPiece.attack);
+        // levvy surround bonus
+        if (selectedPiece.pieceType === pieceTypes.levy) {
+          let surroundLevyCount = 1;
+          for (let x = -1; x < 2; x++) {
+            for (let y = -1; y < 2; y++) {
+              const dest = {
+                x: clickedSquare.x + x,
+                y: clickedSquare.y + y,
+              };
+              if (
+                clickedSquare.x + x < 0 ||
+                clickedSquare.x + x > BOARD_HEIGHT - 1 ||
+                clickedSquare.y + y < 0 ||
+                clickedSquare.y + y > BOARD_WIDTH - 1 ||
+                (dest.x === selectedSquare.x && dest.y === selectedSquare.y)
+              ) {
+                continue; // just the square the piece is on
+              }
+
+              if (isEqual(dest, selectedSquare)) {
+                continue;
+              }
+              const checkedPiece = newBoardState[dest.x][dest.y];
+              if (
+                checkedPiece?.pieceType === pieceTypes.levy &&
+                checkedPiece?.player === this.state.turn
+              ) {
+                surroundLevyCount++;
+              }
+            }
+          }
+          clickedPiece.takeDamage(Math.floor(surroundLevyCount));
+        } else {
+          clickedPiece.takeDamage(selectedPiece.attack);
+        }
+
         if (clickedPiece.health <= 0) {
           newFallenPieces[clickedPiece.player][clickedPiece.pieceType] += 1;
           newBoardState[selectedSquare.x][selectedSquare.y] = null;
@@ -445,7 +493,12 @@ export default class Game extends React.Component<IGameProps, {}> {
       hoveredPiece: hoveredPiece,
     });
 
-    if (!selectedPiece && hoveredPiece && hoveredPiece.player === this.state.turn) {
+    if (
+      !selectedPiece &&
+      hoveredPiece &&
+      hoveredPiece.player === this.state.turn &&
+      !(!this.props.offlineMode && this.state.playerSide !== hoveredPiece.player)
+    ) {
       return 'pointer-icon';
     } else if (!selectedPiece) {
       return '';

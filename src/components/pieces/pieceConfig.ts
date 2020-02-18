@@ -35,7 +35,7 @@ export default {
     whiteSvgSource: whiteArcherImageSvg,
     health: 2,
     lore:
-      'Skilled archers are always in short supply, as good marksman require years of practice or experience from hunting since a young age. While a sword cannot strike from a distance like an arrow, these men are lightly armed and will fall quickly in melee combat.',
+      'Skilled archers are always in short supply, as a good marksman require years of practice or experience from hunting since a young age. While a sword cannot strike from a distance like an arrow, these men are lightly armed and will fall quickly in melee combat.',
     gameplay: '',
   },
   legion: {
@@ -44,7 +44,7 @@ export default {
     whiteSvgSource: whiteLegionImageSvg,
     health: 8,
     lore:
-      'Legions are professional, heavily armed infantry that form the backbone of our army. They are able to stand their ground as they march in a tight, solid formation, though as a result they move very slowly.',
+      'Legions are professional, heavily armed infantry that form the backbone of our army. They are able to stand their ground and are particularly resistant towards arrows as they march in a tight, solid formation, though as a result they move very slowly.',
     gameplay: '',
   },
   cataphract: {
@@ -68,7 +68,7 @@ export default {
     displayName: 'War Elephant',
     svgSource: blackWarElephantImageSvg,
     whiteSvgSource: whiteWarElephantImageSvg,
-    health: 20,
+    health: 24,
     lore:
       'These massive beasts, imported from the far east, are a terrifying sight to any opponent. They throw men around like chickens with thier unmatched strength and it will take many blows to bring one down. Their large size does however make then an easy target for any marksman.',
     gameplay: '',
