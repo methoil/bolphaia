@@ -1,8 +1,12 @@
-Game similar to chess, where pieces have health, attack values and for some range. 
+Bolphaia is a game similar to Chess, with new rules and more pieces. I always liked Chess, but I have gotten tired of the same familiar setup. Modifying the movement of the pieces or expanding the size of the board while keeping the same basic famework could enhance an already deep experience. It also bothered me how many of the pieces made no sense - how does a tower move around? Why can the queen rampage across the map? What the hell is a bishop?
 
-Game can be accessed here:
+As solution to this, I made Bolphaia, which can be played here:
 https://bolphaia.herokuapp.com/
 
-Enter any username and click on the `Lobby` link - you may need to wait a few seconds for this to appear as the server will still go into sleep mode. Next challenge another player to a game by clicking the action in the list of players on the right. The other player could just be another tab on the same computer for testing, or anyone else visiting the same page. Once both players have joined the game (click the room name with the two player's names in the left hand list to join), you can start making moves.
+It is best run in Chrome, and has not yet been tested much in other browsers.
 
-The invited player will be The Phrygians, which is basically white, and the inviter will be The Hittites, or black. Moves will be shown in the other player's browser as they are entered. Possible moves will be highlighted when you click on a piece. Please wait for both players to enter the room before white moves a piece.
+In offline mode, you will control both players from the same screen and the game will be run only on the client.
+
+For online play, you must enter a username and login, and then challenge another player to a game by clicking the link in the right hand list of users in the lobby. They must be online to actually see the request and accept. Once they accept, a new game will be created and you will be able to enter it by clicking it in the left hand pane. 
+
+Each user will be automatically assigned a side. Moves will be sent to a server which keeps to two user's games in sync. The rules of the game are still executed on the client like in offline mode, and the server is mostly for fostering communication. The server code is [located in this repo](https://github.com/methoil/bolphaia-backend). The online mode can also be tested with two tabs with the game open in the same browser. 
