@@ -182,20 +182,22 @@ export default class Lobby extends React.Component<ILobbyProps, any> {
     }
 
     return (
-      <Segment className={'segment-grid-container'}>
-        <Grid>
-          <Grid.Column width={2}>
-            <Rooms
-              joined={this.state.joined}
-              joinable={this.state.joinable}
-              activeRoom={this.state.activeRoom}
-              enterRoom={this.enterRoom.bind(this)}
-              leaveRoom={this.leaveRoom.bind(this)}
-            />
-          </Grid.Column>
-          <Grid.Column width={12}>{chat}</Grid.Column>
-        </Grid>
-      </Segment>
+      <div className={'segment-grid-container'}>
+        <div className="lobby-grid">
+          <Grid>
+            <Grid.Column width={2}>
+              <Rooms
+                joined={this.state.joined}
+                joinable={this.state.joinable}
+                activeRoom={this.state.activeRoom}
+                enterRoom={this.enterRoom.bind(this)}
+                leaveRoom={this.leaveRoom.bind(this)}
+              />
+            </Grid.Column>
+            <Grid.Column width={12}>{chat}</Grid.Column>
+          </Grid>
+        </div>
+      </div>
     );
   }
 }

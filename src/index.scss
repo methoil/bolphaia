@@ -76,14 +76,30 @@ $boardWidth: $squareSize * 18 - 17;
   height: 564px;
   display: inline-block;
   width: $gameContainerWidth - $boardWidth - 6px;
+  padding: 10px;
   background-color: darkslategray;
   color: white;
   vertical-align: top;
 }
 
-.segment-grid-container {
-  border: none;
-  box-shadow: none;
+.cemetery-grid-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.lobby-grid-container {
+}
+
+.lobby-grid {
+  width: 1350px;
+  margin-right: none;
+  margin-top: 50px;
+  margin-left: 50px;
+  padding: 20px;
+  border: solid;
+  border-width: 1px;
+  border-color: lightgray;
+  border-radius: 7px;
 }
 
 .login-segment {

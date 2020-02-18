@@ -62,7 +62,7 @@ function joinableListItems(rooms: IRoom[], props) {
 function joinedListItems(rooms: IRoom[], props) {
   return rooms.map(room => (
     <List.Item key={room.id}>
-      {room.id === props.activeRoom && (
+      {room.id === props.activeRoom && room.name !== 'Lobby' && false && (
         <List.Content floated="right">
           <a onClick={() => props.leaveRoom(room.id)}>Leave</a>
         </List.Content>

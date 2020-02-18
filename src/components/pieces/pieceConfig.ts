@@ -15,7 +15,7 @@ export default {
     health: 3,
     attack: 1,
     lore:
-      'Peasants and laborers are often conscripted into the army or join out of sheer desparation. Armed with a small shield and spear, they are even more poorly trained than they are armed. They can none the less overwhelm careless foes in sufficient numbers.',
+      'Peasants and laborers are often conscripted into the army or join out of sheer desparation. Equipped with a small shield and spear, they are even more poorly trained than they are armed. They can none the less overwhelm careless foes in sufficient numbers.',
     gameplay:
       'Levies are best used to protect more valuable soldiers by distracting enemies.',
   },
@@ -40,7 +40,7 @@ export default {
     svgSource: blackCataphractImageSvg,
     health: 8,
     lore:
-      'Recent developments in horsemanship have given rise to a new class of warrior. Cataphracts are wealthy aristocrats who ride into battle very heavily armed on powerful horses. They are few mortals who can withstand their crushing charge.',
+      'Recent developments in horsemanship have given rise to a new class of warrior. Cataphracts are wealthy aristocrats who ride into battle very heavily armed on powerful horses. There are few mortals who can withstand their crushing charge.',
     gameplay: '',
   },
   chariot: {
@@ -55,7 +55,7 @@ export default {
     svgSource: blackWarElephantImageSvg,
     health: 20,
     lore:
-      'These massive beasts, imported from the far east, are a terrifying sight to any opponent. Their strenght is unmatched and it will take many blows to bring one of them down.',
+      'These massive beasts, imported from the far east, are a terrifying sight to any opponent. They throw men around like chickens with thier unmatched strength and it will take many blows to bring one down. Their large size does however make then an easy target for any marksman.',
     gameplay: '',
   },
   lightCavalry: {

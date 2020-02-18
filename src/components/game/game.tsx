@@ -44,12 +44,16 @@ interface IPieceUpdatePayload {
   pieceType: string | undefined; // TODO: add enums
 }
 
+export type IFallenPiecesStruct = { [key in playerIds]: { [key in pieceTypes]: number } };
+
 interface IGameState {
   turn: playerIds;
   boardState: IBoardState;
   highlightState: IPossibleMoves;
   selectedSquare: coordinate | null;
+  hoveredPiece: IPiece | null;
   mouseHoverIcon: string;
+  fallenPieces: IFallenPiecesStruct;
   playerSide?: playerIds;
   players?: { [key: string]: playerIds };
 }
@@ -91,16 +95,26 @@ export default class Game extends React.Component<IGameProps, {}> {
           onMoveClick={this.onMoveClick.bind(this)}
           getHoverIcon={this.getHoverIcon.bind(this)}
         ></Board>
-        <SelectedPieceStats piece={this.getSelectedPiece()}></SelectedPieceStats>
+        <SelectedPieceStats
+          piece={this.getSelectedPiece() || this.state.hoveredPiece || null}
+        ></SelectedPieceStats>
       </div>
     );
   }
 
   constructor(props) {
     super(props);
+    const fallenPieces: any = { [playerIds.phrygians]: {}, [playerIds.hittites]: {} };
+    for (let player in playerIds) {
+      for (let piece in pieceTypes) {
+        fallenPieces[player][piece] = 0;
+      }
+    }
     this.state = {
       turn: playerIds.phrygians,
       selectedSquare: null,
+      hoveredPiece: null,
+      fallenPieces: fallenPieces,
       boardState: props.offlineMode ? this.initializeBoard(generateNewBoard()) : [[]],
       highlightState: this.generateEmptyHighlightedMoves(),
       mouseHoverIcon: '',
@@ -420,6 +434,12 @@ export default class Game extends React.Component<IGameProps, {}> {
       `state.boardState[${hoveredSquare.x}][${hoveredSquare.y}]`,
       null,
     );
+
+    // TODO: move this out... not good practice to get in get method...
+    this.setState({
+      hoveredPiece: hoveredPiece,
+    });
+
     if (!selectedPiece && hoveredPiece && hoveredPiece.player === this.state.turn) {
       return 'pointer-icon';
     } else if (!selectedPiece) {
