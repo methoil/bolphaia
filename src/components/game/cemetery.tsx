@@ -14,43 +14,49 @@ export default function Cemetery(props: ISlectedPieceStatsProps) {
     <span className="cemetery-container">
       <h4>New Arrivals to Hades</h4>
       <span>
-        {iconAndCount(pieceTypes.levy, whiteCounts)}
-        {iconAndCount(pieceTypes.archer, whiteCounts)}
-        {iconAndCount(pieceTypes.legion, whiteCounts)}
-        {iconAndCount(pieceTypes.lightCavalry, whiteCounts)}
+        {iconAndCount(pieceTypes.levy, playerIds.phrygians, whiteCounts)}
+        {iconAndCount(pieceTypes.archer, playerIds.phrygians, whiteCounts)}
+        {iconAndCount(pieceTypes.legion, playerIds.phrygians, whiteCounts)}
+        {iconAndCount(pieceTypes.lightCavalry, playerIds.phrygians, whiteCounts)}
       </span>
       <span>
-        {iconAndCount(pieceTypes.chariot, whiteCounts)}
-        {iconAndCount(pieceTypes.centaur, whiteCounts)}
-        {iconAndCount(pieceTypes.cataphract, whiteCounts)}
-        {iconAndCount(pieceTypes.warElephant, whiteCounts)}
+        {iconAndCount(pieceTypes.chariot, playerIds.phrygians, whiteCounts)}
+        {iconAndCount(pieceTypes.centaur, playerIds.phrygians, whiteCounts)}
+        {iconAndCount(pieceTypes.cataphract, playerIds.phrygians, whiteCounts)}
+        {iconAndCount(pieceTypes.warElephant, playerIds.phrygians, whiteCounts)}
       </span>
       <span>
-        {iconAndCount(pieceTypes.levy, blackCounts)}
-        {iconAndCount(pieceTypes.archer, blackCounts)}
-        {iconAndCount(pieceTypes.legion, blackCounts)}
-        {iconAndCount(pieceTypes.lightCavalry, blackCounts)}
+        {iconAndCount(pieceTypes.levy, playerIds.hittites, blackCounts)}
+        {iconAndCount(pieceTypes.archer, playerIds.hittites, blackCounts)}
+        {iconAndCount(pieceTypes.legion, playerIds.hittites, blackCounts)}
+        {iconAndCount(pieceTypes.lightCavalry, playerIds.hittites, blackCounts)}
       </span>
       <span>
-        {iconAndCount(pieceTypes.chariot, blackCounts)}
-        {iconAndCount(pieceTypes.centaur, blackCounts)}
-        {iconAndCount(pieceTypes.cataphract, blackCounts)}
-        {iconAndCount(pieceTypes.warElephant, blackCounts)}
+        {iconAndCount(pieceTypes.chariot, playerIds.hittites, blackCounts)}
+        {iconAndCount(pieceTypes.centaur, playerIds.hittites, blackCounts)}
+        {iconAndCount(pieceTypes.cataphract, playerIds.hittites, blackCounts)}
+        {iconAndCount(pieceTypes.warElephant, playerIds.hittites, blackCounts)}
       </span>
     </span>
   );
 }
 
-function iconAndCount(pieceId: pieceTypes, fallenCount: any) {
+function iconAndCount(pieceId: pieceTypes, playerId: playerIds, fallenCount: any) {
+  const svg =
+    playerId === playerIds.phrygians
+      ? pieceConfig[pieceId].whiteSvgSource
+      : pieceConfig[pieceId].svgSource;
   return (
     <div>
       <button
         className="cemetery-square"
         style={{
-          backgroundImage: `url(${pieceConfig[pieceId].svgSource})` || '',
+          backgroundImage: `url(${svg})` || '',
         }}
       >
-        <span style={{ color: 'maroon' }}>{fallenCount[pieceId]}</span>
+        <span className="cemetery-fallen-count" style={{ color: 'maroon' }}>
+          {fallenCount[pieceId]}
+        </span>
       </button>
     </div>
   );

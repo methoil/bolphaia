@@ -182,6 +182,12 @@ $boardWidth: $squareSize * 18 - 17;
   margin: 5px;
 }
 
+.cemetery-fallen-count {
+  color: 'maroon';
+  margin-top: -20px;
+  margin-left: -5px;
+  float: left;
+}
 .square:focus {
   outline: navy;
 }
