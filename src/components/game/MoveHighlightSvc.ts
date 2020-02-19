@@ -1,5 +1,5 @@
-import { coordinate } from './IPieces.model';
-import { IBoardState, BOARD_WIDTH, BOARD_HEIGHT } from '../game/game';
+import { coordinate } from '../pieces/IPieces.model';
+import { IBoardState, BOARD_WIDTH, BOARD_HEIGHT } from './game';
 
 // call this 8 times for each direction to get all possible moves
 export function getMovesPath(src: coordinate, dest: coordinate, board: IBoardState): coordinate[] {

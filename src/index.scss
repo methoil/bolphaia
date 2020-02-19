@@ -73,13 +73,13 @@ $boardWidth: $squareSize * 18 - 17;
 }
 
 .board-sidebar {
-  height: 564px;
+  height: 565px;
   display: inline-block;
-  width: $gameContainerWidth - $boardWidth - 6px;
-  // padding: 10px;
+  width: 300px;
   background-color: darkslategray;
   color: white;
-  vertical-align: top;
+  position: absolute;
+  top: 45px;
 }
 
 .selected-piece-stats {
@@ -89,7 +89,6 @@ $boardWidth: $squareSize * 18 - 17;
   padding: 10px;
   background-color: darkslategray;
   color: white;
-  // vertical-align: top;
 }
 
 .cemetery-container {

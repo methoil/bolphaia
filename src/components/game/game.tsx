@@ -5,7 +5,7 @@ import * as React from 'react';
 import { BACKEND_URL } from '../../app-constants';
 import '../../index.scss';
 import { coordinate, IPiece, IRangedPiece } from '../pieces/IPieces.model';
-import { getMovesPath } from '../pieces/piece.utils';
+import { getMovesPath } from './MoveHighlightSvc';
 import RangedPiece from '../pieces/rangedPiece';
 import Board from './board';
 import { pieceTypes, playerIds } from './game.model';
