@@ -1,6 +1,6 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
-import { Container } from 'semantic-ui-react';
+import { Container, Grid } from 'semantic-ui-react';
 import Game from './components/game/game';
 import Home from './components/game/home';
 import OnlineModeEntry from './components/lobby/onlineModeEntry';
@@ -15,17 +15,15 @@ class App extends React.Component {
 
   render() {
     return (
-        <div>
-          <Switch>
-            <Route path="/offline-mode">
-              <Game offlineMode={true} />
-            </Route>
-            <Route path="/online-mode">
-              <OnlineModeEntry />
-            </Route>
-            <Route path="/" component={Home} exact />
-          </Switch>
-        </div>
+      <div>
+        <Switch>
+          <Route path="/offline-mode">{oneScreenGameWrapper()}</Route>
+          <Route path="/online-mode">
+            <OnlineModeEntry />
+          </Route>
+          <Route path="/" component={Home} exact />
+        </Switch>
+      </div>
     );
   }
 
@@ -34,6 +32,14 @@ class App extends React.Component {
       username: username,
     });
   }
+}
+
+function oneScreenGameWrapper() {
+  return (
+    <Grid>
+      <Grid.Column width={12}>{<Game offlineMode={true} />}</Grid.Column>
+    </Grid>
+  );
 }
 
 export default App;

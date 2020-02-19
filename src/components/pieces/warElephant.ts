@@ -8,7 +8,7 @@ export default class WarElephant extends BasePiece {
   public moveRange: number = 4;
   public health: number = 24;
   readonly maxHealth: number = 24;
-  public attack: number = 8;
+  public attack: number = 7;
 
   getImageUrl() {
     return this.player === playerIds.phrygians ? whiteWarElephantImageSvg : blackWarElephantImageSvg;
