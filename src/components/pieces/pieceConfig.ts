@@ -26,7 +26,7 @@ export default {
     health: 3,
     attack: 1,
     lore:
-      'Peasants and laborers are often conscripted into the army or join out of sheer desparation. Equipped with a small shield and spear, they are even more poorly trained than they are armed. They can none the less overwhelm careless foes in sufficient numbers.',
+      'Peasants and laborers are often conscripted into the army or join out of sheer desperation. Equipped with a small shield and spear, they are even more poorly trained than they are armed. They can none the less overwhelm careless foes in sufficient numbers.',
     gameplay: 'Levies are best used to protect more valuable soldiers by distracting enemies.',
   },
   archer: {
@@ -35,7 +35,7 @@ export default {
     whiteSvgSource: whiteArcherImageSvg,
     health: 2,
     lore:
-      'Skilled archers are always in short supply, as a good marksman require years of practice or experience from hunting since a young age. While a sword cannot strike from a distance like an arrow, these men are lightly armed and will fall quickly in melee combat.',
+      'Skilled archers are always in short supply, as good marksman require years of practice or experience from hunting since a young age. While a sword cannot strike from a distance like an arrow, these men are lightly armed and will fall quickly in melee combat.',
     gameplay: '',
   },
   legion: {
@@ -44,14 +44,14 @@ export default {
     whiteSvgSource: whiteLegionImageSvg,
     health: 8,
     lore:
-      'Legions are professional, heavily armed infantry that form the backbone of our army. They are able to stand their ground and are particularly resistant towards arrows as they march in a tight, solid formation, though as a result they move very slowly.',
+      'Legions are professional, heavily armed infantry that form the backbone of our army. They are able to stand their ground and are particularly resistant towards arrows as they march in a tight, solid formation. Though as a result, they move very slowly.',
     gameplay: '',
   },
   cataphract: {
     displayName: 'Cataphract',
     svgSource: blackCataphractImageSvg,
     whiteSvgSource: whiteCataphractImageSvg,
-    health: 8,
+    health: 10,
     lore:
       'Recent developments in horsemanship have given rise to a new class of warrior. Cataphracts are wealthy aristocrats who ride into battle very heavily armed on powerful horses. There are few mortals who can withstand their crushing charge.',
     gameplay: '',
@@ -95,7 +95,7 @@ export default {
     displayName: 'General',
     svgSource: blackGeneralImageSvg,
     whiteSvgSource: whiteGeneralImageSvg,
-    health: 10,
+    health: 12,
     lore:
       "You have been given command of one of The Empire's grandest armies and are protected by a bodyguard of elite cataphracts. While a formidable warrior yourself, you are needed to issue orders, and if you fall, your army will fall into disarray and rout.",
     gameplay: '',

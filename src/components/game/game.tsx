@@ -31,6 +31,7 @@ interface IUpdateServerPayload {
   player: string; // userId
   newTurn: playerIds;
   updatedSquares: ISquareUpdatePayload[];
+  fallenPieces: IFallenPiecesStruct;
 }
 
 interface ISquareUpdatePayload {
@@ -158,16 +159,13 @@ export default class Game extends React.Component<IGameProps, {}> {
         url: this.urlToGameServer,
       })
       .then(res => {
-        if (res.data.players) {
-          this.setState({ players: res.data.players });
-          this.setState({ playerSide: res.data.players[this.props.userId ?? ''] });
-        }
-        if (res.data.nextTurn) {
-          this.setState({ turn: res.data.nextTurn });
-        }
-        if (res.data.board) {
-          this.setState({ boardState: this.initializeBoard(res.data.board) });
-        }
+        this.setState({
+          players: res.data.players || this.state.players,
+          playerSide: res.data.players[this.props.userId ?? ''] || this.state.playerSide,
+          boardState: this.initializeBoard(res.data.board),
+          turn: res.data.nextTurn || this.state.playerSide,
+          fallenPieces: res.data.fallenPieces || this.state.fallenPieces,
+        });
       })
       .catch(err => {
         console.error('Error fetching board data from server, creating new game', err);
@@ -179,16 +177,13 @@ export default class Game extends React.Component<IGameProps, {}> {
                 url: this.urlToGameServer,
               })
               .then(res => {
-                if (res.data.players) {
-                  this.setState({ players: res.data.players });
-                  this.setState({ playerSide: res.data.players[this.props.userId ?? ''] });
-                }
-                if (res.data.nextTurn) {
-                  this.setState({ turn: res.data.nextTurn });
-                }
-                if (res.data.board) {
-                  this.setState({ boardState: this.initializeBoard(res.data.board) });
-                }
+                this.setState({
+                  players: res.data.players || this.state.players,
+                  playerSide: res.data.players[this.props.userId ?? ''] || this.state.playerSide,
+                  boardState: this.initializeBoard(res.data.board),
+                  turn: res.data.nextTurn || this.state.playerSide,
+                  fallenPieces: res.data.fallenPieces || this.state.fallenPieces,
+                });
               });
           });
       });
@@ -204,20 +199,15 @@ export default class Game extends React.Component<IGameProps, {}> {
           this.setState({ players: res.data.players });
           this.setState({ playerSide: res.data.players[this.props.userId ?? ''] });
         }
-        // use same format as the sent payload and just update the changed squares
+        // using same format as the sent payload and just update the changed squares for now
         if (res.data.player === this.props.userId) {
           return;
         }
 
-        const newBoardState = cloneDeep(this.state.boardState);
-        for (let square of res?.data?.updatedSquares ?? []) {
-          const pieceMeta = square.piece;
-          newBoardState[square.row][square.col] = this.makePieceFromMeta(pieceMeta);
-        }
-
         this.setState({
-          boardState: newBoardState,
+          boardState: this.initializeBoard(res.data.board),
           turn: res.data.nextTurn || this.state.playerSide,
+          fallenPieces: res.data.fallenPieces || this.state.fallenPieces,
         });
       });
   }
@@ -431,6 +421,7 @@ export default class Game extends React.Component<IGameProps, {}> {
         const payload: IUpdateServerPayload = {
           player: this.props.userId ?? '',
           newTurn: this.getNewTurn(),
+          fallenPieces: newFallenPieces,
           updatedSquares: this.getUpdateServerPayload(newBoardState, squaresToUpdate),
         };
         axios.request({
