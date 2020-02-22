@@ -5,7 +5,12 @@ import * as React from 'react';
 import { BACKEND_URL } from '../../app-constants';
 import '../../index.scss';
 import { coordinate, IPiece, IRangedPiece } from '../pieces/IPieces.model';
-import { getMovesPath } from './MoveHighlightSvc';
+import {
+  generatePossibleMovesHighlights,
+  getMovesPath,
+  generateEmptyHighlightedMoves,
+  isTargetValidRangedAttack,
+} from './MoveHighlightSvc';
 import RangedPiece from '../pieces/rangedPiece';
 import Board from './board';
 import { pieceTypes, playerIds } from './game.model';
@@ -121,7 +126,7 @@ export default class Game extends React.Component<IGameProps, {}> {
       hoveredPiece: null,
       fallenPieces: fallenPieces,
       boardState: props.offlineMode ? this.initializeBoard(generateNewBoard()) : [[]],
-      highlightState: this.generateEmptyHighlightedMoves(),
+      highlightState: generateEmptyHighlightedMoves(),
       mouseHoverIcon: '',
     };
 
@@ -250,23 +255,6 @@ export default class Game extends React.Component<IGameProps, {}> {
     );
   }
 
-  private generateEmptyHighlightedMoves(): IPossibleMoves {
-    const highlightedMoves: IPossibleMove[][] = [];
-    for (let x = 0; x < BOARD_HEIGHT; x++) {
-      const currRow: IPossibleMove[] = [];
-      for (let y = 0; y < BOARD_WIDTH; y++) {
-        const noMovesSquare: IPossibleMove = {
-          canMove: false,
-          canAttack: false,
-          inAttackRange: false,
-        };
-        currRow.push(noMovesSquare);
-      }
-      highlightedMoves.push(currRow);
-    }
-    return highlightedMoves;
-  }
-
   private onMoveClick(clickedSquare: coordinate): void {
     if (!this.props.offlineMode && this.state.turn !== this.state.playerSide) {
       return;
@@ -290,7 +278,11 @@ export default class Game extends React.Component<IGameProps, {}> {
 
       return this.setState({
         selectedSquare: { ...clickedSquare },
-        highlightState: this.generatePossibleMovesHighlights(clickedSquare, clickedPiece),
+        highlightState: generatePossibleMovesHighlights(
+          clickedSquare,
+          clickedPiece,
+          this.state.boardState,
+        ),
       });
     }
 
@@ -298,11 +290,16 @@ export default class Game extends React.Component<IGameProps, {}> {
     else if (
       selectedPiece &&
       !isMovePossible &&
-      !this.isTargetValidRangedAttack(clickedSquare, selectedPiece as RangedPiece)
+      !isTargetValidRangedAttack(
+        clickedSquare,
+        selectedPiece as RangedPiece,
+        this.state.highlightState,
+        this.state.boardState,
+      )
     ) {
       return this.setState({
         selectedSquare: null,
-        highlightState: this.generateEmptyHighlightedMoves(),
+        highlightState: generateEmptyHighlightedMoves(),
       });
     }
 
@@ -317,7 +314,12 @@ export default class Game extends React.Component<IGameProps, {}> {
       selectedSquare &&
       clickedPiece &&
       clickedSquare &&
-      this.isTargetValidRangedAttack(clickedSquare, selectedPiece as RangedPiece)
+      isTargetValidRangedAttack(
+        clickedSquare,
+        selectedPiece as RangedPiece,
+        this.state.highlightState,
+        this.state.boardState,
+      )
     ) {
       if (clickedPiece.pieceType === pieceTypes.legion) {
         clickedPiece.takeDamage(1);
@@ -344,7 +346,7 @@ export default class Game extends React.Component<IGameProps, {}> {
         // do not skip turn if you don't move the piece
         return this.setState({
           selectedSquare: null,
-          highlightState: this.generateEmptyHighlightedMoves(),
+          highlightState: generateEmptyHighlightedMoves(),
         });
       }
       // combat occurs on destination arrival
@@ -434,7 +436,7 @@ export default class Game extends React.Component<IGameProps, {}> {
       return this.setState({
         boardState: newBoardState,
         selectedSquare: null,
-        highlightState: this.generateEmptyHighlightedMoves(),
+        highlightState: generateEmptyHighlightedMoves(),
         fallenPieces: newFallenPieces,
         turn: this.getNewTurn(),
       });
@@ -496,7 +498,14 @@ export default class Game extends React.Component<IGameProps, {}> {
     }
 
     const hoveredSquareHighlights = this.state.highlightState[hoveredSquare.x][hoveredSquare.y];
-    if (this.isTargetValidRangedAttack(hoveredSquare, selectedPiece as RangedPiece)) {
+    if (
+      isTargetValidRangedAttack(
+        hoveredSquare,
+        selectedPiece as RangedPiece,
+        this.state.highlightState,
+        this.state.boardState,
+      )
+    ) {
       return 'bow-icon';
     } else if (hoveredSquareHighlights.canAttack) {
       return 'sword-icon';
@@ -505,83 +514,5 @@ export default class Game extends React.Component<IGameProps, {}> {
     } else {
       return '';
     }
-  }
-
-  private generatePossibleMovesHighlights(
-    src: coordinate,
-    selectedPiece: ISelectedPiece,
-  ): IPossibleMoves {
-    const highlightedMoves = this.generateEmptyHighlightedMoves();
-    if (!selectedPiece) {
-      return highlightedMoves;
-    }
-
-    // get possible moves for vectors in all directions a piece can move; detect blocks and board end
-    const dimensions: number[] = [-selectedPiece.moveRange, 0, selectedPiece.moveRange];
-    for (let x = 0; x < 3; x++) {
-      for (let y = 0; y < 3; y++) {
-        if (x === 1 && y === 1) {
-          continue; // just the square the piece is on
-        }
-        const dest = {
-          x: this.getValidIndex(src.x + dimensions[x], BOARD_HEIGHT - 1),
-          y: this.getValidIndex(src.y + dimensions[y], BOARD_WIDTH - 1),
-        };
-        const movesPath = getMovesPath(src, dest, this.state.boardState);
-
-        for (let move of movesPath) {
-          highlightedMoves[move.x][move.y].canMove = true;
-          if (this.squareHasEnemyPiece(move, selectedPiece)) {
-            highlightedMoves[move.x][move.y].canAttack = true;
-          }
-        }
-      }
-    }
-
-    if ((selectedPiece as IRangedPiece).range) {
-      const range = (selectedPiece as IRangedPiece).range;
-
-      for (
-        let x = Math.max(src.x - range, 0);
-        x <= Math.min(src.x + range, BOARD_HEIGHT - 1);
-        x++
-      ) {
-        for (
-          let y = Math.max(src.y - range, 0);
-          y <= Math.min(src.y + range, BOARD_WIDTH - 1);
-          y++
-        ) {
-          highlightedMoves[x][y].inAttackRange = true;
-        }
-      }
-    }
-
-    return highlightedMoves;
-  }
-
-  private getValidIndex(index: number, maxIndex: number): number {
-    if (index > maxIndex) {
-      return maxIndex;
-    } else if (index < 0) {
-      return 0;
-    } else {
-      return index;
-    }
-  }
-
-  private isTargetValidRangedAttack(target: coordinate, selectedPiece: RangedPiece): boolean {
-    // TODO: how could this resolve to 0??????
-    return (
-      !!(selectedPiece as IRangedPiece).range &&
-      (this.state.highlightState[target.x][target.y]?.inAttackRange ?? false) &&
-      this.squareHasEnemyPiece(target, selectedPiece)
-    );
-  }
-
-  private squareHasEnemyPiece(square: coordinate, selectedPiece: IPiece): boolean {
-    return (
-      get(this, `state.boardState[${square.x}][${square.y}].player`, selectedPiece.player) !==
-      selectedPiece.player
-    );
   }
 }
