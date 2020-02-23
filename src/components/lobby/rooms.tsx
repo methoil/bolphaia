@@ -1,5 +1,6 @@
 // chess-ui/src/Rooms.js
 import React from 'react';
+import {cloneDeep} from 'lodash';
 import { List, Icon, Header } from 'semantic-ui-react';
 import { LOBBY_NAME } from './lobby';
 import { remove } from 'lodash';
@@ -22,7 +23,7 @@ interface IRoomsProps {
 }
 
 export default function Rooms(props: IRoomsProps) {
-  const { joined, joinable } = props;
+  const { joined, joinable } = cloneDeep(props);
   const inLobby = !!joined.filter(room => room.name === LOBBY_NAME).length;
   const lobby = remove(inLobby ? joined : joinable, room => room.name === LOBBY_NAME);
 

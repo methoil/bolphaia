@@ -1,5 +1,5 @@
-import React from 'react';
-import { Segment, Grid } from 'semantic-ui-react';
+import React, { useState, useEffect } from 'react';
+import { Grid } from 'semantic-ui-react';
 import { TokenProvider, ChatManager } from '@pusher/chatkit-client';
 import axios from 'axios';
 import Rooms, { IRoom } from './rooms';
@@ -35,17 +35,20 @@ interface ILobbyProps {
   username: string;
 }
 
-export default class Lobby extends React.Component<ILobbyProps, any> {
-  state: ILobbyState = {
-    joined: [],
-    joinable: [],
-  };
-  chat;
-  chatManager;
+export default function Lobby(props: ILobbyProps) {
+  const [joined, setJoined] = useState([]);
+  const [joinable, setJoinable] = useState([]);
+  const [lobbyId, setLobbyId] = useState('');
+  const [activeRoom, setActiveRoom] = useState('');
+  const [currentUser, setCurrentUser] = useState({
+    id: '',
+    name: '',
+    rooms: [],
+    presence: { state: 'offline' },
+  } as any);
 
-  constructor(props) {
-    super(props);
-    this.chatManager = new ChatManager({
+  useEffect(() => {
+    const chatManager = new ChatManager({
       instanceLocator: 'v1:us1:f3854d62-ebf2-4ee2-8a48-c62ed279fa8f', // TODO: import this from global consts
       tokenProvider: new TokenProvider({
         url: `${BACKEND_URL}/auth`,
@@ -53,83 +56,74 @@ export default class Lobby extends React.Component<ILobbyProps, any> {
       userId: props.username,
     });
 
-    this.chatManager
+    chatManager
       .connect()
-      .then(currentUser => {
-        this.setState({
-          currentUser: currentUser,
-        });
-        currentUser.getJoinableRooms().then(rooms => {
-          let lobby = this.findLobby(rooms);
-          if (lobby) {
-            currentUser.joinRoom({ roomId: lobby.id });
-          } else {
-            lobby = this.findLobby(currentUser.rooms);
-          }
-          if (lobby) {
-            this.setState({
-              lobbyId: lobby.id,
-              activeRoom: lobby.id,
-            });
-          }
-        });
-        setInterval(this.pollRooms.bind(this), 5000);
-        this.pollRooms();
+      .then(currentUserRes => {
+        setCurrentUser(currentUserRes);
       })
-      .catch(e => {
-        console.log('Failed to connect to Chatkit');
-        console.log(e);
+      .catch(err => {
+        console.error('Failed to connect to Chatkit', err);
       });
-  }
+  }, []);
 
-  private pollRooms() {
-    const { currentUser } = this.state;
-    currentUser?.getJoinableRooms().then(rooms => {
-      this.setState({
-        joined: currentUser.rooms,
-        joinable: rooms.filter(room => {
-          return room.name.includes(this.state.currentUser?.name);
-        }),
-      });
+  useEffect(() => {
+    if (!currentUser.name) {
+      return;
+    }
+    currentUser.getJoinableRooms?.().then(rooms => {
+      const lobby = findLobby(rooms) || findLobby(currentUser.rooms);
+      if (lobby) {
+        setLobbyId(lobby.id);
+        setActiveRoom(lobby.id);
+      }
+    });
+    // setInterval(pollRooms, 5000);
+    pollRooms();
+  }, [currentUser]);
+
+  function pollRooms() {
+    // const rooms = await currentUser.getJoinableRooms?.();
+    currentUser.getJoinableRooms?.().then(rooms => {
+      setJoined(currentUser.rooms);
+      setJoinable(
+        rooms.filter(room => room.name.includes(currentUser.name) || room.name === 'Lobby'),
+      );
     });
   }
 
-  private enterRoom(id) {
-    const { currentUser } = this.state;
+  function enterRoom(id) {
     currentUser
       ?.joinRoom({ roomId: id })
       .then(() => {
-        this.setState({
-          activeRoom: id,
-        });
-        this.pollRooms();
+        setActiveRoom(id);
+        pollRooms();
       })
       .catch(() => {
         console.log('Failed to enter room');
       });
   }
 
-  private leaveRoom(id) {
-    const { currentUser } = this.state;
-    // TODO: temp disable toom deletion so I can see if games persist over time
-    if (this.chat) {
-      const playersInRoom = this.chat.getPlayersInRoom();
-      if (playersInRoom.length === 1 && playersInRoom[0].id === currentUser?.id) {
-        // TODO: when to delete?
-        currentUser?.deleteRoom({ roomId: id });
-      }
-    }
-    currentUser
-      ?.leaveRoom({ roomId: id })
-      .then(() => {
-        this.pollRooms();
-      })
-      .catch(() => {
-        console.log('Failed to leave room');
-      });
-  }
+  // TODO: useRef hook here
+  function leaveRoom(id) {}
+  //   // TODO: temp disable toom deletion so I can see if games persist over time
+  //   if (chat) {
+  //     const playersInRoom = chat.getPlayersInRoom();
+  //     if (playersInRoom.length === 1 && playersInRoom[0].id === currentUser?.id) {
+  //       // TODO: when to delete?
+  //       currentUser?.deleteRoom({ roomId: id });
+  //     }
+  //   }
+  //   currentUser
+  //     ?.leaveRoom({ roomId: id })
+  //     .then(() => {
+  //       pollRooms();
+  //     })
+  //     .catch(() => {
+  //       console.log('Failed to leave room');
+  //     });
+  // }
 
-  private startedGame(roomId, white, black): Promise<any> {
+  function startedGame(roomId, white, black): Promise<any> {
     return axios
       .request({
         url: `${BACKEND_URL}/games`,
@@ -141,10 +135,8 @@ export default class Lobby extends React.Component<ILobbyProps, any> {
         },
       })
       .then(response => {
-        this.setState({
-          activeRoom: roomId,
-        });
-        this.pollRooms();
+        setActiveRoom(roomId);
+        pollRooms();
         return {
           [white]: playerIds.phrygians,
           [black]: playerIds.hittites,
@@ -152,52 +144,46 @@ export default class Lobby extends React.Component<ILobbyProps, any> {
       });
   }
 
-  private findLobby(rooms: IRoom[]): IRoom | null {
+  function findLobby(rooms: IRoom[]): IRoom | null {
     return rooms.filter(room => room.name === LOBBY_NAME)?.[0] ?? null;
   }
 
-  render() {
-    const { currentUser } = this.state;
-    let chat;
-    if (currentUser) {
-      const room = currentUser.rooms.find(room => room.id == this.state.activeRoom);
-      if (room) {
-        const gameGameRoomId =
-          this.state.activeRoom && this.state.activeRoom !== this.state.lobbyId
-            ? this.state.activeRoom
-            : '';
-        chat = (
-          <Chat
-            user={currentUser}
-            room={room}
-            key={room.id}
-            startedGame={this.startedGame.bind(this)}
-            gameGameRoomId={gameGameRoomId}
-            ref={child => {
-              this.chat = child;
-            }}
-          />
-        );
-      }
+  let chat;
+  if (currentUser.id) {
+    const room = currentUser.rooms.find(room => room.id == activeRoom);
+    if (room) {
+      const gameGameRoomId = activeRoom && activeRoom !== lobbyId ? activeRoom : '';
+      chat = (
+        <Chat
+          user={currentUser}
+          room={room}
+          key={room.id}
+          startedGame={startedGame}
+          gameGameRoomId={gameGameRoomId}
+          ref={child => {
+            chat = child;
+          }}
+        />
+      );
     }
-
-    return (
-      <div className={'segment-grid-container'}>
-        <div className="lobby-grid">
-          <Grid>
-            <Grid.Column width={2}>
-              <Rooms
-                joined={this.state.joined}
-                joinable={this.state.joinable}
-                activeRoom={this.state.activeRoom}
-                enterRoom={this.enterRoom.bind(this)}
-                leaveRoom={this.leaveRoom.bind(this)}
-              />
-            </Grid.Column>
-            <Grid.Column width={12}>{chat}</Grid.Column>
-          </Grid>
-        </div>
-      </div>
-    );
   }
+
+  return (
+    <div className={'segment-grid-container'}>
+      <div className="lobby-grid">
+        <Grid>
+          <Grid.Column width={2}>
+            <Rooms
+              joined={joined}
+              joinable={joinable}
+              activeRoom={activeRoom}
+              enterRoom={enterRoom}
+              leaveRoom={leaveRoom}
+            />
+          </Grid.Column>
+          <Grid.Column width={12}>{chat}</Grid.Column>
+        </Grid>
+      </div>
+    </div>
+  );
 }
