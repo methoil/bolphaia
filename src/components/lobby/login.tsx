@@ -1,47 +1,38 @@
-import React from 'react';
-import { Segment, Button, Form } from 'semantic-ui-react';
-
-interface ILobbyState {
-  username: string;
-}
+import React, {useState} from 'react';
+import { Button, Form } from 'semantic-ui-react';
 
 interface ILoginProps {
   login: (string) => void;
 }
 
-export default class Login extends React.Component<ILoginProps, any> {
-  state: ILobbyState = {
-    username: '',
-  };
+export default function(props: ILoginProps) {
+  const [username, setUsername] = useState('');
 
-  render() {
     return (
       <div className="login-segment">
-        <Form onSubmit={this.handleFormSubmit.bind(this)}>
+        <Form onSubmit={handleFormSubmit}>
           <Form.Field>
             <label>Username</label>
             <input
               placeholder="Username"
-              value={this.state.username}
+              value={username}
               autoFocus
-              onChange={this.handleUsernameChange.bind(this)}
+              onChange={handleUsernameChange}
             />
           </Form.Field>
           <Button type="submit">Log in</Button>
         </Form>
       </div>
     );
+
+  function handleUsernameChange(e) {
+    setUsername(e.target.value);
   }
 
-  handleUsernameChange(e) {
-    this.setState({
-      username: e.target.value,
-    });
-  }
-
-  handleFormSubmit() {
-    if (this.state.username) {
-      this.props.login(this.state.username);
+  // TODO: this can definitely be a hook
+  function handleFormSubmit() {
+    if (username) {
+      props.login(username);
     }
   }
 }

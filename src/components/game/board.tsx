@@ -18,12 +18,11 @@ interface IBoardProps {
   getHoverIcon: (clickedSquare: coordinate) => void;
 }
 
-export default class Board extends React.Component<IBoardProps, {}> {
-  render() {
+export default function(props: IBoardProps) {
     const board: JSX.Element[] = [];
 
-    const xLength = this.props.boardState.length;
-    const yLength = this.props.boardState[0].length;
+    const xLength = props.boardState.length;
+    const yLength = props.boardState[0].length;
 
     for (let i = 0; i < xLength; i++) {
       const squareRows: JSX.Element[] = [];
@@ -33,8 +32,8 @@ export default class Board extends React.Component<IBoardProps, {}> {
           (isEven(i) && isEven(j)) || (!isEven(i) && !isEven(j)) ? 'light-square' : 'dark-square',
         );
 
-        const piece = this.props.boardState[i][j];
-        const squareHighlight = this.props.highlightState.length && this.props.highlightState[i][j];
+        const piece = props.boardState[i][j];
+        const squareHighlight = props.highlightState.length && props.highlightState[i][j];
         if (squareHighlight && squareHighlight.canMove) {
           cssClasses.push(
             squareHighlight.canAttack === true
@@ -46,7 +45,7 @@ export default class Board extends React.Component<IBoardProps, {}> {
           cssClasses.push('highlighted-square-in-ranged-attack');
         }
 
-        squareRows.push(this.renderSquare(i, j, cssClasses, piece));
+        squareRows.push(renderSquare(i, j, cssClasses, piece));
       }
       board.push(
         <div key={i} className="board-row">
@@ -56,16 +55,16 @@ export default class Board extends React.Component<IBoardProps, {}> {
     }
 
     return <span className="board">{board}</span>;
-  }
+  
 
-  renderSquare(xIdx: number, yIdx: number, cssClasses: string[], piece: IPiece | null) {
+  function renderSquare(xIdx: number, yIdx: number, cssClasses: string[], piece: IPiece | null) {
     return (
       <Square
         key={xIdx * 8 + yIdx}
         cssClasses={cssClasses}
         piece={piece}
-        onMoveClick={() => this.props.onMoveClick({ x: xIdx, y: yIdx })}
-        getHoverIcon={() => this.props.getHoverIcon({ x: xIdx, y: yIdx })}
+        onMoveClick={() => props.onMoveClick({ x: xIdx, y: yIdx })}
+        getHoverIcon={() => props.getHoverIcon({ x: xIdx, y: yIdx })}
       />
     );
   }
