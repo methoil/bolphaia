@@ -1,16 +1,9 @@
 import * as React from 'react';
-
 import '../../index.scss';
 import Square from './square';
 import { IBoardState, IPossibleMoves } from './game';
 import { coordinate, IPiece } from '../pieces/IPieces.model';
 
-interface ISquare {
-  style: string;
-  shade: string;
-  onMoveClick: () => any;
-  getHoverIcon: () => any;
-}
 interface IBoardProps {
   boardState: IBoardState;
   highlightState: IPossibleMoves;

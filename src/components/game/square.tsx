@@ -1,6 +1,6 @@
-import * as React from "react";
-import HealthBar from "./health-bar";
-import { IPiece } from "../pieces/IPieces.model";
+import React, { useState } from 'react';
+import HealthBar from './health-bar';
+import { IPiece } from '../pieces/IPieces.model';
 
 interface ISquareProps {
   cssClasses: string[];
@@ -9,52 +9,40 @@ interface ISquareProps {
   getHoverIcon: () => any;
 }
 
-let hoverIcon: string = "";
+export default function Square(props: ISquareProps) {
+  const [hoverIcon, setHoverIcon] = useState('');
 
-export default class Square extends React.Component<ISquareProps, {}> {
-  state: { hoverIcon: string };
+  return (
+    <button
+      className={`square ${props.cssClasses.join(' ')} ${hoverIcon}`}
+      onClick={onClick}
+      onMouseEnter={setHoverIconFromGameCallback}
+      onMouseLeave={resetHoverIcon}
+      style={{
+        backgroundImage: `url(${props?.piece?.getImageUrl()})` || '',
+      }}
+    >
+      {props.piece ? (
+        <HealthBar
+          maxHealth={props.piece.maxHealth}
+          remainingHealth={props.piece.health}
+        ></HealthBar>
+      ) : (
+        ''
+      )}
+    </button>
+  );
 
-  constructor(props: ISquareProps) {
-    super(props);
-    this.state = {
-      hoverIcon: ""
-    };
-  }
-  render() {
-    return (
-      <button
-        className={`square ${this.props.cssClasses.join(" ")} ${this.state.hoverIcon}`}
-        onClick={this.onClick.bind(this)}
-        onMouseEnter={this.setHoverIconFromGameCallback.bind(this)}
-        onMouseLeave={this.resetHoverIcon.bind(this)}
-        style={{
-          backgroundImage: `url(${this.props?.piece?.getImageUrl()})` || ""
-        }}
-      >
-        {this.props.piece ? (
-          <HealthBar
-            maxHealth={this.props.piece.maxHealth}
-            remainingHealth={this.props.piece.health}
-          ></HealthBar>
-        ) : (
-          ""
-        )}
-      </button>
-    );
+  function onClick(): void {
+    props.onMoveClick();
+    return setHoverIconFromGameCallback();
   }
 
-  onClick(): void {
-    this.props.onMoveClick();
-    return this.setHoverIconFromGameCallback();
+  function resetHoverIcon(): void {
+    return setHoverIcon('');
   }
 
-  resetHoverIcon(): void {
-    return this.setState({ hoverIcon: "" });
-  }
-
-  setHoverIconFromGameCallback(): void {
-    return this.setState(state => {
-      return { hoverIcon: this.props.getHoverIcon() };
-    });
+  function setHoverIconFromGameCallback(): void {
+    return setHoverIcon(props.getHoverIcon());
   }
 }
