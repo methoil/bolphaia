@@ -3,7 +3,7 @@ import { Grid } from 'semantic-ui-react';
 import { TokenProvider, ChatManager } from '@pusher/chatkit-client';
 import axios from 'axios';
 import Rooms, { IRoom } from './rooms';
-import Chat from './chat';
+import Chat from './chat/chat';
 import { playerIds } from '../game/game.model';
 import { BACKEND_URL } from '../../app-constants';
 
@@ -20,6 +20,8 @@ export interface IUser {
   joinRoom: any;
   leaveRoom: any;
   getJoinableRooms: any;
+  subscribeToRoomMultipart: any;
+  roomSubscriptions: any[];
 }
 
 interface ILobbyState {
@@ -160,9 +162,9 @@ export default function Lobby(props: ILobbyProps) {
           key={room.id}
           startedGame={startedGame}
           gameGameRoomId={gameGameRoomId}
-          ref={child => {
-            chat = child;
-          }}
+          // ref={child => {
+          //   chat = child;
+          // }}
         />
       );
     }

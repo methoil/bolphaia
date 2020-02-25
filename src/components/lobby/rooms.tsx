@@ -9,6 +9,7 @@ export interface IRoom {
   id: string;
   name: string;
   users: any[]; // todo: IUser[]
+  isSubscribedTo: any;
 }
 
 type IEnterRoom = (roomId: string) => void;
