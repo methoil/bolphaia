@@ -25,9 +25,13 @@ export default function SelectedPieceStats(props: ISlectedPieceStatsProps) {
       </div>
       <div>Speed: {props.piece.moveRange}</div>
       <div>Attack: {props.piece.attack}</div>
-      {(props.piece as IRangedPiece)?.range ? <div>Range: {(props.piece as IRangedPiece).range}</div> : ''}
+      {(props.piece as IRangedPiece)?.range ? (
+        <div>Range: {(props.piece as IRangedPiece).range}</div>
+      ) : (
+        ''
+      )}
       <div>Max Health: {props.piece.maxHealth}</div>
-      <div>Reaming Health: {props.piece.health}</div>
+      <div>Remaing Health: {props.piece.health}</div>
       <div className="lore-text">{config.lore}</div>
     </span>
   );
