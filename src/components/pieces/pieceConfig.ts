@@ -76,7 +76,7 @@ export default {
     speed: 4,
     range: null,
     lore:
-      'Horse drawn chariots provide well armed soldiers a solid platform to attack from with greatly enhanced mobility. While slower than mounted units, they can chase down infantry and have impressive durability due to their solid construction and disciplined crews.',
+      'Horse drawn chariots have been dominant war machines since the times of our ancestors, and master blacksmiths continue to perfect their construction. While slower than mounted units, they can easily chase down infantry and have impressive durability due to their solid build and disciplined crews.',
   },
   warElephant: {
     displayName: 'War Elephant',

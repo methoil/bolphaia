@@ -11,7 +11,6 @@ import {
   generateEmptyHighlightedMoves,
   isTargetValidRangedAttack,
 } from './MoveHighlightSvc';
-import RangedPiece from '../pieces/rangedPiece';
 import Board from './board';
 import { pieceTypes, playerIds } from './game.model';
 import { generateNewBoard, pieceNameToConstructorMap, IPieceMeta } from './boardSetup';
