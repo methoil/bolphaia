@@ -1,22 +1,22 @@
-import blackLevyImageSvg from '../../resources/levyBlack.svg';
-import blackLegionImageSvg from '../../resources/legionBlack.svg';
-import blackWarElephantImageSvg from '../../resources/warElephantBlack.svg';
-import blackLightCavalryImageSvg from '../../resources/lightCavalryBlack.svg';
-import blackArcherImageSvg from '../../resources/archerBlack.svg';
-import blackCataphractImageSvg from '../../resources/cataphractBlack.svg';
-import blackCentaurImageSvg from '../../resources/centaurBlack.svg';
-import blackChariotImageSvg from '../../resources/chariotBlack.svg';
-import blackGeneralImageSvg from '../../resources/generalBlack.svg';
+import blackLevyImageSvg from '../../../resources/levyBlack.svg';
+import blackLegionImageSvg from '../../../resources/legionBlack.svg';
+import blackWarElephantImageSvg from '../../../resources/warElephantBlack.svg';
+import blackLightCavalryImageSvg from '../../../resources/lightCavalryBlack.svg';
+import blackArcherImageSvg from '../../../resources/archerBlack.svg';
+import blackCataphractImageSvg from '../../../resources/cataphractBlack.svg';
+import blackCentaurImageSvg from '../../../resources/centaurBlack.svg';
+import blackChariotImageSvg from '../../../resources/chariotBlack.svg';
+import blackGeneralImageSvg from '../../../resources/generalBlack.svg';
 // TODO: there must be a way to set the color through css while loding the svg files... didn't work initially
-import whiteLevyImageSvg from '../../resources/levyWhite.svg';
-import whiteLegionImageSvg from '../../resources/legionWhite.svg';
-import whiteWarElephantImageSvg from '../../resources/warElephantWhite.svg';
-import whiteLightCavalryImageSvg from '../../resources/lightCavalryWhite.svg';
-import whiteArcherImageSvg from '../../resources/archerWhite.svg';
-import whiteCataphractImageSvg from '../../resources/cataphractWhite.svg';
-import whiteCentaurImageSvg from '../../resources/centaurWhite.svg';
-import whiteChariotImageSvg from '../../resources/chariotWhite.svg';
-import whiteGeneralImageSvg from '../../resources/generalWhite.svg';
+import whiteLevyImageSvg from '../../../resources/levyWhite.svg';
+import whiteLegionImageSvg from '../../../resources/legionWhite.svg';
+import whiteWarElephantImageSvg from '../../../resources/warElephantWhite.svg';
+import whiteLightCavalryImageSvg from '../../../resources/lightCavalryWhite.svg';
+import whiteArcherImageSvg from '../../../resources/archerWhite.svg';
+import whiteCataphractImageSvg from '../../../resources/cataphractWhite.svg';
+import whiteCentaurImageSvg from '../../../resources/centaurWhite.svg';
+import whiteChariotImageSvg from '../../../resources/chariotWhite.svg';
+import whiteGeneralImageSvg from '../../../resources/generalWhite.svg';
 
 export default {
   levy: {

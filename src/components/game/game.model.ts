@@ -14,3 +14,8 @@ export enum pieceTypes {
   lightCavalry = 'lightCavalry',
   general = 'general',
 }
+
+export type coordinate = {
+  x: number;
+  y: number;
+};

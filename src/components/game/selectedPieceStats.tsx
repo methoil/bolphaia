@@ -1,6 +1,6 @@
 import * as React from 'react';
-import pieceConfig from '../pieces/pieceConfig';
-import { IPiece, IRangedPiece } from '../pieces/IPieces.model';
+import pieceConfig from './pieces/pieceConfig';
+import { IPiece } from './pieces/piece';
 
 interface ISlectedPieceStatsProps {
   piece: IPiece | null;
@@ -25,8 +25,8 @@ export default function SelectedPieceStats(props: ISlectedPieceStatsProps) {
       </div>
       <div>Speed: {props.piece.moveRange}</div>
       <div>Attack: {props.piece.attack}</div>
-      {(props.piece as IRangedPiece)?.range ? (
-        <div>Range: {(props.piece as IRangedPiece).range}</div>
+      {(props.piece)?.range ? (
+        <div>Range: {(props.piece).range}</div>
       ) : (
         ''
       )}

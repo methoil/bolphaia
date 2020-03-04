@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { pieceTypes, playerIds } from './game.model';
 import { IFallenPiecesStruct } from './game';
-import pieceConfig from '../pieces/pieceConfig';
+import pieceConfig from './pieces/pieceConfig';
 
 interface ISlectedPieceStatsProps {
   fallenPieces: IFallenPiecesStruct;

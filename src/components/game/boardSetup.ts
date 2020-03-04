@@ -9,7 +9,7 @@ import {  makeGeneral,
           makeCataphract,
           makeLegion ,
           makeLevy ,
-} from '../pieces/piece';
+} from './pieces/piece';
 
 export enum playerIds {
   phrygians = 'phrygians',

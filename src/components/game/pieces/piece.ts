@@ -1,8 +1,20 @@
-import { IBasePiece } from './IPieces.model';
-import { playerIds, pieceTypes } from '../game/game.model';
+import { playerIds, pieceTypes } from '../game.model';
 import pieceConfig from './pieceConfig';
 
- export default class BasePiece implements IBasePiece {
+export interface IPiece {
+  pieceType: pieceTypes;
+  player: playerIds;
+  isSelected: boolean;
+  health: number;
+  maxHealth: number;
+  attack: number;
+  moveRange: number;
+  range: number | null;
+  takeDamage: (damage: number) => void;
+  getImageUrl: () => string;
+}
+
+ export default class BasePiece implements IPiece {
   public player: playerIds;
   public isSelected: boolean = false;
   public imageUrl: string;
@@ -29,10 +41,6 @@ import pieceConfig from './pieceConfig';
   public takeDamage(damage: number): number {
     this.health = this.health - damage;
     return this.health;
-  }
-
-  public setHealth(health) {
-    this.health = health;
   }
 
   public getImageUrl(): string {

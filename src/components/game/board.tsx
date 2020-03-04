@@ -1,8 +1,9 @@
 import * as React from 'react';
 import '../../index.scss';
 import Square from './square';
+import {coordinate} from './game.model'
 import { IBoardState, IPossibleMoves } from './game';
-import { coordinate, IPiece } from '../pieces/IPieces.model';
+import { IPiece } from './pieces/piece';
 
 interface IBoardProps {
   boardState: IBoardState;

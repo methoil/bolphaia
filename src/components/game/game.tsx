@@ -4,7 +4,7 @@ import Pusher from 'pusher-js';
 import * as React from 'react';
 import { BACKEND_URL } from '../../app-constants';
 import '../../index.scss';
-import { coordinate, IPiece, IRangedPiece } from '../pieces/IPieces.model';
+import { IPiece } from './pieces/piece';
 import {
   generatePossibleMovesHighlights,
   getMovesPath,
@@ -12,7 +12,7 @@ import {
   isTargetValidRangedAttack,
 } from './MoveHighlightSvc';
 import Board from './board';
-import { pieceTypes, playerIds } from './game.model';
+import { pieceTypes, playerIds, coordinate } from './game.model';
 import { generateNewBoard, pieceNameToConstructorMap, IPieceMeta } from './boardSetup';
 import SelectedPieceStats from './selectedPieceStats';
 import Cemetery from './cemetery';
@@ -26,7 +26,7 @@ export type IPossibleMove = {
   inAttackRange: boolean;
 };
 export type IPossibleMoves = IPossibleMove[][];
-export type ISelectedPiece = IPiece | IRangedPiece | null;
+export type ISelectedPiece = IPiece | null;
 export type IBoardState = (IPiece | null)[][];
 
 let pusher;
@@ -237,7 +237,10 @@ export default class Game extends React.Component<IGameProps, {}> {
   private makePieceFromMeta(squareMata: IPieceMeta | null): IPiece | null {
     let fromPiecePlacement: IPiece | null = null;
     if (squareMata?.pieceType) {
-      fromPiecePlacement = new pieceNameToConstructorMap[squareMata.pieceType](squareMata?.player, squareMata?.health);
+      fromPiecePlacement = new pieceNameToConstructorMap[squareMata.pieceType](
+        squareMata?.player,
+        squareMata?.health,
+      );
     }
 
     return fromPiecePlacement;
@@ -476,7 +479,6 @@ export default class Game extends React.Component<IGameProps, {}> {
       null,
     );
 
-    // TODO: move this out... not good practice to get in get method...
     this.setState({
       hoveredPiece: hoveredPiece,
     });

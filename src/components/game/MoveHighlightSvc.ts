@@ -1,5 +1,5 @@
 import { get } from 'lodash';
-import { coordinate, IPiece } from '../pieces/IPieces.model';
+import { IPiece } from './pieces/piece';
 import {
   IBoardState,
   BOARD_WIDTH,
@@ -8,6 +8,7 @@ import {
   IPossibleMoves,
   IPossibleMove,
 } from './game';
+import { coordinate } from './game.model';
 
 export function generateEmptyHighlightedMoves(): IPossibleMoves {
   const highlightedMoves: IPossibleMove[][] = [];

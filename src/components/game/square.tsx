@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import HealthBar from './health-bar';
-import { IPiece } from '../pieces/IPieces.model';
+import { IPiece } from './pieces/piece';
 
 interface ISquareProps {
   cssClasses: string[];
