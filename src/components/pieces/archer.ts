@@ -11,7 +11,7 @@ export default class Archer extends RangedPiece {
   attack: number = 2;
   range: number = 3;
 
-  getImageUrl() {
-    return this.player === playerIds.phrygians ? whiteArcherImageSvg : blackArcherImageSvg;
-  }
+  // getImageUrl() {
+  //   return this.player === playerIds.phrygians ? whiteArcherImageSvg : blackArcherImageSvg;
+  // }
 }

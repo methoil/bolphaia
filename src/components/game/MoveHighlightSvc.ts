@@ -1,5 +1,5 @@
 import { get } from 'lodash';
-import { coordinate, IPiece, IRangedPiece } from '../pieces/IPieces.model';
+import { coordinate, IPiece } from '../pieces/IPieces.model';
 import {
   IBoardState,
   BOARD_WIDTH,
@@ -58,8 +58,8 @@ export function generatePossibleMovesHighlights(
     }
   }
 
-  if ((selectedPiece as IRangedPiece).range) {
-    const range = (selectedPiece as IRangedPiece).range;
+  if (selectedPiece.range) {
+    const range = selectedPiece.range;
 
     for (let x = Math.max(src.x - range, 0); x <= Math.min(src.x + range, BOARD_HEIGHT - 1); x++) {
       for (let y = Math.max(src.y - range, 0); y <= Math.min(src.y + range, BOARD_WIDTH - 1); y++) {
@@ -140,13 +140,13 @@ function getValidIndex(index: number, maxIndex: number): number {
 
 export function isTargetValidRangedAttack(
   target: coordinate,
-  selectedPiece: IRangedPiece,
+  selectedPiece: IPiece,
   highlightState: IPossibleMoves,
   boardState: IBoardState,
 ): boolean {
   // TODO: how could this resolve to 0??????
   return (
-    !!(selectedPiece as IRangedPiece).range &&
+    !!selectedPiece.range &&
     (highlightState[target.x][target.y]?.inAttackRange ?? false) &&
     squareHasEnemyPiece(target, selectedPiece, boardState)
   );

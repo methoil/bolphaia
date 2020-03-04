@@ -1,14 +1,15 @@
 // TODO: temp file, result of this should be json
 import { extend, find, clone } from 'lodash';
-import General from '../pieces/general';
-import Chariot from '../pieces/chariot';
-import Centaur from '../pieces/centaur';
-import LightCavalry from '../pieces/lightCavalry';
-import WarElephant from '../pieces/warElephant';
-import Archer from '../pieces/archer';
-import Cataphract from '../pieces/cataphract';
-import Legion from '../pieces/legion';
-import Levy from '../pieces/levy';
+import {  makeGeneral, 
+          makeChariot, 
+          makeCentaur, 
+          makeLightCavalry,
+          makeWarElephant ,
+          makeArcher  ,
+          makeCataphract,
+          makeLegion ,
+          makeLevy ,
+} from '../pieces/piece';
 
 export enum playerIds {
   phrygians = 'phrygians',
@@ -28,15 +29,15 @@ export enum pieceTypes {
 }
 
 export const pieceNameToConstructorMap: { [key: string]: any } = {
-  [pieceTypes.levy]: Levy,
-  [pieceTypes.legion]: Legion,
-  [pieceTypes.archer]: Archer,
-  [pieceTypes.cataphract]: Cataphract,
-  [pieceTypes.chariot]: Chariot,
-  [pieceTypes.warElephant]: WarElephant,
-  [pieceTypes.centaur]: Centaur,
-  [pieceTypes.lightCavalry]: LightCavalry,
-  [pieceTypes.general]: General,
+  [pieceTypes.levy]: makeLevy,
+  [pieceTypes.legion]: makeLegion,
+  [pieceTypes.archer]: makeArcher,
+  [pieceTypes.cataphract]: makeCataphract,
+  [pieceTypes.chariot]: makeChariot,
+  [pieceTypes.warElephant]:makeWarElephant,
+  [pieceTypes.centaur]: makeCentaur,
+  [pieceTypes.lightCavalry]:makeLightCavalry,
+  [pieceTypes.general]: makeGeneral,
 };
 
 interface IPieceDef {

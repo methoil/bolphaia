@@ -26,6 +26,7 @@ export default {
     health: 3,
     attack: 1,
     speed: 2,
+    range: null,
     lore:
       'Peasants and laborers are often conscripted into the army or join out of sheer desperation. Equipped with a small shield and spear, they are even more poorly trained than they are armed. They can none the less overwhelm careless foes in sufficient numbers.',
     gameplay: 'Levies are best used to protect more valuable soldiers by distracting enemies.',
@@ -49,6 +50,7 @@ export default {
     health: 8,
     attack: 3,
     speed: 1,
+    range: null,
     lore:
       'Legions are professional, heavily armed infantry that form the backbone of our army. They are able to stand their ground and are particularly resistant against arrows as they march in a tight, solid formation. Though as a result, they move very slowly.',
     gameplay: '',
@@ -60,6 +62,7 @@ export default {
     health: 10,
     attack: 6,
     speed: 5,
+    range: null,
     lore:
       'Recent developments in horsemanship have given rise to a new class of warrior. Cataphracts are wealthy aristocrats who ride into battle very heavily armed on powerful horses. There are few mortals who can withstand their crushing charge.',
     gameplay: '',
@@ -71,6 +74,7 @@ export default {
     health: 8,
     attack: 3,
     speed: 4,
+    range: null,
     lore:
       'Horse drawn chariots provide well armed soldiers a solid platform to attack from with greatly enhanced mobility. While slower than mounted units, they can chase down infantry and have impressive durability due to their solid construction and disciplined crews.',
   },
@@ -81,6 +85,7 @@ export default {
     health: 24,
     attack: 7,
     speed: 3,
+    range: null,
     lore:
       'These massive beasts, imported from the far east, are a terrifying sight to any opponent. They throw men around like chickens with thier unmatched strength and it will take many blows to bring one down. Their large size does however make then an easy target for any marksman.',
     gameplay: '',
@@ -92,6 +97,7 @@ export default {
     health: 4,
     attack: 2,
     speed: 7,
+    range: null,
     lore:
       'Migrant barbarians and more reckless youths of the nobility not yet old enough to join elite units often serve as irregular cavalry. What they lack in discipline and amor, they make up for with speed and daring.',
     gameplay: '',
@@ -115,6 +121,7 @@ export default {
     health: 12,
     attack: 6,
     speed: 5,
+    range: null,
     lore:
       "You have been given command of one of The Empire's grandest armies and are protected by a bodyguard of elite cataphracts. While a formidable warrior yourself, you are needed to issue orders, and if you fall, your army will fall into disarray and rout.",
     gameplay: '',

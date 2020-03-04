@@ -13,6 +13,7 @@ export interface IBasePiece {
   maxHealth: number;
   attack: number;
   moveRange: number;
+  range: number | null;
   takeDamage: (damage: number) => void;
   getImageUrl: () => string;
 }

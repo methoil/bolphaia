@@ -238,11 +238,7 @@ export default class Game extends React.Component<IGameProps, {}> {
   private makePieceFromMeta(squareMata: IPieceMeta | null): IPiece | null {
     let fromPiecePlacement: IPiece | null = null;
     if (squareMata?.pieceType) {
-      fromPiecePlacement = new pieceNameToConstructorMap[squareMata.pieceType](squareMata?.player);
-    }
-
-    if (fromPiecePlacement && squareMata?.health) {
-      fromPiecePlacement.setHealth(squareMata.health);
+      fromPiecePlacement = new pieceNameToConstructorMap[squareMata.pieceType](squareMata?.player, squareMata?.health);
     }
 
     return fromPiecePlacement;
@@ -292,7 +288,7 @@ export default class Game extends React.Component<IGameProps, {}> {
       !isMovePossible &&
       !isTargetValidRangedAttack(
         clickedSquare,
-        selectedPiece as RangedPiece,
+        selectedPiece,
         this.state.highlightState,
         this.state.boardState,
       )
@@ -316,7 +312,7 @@ export default class Game extends React.Component<IGameProps, {}> {
       clickedSquare &&
       isTargetValidRangedAttack(
         clickedSquare,
-        selectedPiece as RangedPiece,
+        selectedPiece,
         this.state.highlightState,
         this.state.boardState,
       )
@@ -501,7 +497,7 @@ export default class Game extends React.Component<IGameProps, {}> {
     if (
       isTargetValidRangedAttack(
         hoveredSquare,
-        selectedPiece as RangedPiece,
+        selectedPiece,
         this.state.highlightState,
         this.state.boardState,
       )
