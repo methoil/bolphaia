@@ -1,13 +1,7 @@
 import { get } from 'lodash';
 import { IPiece } from './pieces/piece';
-import {
-  IBoardState,
-  BOARD_WIDTH,
-  BOARD_HEIGHT,
-  ISelectedPiece,
-  IPossibleMoves,
-  IPossibleMove,
-} from './game';
+import { BOARD_WIDTH, BOARD_HEIGHT } from './boardSetup';
+import { IBoardState, ISelectedPiece, IPossibleMoves, IPossibleMove } from './game';
 import { coordinate } from './game.model';
 
 export function generateEmptyHighlightedMoves(): IPossibleMoves {

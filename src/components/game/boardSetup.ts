@@ -1,6 +1,9 @@
 // TODO: temp file, result of this should be json
 import { extend, find, clone } from 'lodash';
 
+export const BOARD_WIDTH: number = 18;
+export const BOARD_HEIGHT: number = 12;
+
 export enum playerIds {
   phrygians = 'phrygians',
   hittites = 'hittites',
@@ -17,8 +20,6 @@ export enum pieceTypes {
   lightCavalry = 'lightCavalry',
   general = 'general',
 }
-
-
 
 interface IPieceDef {
   pieceType: pieceTypes;
@@ -48,7 +49,7 @@ export const pieceDefs: IPieceDef[] = [
   },
   {
     pieceType: pieceTypes.chariot,
-    health: 10,
+    health: 8,
   },
   {
     pieceType: pieceTypes.warElephant,
@@ -67,9 +68,6 @@ export const pieceDefs: IPieceDef[] = [
     health: 12,
   },
 ];
-
-const BOARD_WIDTH: number = 18;
-const BOARD_HEIGHT: number = 12;
 
 export function generateNewBoard(): Array<IPieceMeta | null>[] {
   const boardState: Array<IPieceMeta | null>[] = [];

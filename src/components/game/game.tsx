@@ -13,12 +13,9 @@ import {
 } from './MoveHighlightSvc';
 import Board from './board';
 import { pieceTypes, playerIds, coordinate } from './game.model';
-import { generateNewBoard, IPieceMeta } from './boardSetup';
+import { generateNewBoard, IPieceMeta, BOARD_WIDTH, BOARD_HEIGHT  } from './boardSetup';
 import SelectedPieceStats from './selectedPieceStats';
 import Cemetery from './cemetery';
-
-export const BOARD_WIDTH: number = 18;
-export const BOARD_HEIGHT: number = 12;
 
 export type IPossibleMove = {
   canMove: boolean;
