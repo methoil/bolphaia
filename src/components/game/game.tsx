@@ -4,7 +4,7 @@ import Pusher from 'pusher-js';
 import * as React from 'react';
 import { BACKEND_URL } from '../../app-constants';
 import '../../index.scss';
-import { IPiece } from './pieces/piece';
+import { IPiece, generatePiece } from './pieces/piece';
 import {
   generatePossibleMovesHighlights,
   getMovesPath,
@@ -13,7 +13,7 @@ import {
 } from './MoveHighlightSvc';
 import Board from './board';
 import { pieceTypes, playerIds, coordinate } from './game.model';
-import { generateNewBoard, pieceNameToConstructorMap, IPieceMeta } from './boardSetup';
+import { generateNewBoard, IPieceMeta } from './boardSetup';
 import SelectedPieceStats from './selectedPieceStats';
 import Cemetery from './cemetery';
 
@@ -237,7 +237,8 @@ export default class Game extends React.Component<IGameProps, {}> {
   private makePieceFromMeta(squareMata: IPieceMeta | null): IPiece | null {
     let fromPiecePlacement: IPiece | null = null;
     if (squareMata?.pieceType) {
-      fromPiecePlacement = new pieceNameToConstructorMap[squareMata.pieceType](
+      fromPiecePlacement = generatePiece(
+        squareMata.pieceType,
         squareMata?.player,
         squareMata?.health,
       );

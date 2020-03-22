@@ -1,15 +1,5 @@
 // TODO: temp file, result of this should be json
 import { extend, find, clone } from 'lodash';
-import {  makeGeneral, 
-          makeChariot, 
-          makeCentaur, 
-          makeLightCavalry,
-          makeWarElephant ,
-          makeArcher  ,
-          makeCataphract,
-          makeLegion ,
-          makeLevy ,
-} from './pieces/piece';
 
 export enum playerIds {
   phrygians = 'phrygians',
@@ -28,62 +18,52 @@ export enum pieceTypes {
   general = 'general',
 }
 
-export const pieceNameToConstructorMap: { [key: string]: any } = {
-  [pieceTypes.levy]: makeLevy,
-  [pieceTypes.legion]: makeLegion,
-  [pieceTypes.archer]: makeArcher,
-  [pieceTypes.cataphract]: makeCataphract,
-  [pieceTypes.chariot]: makeChariot,
-  [pieceTypes.warElephant]:makeWarElephant,
-  [pieceTypes.centaur]: makeCentaur,
-  [pieceTypes.lightCavalry]:makeLightCavalry,
-  [pieceTypes.general]: makeGeneral,
-};
+
 
 interface IPieceDef {
-  pieceType: string;
+  pieceType: pieceTypes;
   health: number;
 }
 
 export interface IPieceMeta extends IPieceDef {
-  player: string;
+  player: playerIds;
 }
 
 export const pieceDefs: IPieceDef[] = [
   {
-    pieceType: 'levy',
+    pieceType: pieceTypes.levy,
     health: 3,
   },
   {
-    pieceType: 'archer',
+    pieceType: pieceTypes.archer,
     health: 2,
   },
   {
-    pieceType: 'legion',
+    pieceType: pieceTypes.legion,
     health: 8,
   },
   {
-    pieceType: 'cataphract',
+    pieceType: pieceTypes.cataphract,
     health: 10,
   },
   {
-    pieceType: 'chariot',
+    pieceType: pieceTypes.chariot,
     health: 10,
   },
   {
-    pieceType: 'warElephant',
+    pieceType: pieceTypes.warElephant,
     health: 24,
   },
   {
-    pieceType: 'lightCavalry',
+    pieceType: pieceTypes.lightCavalry,
     health: 4,
   },
   {
-    pieceType: 'centaur',
+    pieceType: pieceTypes.centaur,
     health: 4,
   },
   {
-    pieceType: 'general',
+    pieceType: pieceTypes.general,
     health: 12,
   },
 ];

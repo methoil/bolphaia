@@ -1,6 +1,18 @@
 import { playerIds, pieceTypes } from '../game.model';
 import pieceConfig from './pieceConfig';
 
+const pieceNameToConstructorMap: { [key: string]: any } = {
+  [pieceTypes.levy]: makeLevy,
+  [pieceTypes.legion]: makeLegion,
+  [pieceTypes.archer]: makeArcher,
+  [pieceTypes.cataphract]: makeCataphract,
+  [pieceTypes.chariot]: makeChariot,
+  [pieceTypes.warElephant]: makeWarElephant,
+  [pieceTypes.centaur]: makeCentaur,
+  [pieceTypes.lightCavalry]: makeLightCavalry,
+  [pieceTypes.general]: makeGeneral,
+};
+
 export interface IPiece {
   pieceType: pieceTypes;
   player: playerIds;
@@ -14,7 +26,7 @@ export interface IPiece {
   getImageUrl: () => string;
 }
 
- export default class BasePiece implements IPiece {
+class Piece implements IPiece {
   public player: playerIds;
   public isSelected: boolean = false;
   public imageUrl: string;
@@ -45,41 +57,45 @@ export interface IPiece {
 
   public getImageUrl(): string {
     return this.imageUrl;
-  };
+  }
 }
 
-export function makeLevy(player: playerIds, remainingHealth?: number) {
-  return new BasePiece(player, pieceTypes.levy, remainingHealth);
+export function generatePiece(pieceType: pieceTypes, player: playerIds, remainingHealth?: number) {
+  return new pieceNameToConstructorMap[pieceType](player, remainingHealth);
 }
 
-export function makeLegion(player: playerIds, remainingHealth?: number) {
-  return new BasePiece(player, pieceTypes.legion, remainingHealth);
+function makeLevy(player: playerIds, remainingHealth?: number) {
+  return new Piece(player, pieceTypes.levy, remainingHealth);
 }
 
-export function makeArcher(player: playerIds, remainingHealth?: number) {
-  return new BasePiece(player, pieceTypes.archer, remainingHealth);
+function makeLegion(player: playerIds, remainingHealth?: number) {
+  return new Piece(player, pieceTypes.legion, remainingHealth);
 }
 
-export function makeChariot(player: playerIds, remainingHealth?: number) {
-  return new BasePiece(player, pieceTypes.chariot, remainingHealth);
+function makeArcher(player: playerIds, remainingHealth?: number) {
+  return new Piece(player, pieceTypes.archer, remainingHealth);
 }
 
-export function makeLightCavalry(player: playerIds, remainingHealth?: number) {
-  return new BasePiece(player, pieceTypes.lightCavalry, remainingHealth);
+function makeChariot(player: playerIds, remainingHealth?: number) {
+  return new Piece(player, pieceTypes.chariot, remainingHealth);
 }
 
-export function makeCataphract(player: playerIds, remainingHealth?: number) {
-  return new BasePiece(player, pieceTypes.cataphract, remainingHealth);
+function makeLightCavalry(player: playerIds, remainingHealth?: number) {
+  return new Piece(player, pieceTypes.lightCavalry, remainingHealth);
 }
 
-export function makeCentaur(player: playerIds, remainingHealth?: number) {
-  return new BasePiece(player, pieceTypes.centaur, remainingHealth);
+function makeCataphract(player: playerIds, remainingHealth?: number) {
+  return new Piece(player, pieceTypes.cataphract, remainingHealth);
 }
 
-export function makeWarElephant(player: playerIds, remainingHealth?: number) {
-  return new BasePiece(player, pieceTypes.warElephant, remainingHealth);
+function makeCentaur(player: playerIds, remainingHealth?: number) {
+  return new Piece(player, pieceTypes.centaur, remainingHealth);
 }
 
-export function makeGeneral(player: playerIds, remainingHealth?: number) {
-  return new BasePiece(player, pieceTypes.general, remainingHealth);
+function makeWarElephant(player: playerIds, remainingHealth?: number) {
+  return new Piece(player, pieceTypes.warElephant, remainingHealth);
+}
+
+function makeGeneral(player: playerIds, remainingHealth?: number) {
+  return new Piece(player, pieceTypes.general, remainingHealth);
 }
