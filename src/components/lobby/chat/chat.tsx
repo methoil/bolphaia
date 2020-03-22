@@ -10,7 +10,7 @@ import MessageElements from './messageElements';
 let playerSide = playerIds.phrygians;
 let opponentId = '';
 
-interface IMessage {
+export interface IMessage {
   id: string;
   user: string;
   message: string;
@@ -108,6 +108,7 @@ export default function Chat(props: IChatProps) {
         <Grid.Column width={12}>
           <Comment.Group style={{ height: '20em', overflow: 'auto' }}>
             <MessageElements
+              user={props.user}
               messages={messages}
               startGameCallback={startGameCallback}
             ></MessageElements>
