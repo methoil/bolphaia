@@ -1,69 +1,57 @@
 import axios from 'axios';
-import { BACKEND_URL } from '../../app-constants';
+import { BACKEND_URL } from '../../../app-constants';
 
-export default class gameRequestsSvc {
-
+interface IGameRequestsSvc {
+  setupGame: any;
+  updateGame: any;
+  sendMove: any;
 }
 
-export function setupGame() {
+class gameRequestsSvc implements IGameRequestsSvc {
+  // constructor(roomId: string) {} should this have roomId as state?
+  // TODO: Yes - this whole thing should be an 'OnlineGame' type HOC that has access to game state
+  // separating this out made me realize how poorly this logic has been handled
+
+  public setupGame(roomId: string = '', setStateCb: any, startGameCb: any) {
+    // try to load game, if it exists
     axios
       .request({
-        url: this.urlToGameServer,
+        url: this.urlToGameServer(roomId),
       })
       .then(res => {
-        this.setState({
-          players: res.data.players || this.state.players,
-          playerSide: res.data.players[this.props.userId ?? ''] || this.state.playerSide,
-          boardState: this.buildBoardState(res.data.board),
-          turn: res.data.nextTurn || this.state.playerSide,
-          fallenPieces: res.data.fallenPieces || this.state.fallenPieces,
-        });
+        setStateCb(res);
       })
       .catch(err => {
-        console.error('Error fetching board data from server, creating new game', err);
-        // TODO: use TS argument types: https://stackoverflow.com/questions/52771626/typescript-react-conditionally-optional-props-based-on-the-type-of-another-prop
-        this.props.startGameCallback &&
-          this.props.startGameCallback().then(() => {
-            return axios
-              .request({
-                url: this.urlToGameServer,
-              })
-              .then(res => {
-                this.setState({
-                  players: res.data.players || this.state.players,
-                  playerSide: res.data.players[this.props.userId ?? ''] || this.state.playerSide,
-                  boardState: this.buildBoardState(res.data.board),
-                  turn: res.data.nextTurn || this.state.playerSide,
-                  fallenPieces: res.data.fallenPieces || this.state.fallenPieces,
-                });
-              });
-          });
-      });
-  }
-
-  export function updateGame() {
-    axios
-      .request({
-        url: this.urlToGameServer,
-      })
-      .then(res => {
-        if ((res.data.players && !this.state.players) || !this.state.playerSide) {
-          this.setState({ players: res.data.players });
-          this.setState({ playerSide: res.data.players[this.props.userId ?? ''] });
-        }
-        // using same format as the sent payload and just update the changed squares for now
-        if (res.data.player === this.props.userId) {
-          return;
-        }
-
-        this.setState({
-          boardState: this.buildBoardState(res.data.board),
-          turn: res.data.nextTurn || this.state.playerSide,
-          fallenPieces: res.data.fallenPieces || this.state.fallenPieces,
+        console.info('Error fetching board data from server, creating new game', err);
+        startGameCb().then(() => {
+          return axios
+            .request({
+              url: this.urlToGameServer(roomId),
+            })
+            .then(res => {
+              setStateCb(res);
+            });
         });
       });
   }
 
-  urlToGameServer() {
-    return `${BACKEND_URL}/games/${this.props.roomId}`;
+  public async updateGame(roomId: string = '', updateGameCb: any): Promise<void> {
+    const res = await axios.request({ url: this.urlToGameServer(roomId) });
+    updateGameCb(res);
   }
+
+  public sendMove(roomId: string = '', payload: any) {
+    return axios.request({
+      method: 'POST',
+      url: this.urlToGameServer(roomId),
+      data: payload,
+    });
+  }
+
+  private urlToGameServer(roomId: string) {
+    return `${BACKEND_URL}/games/${roomId}`;
+  }
+}
+
+const GameReqSingleton = new gameRequestsSvc();
+export default GameReqSingleton;

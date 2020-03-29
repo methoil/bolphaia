@@ -1,8 +1,6 @@
-import axios from 'axios';
 import { capitalize, cloneDeep, findIndex, get, isEqual } from 'lodash';
 import Pusher from 'pusher-js';
 import * as React from 'react';
-import { BACKEND_URL } from '../../app-constants';
 import '../../index.scss';
 import { IPiece, generatePiece } from './pieces/piece';
 import {
@@ -11,9 +9,10 @@ import {
   generateEmptyHighlightedMoves,
   isTargetValidRangedAttack,
 } from './services/moveHighlightSvc';
+import gameRequestsSvc from './services/gameRequestsSvc';
 import Board from './board';
 import { pieceTypes, playerIds, coordinate } from './game.model';
-import { generateNewBoard, IPieceMeta, BOARD_WIDTH, BOARD_HEIGHT  } from './services/boardSetup';
+import { generateNewBoard, IPieceMeta, BOARD_WIDTH, BOARD_HEIGHT } from './services/boardSetup';
 import SelectedPieceStats from './selectedPieceStats';
 import Cemetery from './cemetery';
 
@@ -138,9 +137,38 @@ export default class Game extends React.Component<IGameProps, {}> {
     if (!this.props.offlineMode) {
       const channel = pusher.subscribe(`game-${this.props.roomId}`);
       channel.bind('board-updated', () => {
-        this.updateGame();
+        const updateGameSateCb = res => {
+          if ((res.data.players && !this.state.players) || !this.state.playerSide) {
+            this.setState({ players: res.data.players });
+            this.setState({ playerSide: res.data.players[this.props.userId ?? ''] });
+          }
+          // using same format as the sent payload and just update the changed squares for now
+          if (res.data.player === this.props.userId) {
+            return;
+          }
+
+          this.setState({
+            boardState: this.buildBoardState(res.data.board),
+            turn: res.data.nextTurn || this.state.playerSide,
+            fallenPieces: res.data.fallenPieces || this.state.fallenPieces,
+          });
+        };
+
+        gameRequestsSvc.updateGame(this.props.roomId, updateGameSateCb);
       });
-      this.setupGame();
+
+      const setupGameStateCb = res => {
+        this.setState({
+          players: res.data.players || this.state.players,
+          playerSide: res.data.players[this.props.userId ?? ''] || this.state.playerSide,
+          boardState: this.buildBoardState(res.data.board),
+          turn: res.data.nextTurn || this.state.playerSide,
+          fallenPieces: res.data.fallenPieces || this.state.fallenPieces,
+        });
+      };
+      // TODO: use TS argument types: https://stackoverflow.com/questions/52771626/typescript-react-conditionally-optional-props-based-on-the-type-of-another-prop
+      // for startGameCallback .. ?
+      gameRequestsSvc.setupGame(this.props.roomId, setupGameStateCb, this.props.startGameCallback);
     }
   }
 
@@ -152,69 +180,6 @@ export default class Game extends React.Component<IGameProps, {}> {
 
   public getPlayers() {
     return Object.keys(this.state.players || {});
-  }
-
-  private setupGame() {
-    axios
-      .request({
-        url: this.urlToGameServer,
-      })
-      .then(res => {
-        this.setState({
-          players: res.data.players || this.state.players,
-          playerSide: res.data.players[this.props.userId ?? ''] || this.state.playerSide,
-          boardState: this.buildBoardState(res.data.board),
-          turn: res.data.nextTurn || this.state.playerSide,
-          fallenPieces: res.data.fallenPieces || this.state.fallenPieces,
-        });
-      })
-      .catch(err => {
-        console.error('Error fetching board data from server, creating new game', err);
-        // TODO: use TS argument types: https://stackoverflow.com/questions/52771626/typescript-react-conditionally-optional-props-based-on-the-type-of-another-prop
-        this.props.startGameCallback &&
-          this.props.startGameCallback().then(() => {
-            return axios
-              .request({
-                url: this.urlToGameServer,
-              })
-              .then(res => {
-                this.setState({
-                  players: res.data.players || this.state.players,
-                  playerSide: res.data.players[this.props.userId ?? ''] || this.state.playerSide,
-                  boardState: this.buildBoardState(res.data.board),
-                  turn: res.data.nextTurn || this.state.playerSide,
-                  fallenPieces: res.data.fallenPieces || this.state.fallenPieces,
-                });
-              });
-          });
-      });
-  }
-
-  private updateGame() {
-    axios
-      .request({
-        url: this.urlToGameServer,
-      })
-      .then(res => {
-        if ((res.data.players && !this.state.players) || !this.state.playerSide) {
-          this.setState({ players: res.data.players });
-          this.setState({ playerSide: res.data.players[this.props.userId ?? ''] });
-        }
-        // using same format as the sent payload and just update the changed squares for now
-        if (res.data.player === this.props.userId) {
-          return;
-        }
-
-        this.setState({
-          boardState: this.buildBoardState(res.data.board),
-          turn: res.data.nextTurn || this.state.playerSide,
-          fallenPieces: res.data.fallenPieces || this.state.fallenPieces,
-        });
-      });
-  }
-
-  private get urlToGameServer() {
-    return `${BACKEND_URL}/games/${this.props.roomId}`;
   }
 
   private buildBoardState(newBoardMeta: Array<IPieceMeta | null>[]): IBoardState {
@@ -422,11 +387,7 @@ export default class Game extends React.Component<IGameProps, {}> {
           fallenPieces: newFallenPieces,
           updatedSquares: this.getUpdateServerPayload(newBoardState, squaresToUpdate),
         };
-        axios.request({
-          method: 'POST',
-          url: this.urlToGameServer,
-          data: payload,
-        });
+        gameRequestsSvc.sendMove(this.props.roomId, payload);
       }
 
       return this.setState({
