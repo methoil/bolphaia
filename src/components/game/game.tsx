@@ -10,10 +10,10 @@ import {
   getMovesPath,
   generateEmptyHighlightedMoves,
   isTargetValidRangedAttack,
-} from './MoveHighlightSvc';
+} from './services/moveHighlightSvc';
 import Board from './board';
 import { pieceTypes, playerIds, coordinate } from './game.model';
-import { generateNewBoard, IPieceMeta, BOARD_WIDTH, BOARD_HEIGHT  } from './boardSetup';
+import { generateNewBoard, IPieceMeta, BOARD_WIDTH, BOARD_HEIGHT  } from './services/boardSetup';
 import SelectedPieceStats from './selectedPieceStats';
 import Cemetery from './cemetery';
 
@@ -121,7 +121,7 @@ export default class Game extends React.Component<IGameProps, {}> {
       selectedSquare: null,
       hoveredPiece: null,
       fallenPieces: fallenPieces,
-      boardState: props.offlineMode ? this.initializeBoard(generateNewBoard()) : [[]],
+      boardState: props.offlineMode ? this.buildBoardState(generateNewBoard()) : [[]],
       highlightState: generateEmptyHighlightedMoves(),
       mouseHoverIcon: '',
     };
@@ -163,7 +163,7 @@ export default class Game extends React.Component<IGameProps, {}> {
         this.setState({
           players: res.data.players || this.state.players,
           playerSide: res.data.players[this.props.userId ?? ''] || this.state.playerSide,
-          boardState: this.initializeBoard(res.data.board),
+          boardState: this.buildBoardState(res.data.board),
           turn: res.data.nextTurn || this.state.playerSide,
           fallenPieces: res.data.fallenPieces || this.state.fallenPieces,
         });
@@ -181,7 +181,7 @@ export default class Game extends React.Component<IGameProps, {}> {
                 this.setState({
                   players: res.data.players || this.state.players,
                   playerSide: res.data.players[this.props.userId ?? ''] || this.state.playerSide,
-                  boardState: this.initializeBoard(res.data.board),
+                  boardState: this.buildBoardState(res.data.board),
                   turn: res.data.nextTurn || this.state.playerSide,
                   fallenPieces: res.data.fallenPieces || this.state.fallenPieces,
                 });
@@ -206,7 +206,7 @@ export default class Game extends React.Component<IGameProps, {}> {
         }
 
         this.setState({
-          boardState: this.initializeBoard(res.data.board),
+          boardState: this.buildBoardState(res.data.board),
           turn: res.data.nextTurn || this.state.playerSide,
           fallenPieces: res.data.fallenPieces || this.state.fallenPieces,
         });
@@ -217,7 +217,7 @@ export default class Game extends React.Component<IGameProps, {}> {
     return `${BACKEND_URL}/games/${this.props.roomId}`;
   }
 
-  private initializeBoard(newBoardMeta: Array<IPieceMeta | null>[]): IBoardState {
+  private buildBoardState(newBoardMeta: Array<IPieceMeta | null>[]): IBoardState {
     const boardState: Array<IPiece | null>[] = [];
 
     for (let x = 0; x < BOARD_HEIGHT; x++) {
