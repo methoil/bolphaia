@@ -8,7 +8,6 @@ import UsersListItems from './usersListItem';
 import MessageElements from './messageElements';
 
 let playerSide = playerIds.phrygians;
-let opponentId = '';
 
 export interface IMessage {
   id: string;
@@ -30,19 +29,10 @@ interface IChatState {
   newMessage: string;
 }
 
-interface IChatComponent {
-  // messagesEnd: any;
-  gameBoard: HTMLElement | undefined;
-  // playerSide: any; // TODO: get this working instead of global var
-}
-
 export default function Chat(props: IChatProps) {
-  // private messagesEnd;
-
   const [users, setUsers] = useState([] as IUser[]); // props.room.users
   const [messages, setMessages] = useState([] as IMessage[]);
   const [newMessage, setNewMessage] = useState('');
-  // const [gameBoard, setGameBoard] = useState(undefined as any); // TODO: should not be on state
 
   useEffect(() => {
     props.user
@@ -50,16 +40,6 @@ export default function Chat(props: IChatProps) {
         roomId: props.room.id,
         messageLimit: 100,
         hooks: {
-          // onUserJoined: user => {
-          //   setState({
-          //     users: props.room.users,
-          //   });
-          // },
-          // onUserLeft: user => {
-          //   setState({
-          //     users: props.room.users,
-          //   });
-          // },
           onMessage: message => {
             let opponent;
             if (message?.parts?.[1]?.payload?.url?.startsWith('urn:player:')) {
@@ -94,10 +74,7 @@ export default function Chat(props: IChatProps) {
         roomId={props.gameGameRoomId}
         offlineMode={false}
         userId={props.user.id}
-        // ref={child => {
-        //   setGameBoard(child);
-        // }}
-        startGameCallback={() => startGameCallback(props.gameGameRoomId, opponentId)}
+        startGameCallback={() => startGameCallback(props.gameGameRoomId)}
       />
     );
   }
@@ -114,12 +91,7 @@ export default function Chat(props: IChatProps) {
             ></MessageElements>
             >
           </Comment.Group>
-          <div
-            style={{ float: 'left', clear: 'both' }}
-            // ref={el => {
-            //   messagesEnd = el;
-            // }}
-          />
+          <div style={{ float: 'left', clear: 'both' }} />
         </Grid.Column>
         <Grid.Column width={4}>
           <List style={{ maxHeight: '20em', overflow: 'auto' }}>
@@ -180,12 +152,5 @@ export default function Chat(props: IChatProps) {
     }
     const res = await props.startedGame(roomId, props.user.id, opponent);
     playerSide = res[props.user.id];
-    // opponentSide = res[opponent];
   }
-
-  // function getPlayersInRoom() {
-  //   const players = gameBoard ? gameBoard?.getPlayers() : [];
-  //   const playersInRoom = users.filter(user => players.includes(user.id));
-  //   return playersInRoom;
-  // }
 }
