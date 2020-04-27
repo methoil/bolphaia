@@ -28,7 +28,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest",
     "eject": "react-scripts eject",
     "deploy": "gh-pages -d build",
     "predeploy": "yarn run build"
@@ -47,5 +47,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/jest": "^25.2.1",
+    "jest": "^25.4.0",
+    "ts-jest": "^25.4.0"
   }
 }
