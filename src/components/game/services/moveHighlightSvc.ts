@@ -1,8 +1,13 @@
-import { get } from 'lodash';
-import { IPiece } from '../pieces/piece';
-import { BOARD_WIDTH, BOARD_HEIGHT } from './boardSetup';
-import { IBoardState, ISelectedPiece, IPossibleMoves, IPossibleMove } from '../game';
-import { coordinate } from '../game.model';
+import { get } from "lodash";
+import { IPiece } from "../pieces/piece";
+import { BOARD_WIDTH, BOARD_HEIGHT } from "./boardSetup";
+import {
+  IBoardState,
+  ISelectedPiece,
+  IPossibleMoves,
+  IPossibleMove,
+} from "../game";
+import { coordinate } from "../game.model";
 
 export function generateEmptyHighlightedMoves(): IPossibleMoves {
   const highlightedMoves: IPossibleMove[][] = [];
@@ -24,7 +29,7 @@ export function generateEmptyHighlightedMoves(): IPossibleMoves {
 export function generatePossibleMovesHighlights(
   src: coordinate,
   selectedPiece: ISelectedPiece,
-  boardState: IBoardState,
+  boardState: IBoardState
 ): IPossibleMoves {
   const highlightedMoves = generateEmptyHighlightedMoves();
   if (!selectedPiece) {
@@ -32,7 +37,11 @@ export function generatePossibleMovesHighlights(
   }
 
   // get possible moves for vectors in all directions a piece can move; detect blocks and board end
-  const dimensions: number[] = [-selectedPiece.moveRange, 0, selectedPiece.moveRange];
+  const dimensions: number[] = [
+    -selectedPiece.moveRange,
+    0,
+    selectedPiece.moveRange,
+  ];
   for (let x = 0; x < 3; x++) {
     for (let y = 0; y < 3; y++) {
       if (x === 1 && y === 1) {
@@ -56,8 +65,16 @@ export function generatePossibleMovesHighlights(
   if (selectedPiece.range) {
     const range = selectedPiece.range;
 
-    for (let x = Math.max(src.x - range, 0); x <= Math.min(src.x + range, BOARD_HEIGHT - 1); x++) {
-      for (let y = Math.max(src.y - range, 0); y <= Math.min(src.y + range, BOARD_WIDTH - 1); y++) {
+    for (
+      let x = Math.max(src.x - range, 0);
+      x <= Math.min(src.x + range, BOARD_HEIGHT - 1);
+      x++
+    ) {
+      for (
+        let y = Math.max(src.y - range, 0);
+        y <= Math.min(src.y + range, BOARD_WIDTH - 1);
+        y++
+      ) {
         highlightedMoves[x][y].inAttackRange = true;
       }
     }
@@ -67,7 +84,11 @@ export function generatePossibleMovesHighlights(
 }
 
 // call this 8 times for each direction to get all possible moves
-export function getMovesPath(src: coordinate, dest: coordinate, board: IBoardState): coordinate[] {
+export function getMovesPath(
+  src: coordinate,
+  dest: coordinate,
+  board: IBoardState
+): coordinate[] {
   if (dest.x < 0 || src.x < 0 || dest.y < 0 || src.y < 0) {
     return [];
   }
@@ -123,7 +144,7 @@ export function getMovesPath(src: coordinate, dest: coordinate, board: IBoardSta
   return path;
 }
 
-function getValidIndex(index: number, maxIndex: number): number {
+export function getValidIndex(index: number, maxIndex: number): number {
   if (index > maxIndex) {
     return maxIndex;
   } else if (index < 0) {
@@ -137,7 +158,7 @@ export function isTargetValidRangedAttack(
   target: coordinate,
   selectedPiece: IPiece,
   highlightState: IPossibleMoves,
-  boardState: IBoardState,
+  boardState: IBoardState
 ): boolean {
   // TODO: how could this resolve to 0??????
   return (
@@ -150,10 +171,17 @@ export function isTargetValidRangedAttack(
 function squareHasEnemyPiece(
   square: coordinate,
   selectedPiece: IPiece,
-  boardState: IBoardState,
+  boardState: IBoardState
 ): boolean {
   return (
-    get(boardState, `[${square.x}][${square.y}].player`, selectedPiece.player) !==
-    selectedPiece.player
+    get(
+      boardState,
+      `[${square.x}][${square.y}].player`,
+      selectedPiece.player
+    ) !== selectedPiece.player
   );
+}
+
+export function sum(a: number, b: number): number {
+  return a + b;
 }

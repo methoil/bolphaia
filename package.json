@@ -49,8 +49,8 @@
     ]
   },
   "devDependencies": {
-    "@types/jest": "^25.2.1",
-    "jest": "^25.4.0",
-    "ts-jest": "^25.4.0"
+    "@types/jest": "^24.x.x",
+    "jest": "24.9.0",
+    "ts-jest": "24.3.0"
   }
 }
