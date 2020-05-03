@@ -1,21 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { Grid } from 'semantic-ui-react';
-import { TokenProvider, ChatManager } from '@pusher/chatkit-client';
-import axios from 'axios';
-import Rooms, { IRoom } from './rooms';
-import Chat from './chat/chat';
-import { playerIds } from '../game/game.model';
-import { BACKEND_URL } from '../../app-constants';
+import React, { useState, useEffect } from "react";
+import { Grid } from "semantic-ui-react";
+import axios from "axios";
+import Rooms, { IRoom } from "./rooms";
+import Chat from "./chat/chat";
+import { playerIds } from "../game/game.model";
+import { BACKEND_URL } from "../../app-constants";
 
-export const LOBBY_NAME = 'Lobby';
+export const LOBBY_NAME = "Lobby";
 
 export interface IUser {
   id: string;
   name: string;
   rooms: IRoom[];
-  presence: { state: 'online' | 'offline' };
-  sendMessage: (payload: { text: string; roomId: string; attachment?: any }) => void;
-  createRoom: (paylod: { name: string; addUserIds: string[] }) => Promise<IRoom>;
+  presence: { state: "online" | "offline" };
+  sendMessage: (payload: {
+    text: string;
+    roomId: string;
+    attachment?: any;
+  }) => void;
+  createRoom: (paylod: {
+    name: string;
+    addUserIds: string[];
+  }) => Promise<IRoom>;
   deleteRoom: any;
   joinRoom: any;
   leaveRoom: any;
@@ -40,39 +46,40 @@ interface ILobbyProps {
 export default function Lobby(props: ILobbyProps) {
   const [joined, setJoined] = useState([]);
   const [joinable, setJoinable] = useState([]);
-  const [lobbyId, setLobbyId] = useState('');
-  const [activeRoom, setActiveRoom] = useState('');
+  const [lobbyId, setLobbyId] = useState("");
+  const [activeRoom, setActiveRoom] = useState("");
   const [currentUser, setCurrentUser] = useState({
-    id: '',
-    name: '',
+    id: "",
+    name: "",
     rooms: [],
-    presence: { state: 'offline' },
+    presence: { state: "offline" },
   } as any);
 
-  useEffect(() => {
-    const chatManager = new ChatManager({
-      instanceLocator: 'v1:us1:f3854d62-ebf2-4ee2-8a48-c62ed279fa8f', // TODO: import this from global consts
-      tokenProvider: new TokenProvider({
-        url: `${BACKEND_URL}/auth`,
-      }),
-      userId: props.username,
-    });
+  // TODO: Chatkit discontinued... replace this with another service, maybe Pusher Channels
+  // useEffect(() => {
+  //   const chatManager = new ChatManager({
+  //     instanceLocator: "v1:us1:f3854d62-ebf2-4ee2-8a48-c62ed279fa8f",
+  //     tokenProvider: new TokenProvider({
+  //       url: `${BACKEND_URL}/auth`,
+  //     }),
+  //     userId: props.username,
+  //   });
 
-    chatManager
-      .connect()
-      .then(currentUserRes => {
-        setCurrentUser(currentUserRes);
-      })
-      .catch(err => {
-        console.error('Failed to connect to Chatkit', err);
-      });
-  }, []);
+  //   chatManager
+  //     .connect()
+  //     .then((currentUserRes) => {
+  //       setCurrentUser(currentUserRes);
+  //     })
+  //     .catch((err) => {
+  //       console.error("Failed to connect to Chatkit", err);
+  //     });
+  // }, []);
 
   useEffect(() => {
     if (!currentUser.name) {
       return;
     }
-    currentUser.getJoinableRooms?.().then(rooms => {
+    currentUser.getJoinableRooms?.().then((rooms) => {
       const lobby = findLobby(rooms) || findLobby(currentUser.rooms);
       if (lobby) {
         setLobbyId(lobby.id);
@@ -85,10 +92,13 @@ export default function Lobby(props: ILobbyProps) {
 
   function pollRooms() {
     // const rooms = await currentUser.getJoinableRooms?.();
-    currentUser.getJoinableRooms?.().then(rooms => {
+    currentUser.getJoinableRooms?.().then((rooms) => {
       setJoined(currentUser.rooms);
       setJoinable(
-        rooms.filter(room => room.name.includes(currentUser.name) || room.name === 'Lobby'),
+        rooms.filter(
+          (room) =>
+            room.name.includes(currentUser.name) || room.name === "Lobby"
+        )
       );
     });
   }
@@ -101,7 +111,7 @@ export default function Lobby(props: ILobbyProps) {
         pollRooms();
       })
       .catch(() => {
-        console.log('Failed to enter room');
+        console.log("Failed to enter room");
       });
   }
 
@@ -129,14 +139,14 @@ export default function Lobby(props: ILobbyProps) {
     return axios
       .request({
         url: `${BACKEND_URL}/games`,
-        method: 'POST',
+        method: "POST",
         data: {
           room: roomId,
           whitePlayer: white,
           blackPlayer: black,
         },
       })
-      .then(response => {
+      .then((response) => {
         setActiveRoom(roomId);
         pollRooms();
         return {
@@ -147,14 +157,15 @@ export default function Lobby(props: ILobbyProps) {
   }
 
   function findLobby(rooms: IRoom[]): IRoom | null {
-    return rooms.filter(room => room.name === LOBBY_NAME)?.[0] ?? null;
+    return rooms.filter((room) => room.name === LOBBY_NAME)?.[0] ?? null;
   }
 
   let chat;
   if (currentUser.id) {
-    const room = currentUser.rooms.find(room => room.id == activeRoom);
+    const room = currentUser.rooms.find((room) => room.id == activeRoom);
     if (room) {
-      const gameGameRoomId = activeRoom && activeRoom !== lobbyId ? activeRoom : '';
+      const gameGameRoomId =
+        activeRoom && activeRoom !== lobbyId ? activeRoom : "";
       chat = (
         <Chat
           user={currentUser}
@@ -171,7 +182,7 @@ export default function Lobby(props: ILobbyProps) {
   }
 
   return (
-    <div className={'segment-grid-container'}>
+    <div className={"segment-grid-container"}>
       <div className="lobby-grid">
         <Grid>
           <Grid.Column width={2}>

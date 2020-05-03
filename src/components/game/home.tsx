@@ -1,7 +1,10 @@
-import React from 'react';
-import { Button } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
-import pieceDefs from './pieces/pieceConfig';
+import React from "react";
+import { Button } from "semantic-ui-react";
+import { Link } from "react-router-dom";
+import pieceDefs from "./pieces/pieceConfig";
+
+const onlineDisabledMessage: string =
+  "Chatkit, the service supporting lobbies for this game, was recently discontinued. I will need to find and implement a replacement for online mode to work.";
 
 export default function Home() {
   return (
@@ -10,28 +13,42 @@ export default function Home() {
         <div className="main-title-intro">
           <h3>Bolphaia</h3>
           <div>
-            Bolphaia is a board game inspired by chess with additional mechanics. Each player makes
-            one move per turn, and the aim is to capture the oponent's general. An overview of the
-            pieces can be seen below, and more detailed stats will be shown within the game.
+            Bolphaia is a board game inspired by chess with additional
+            mechanics. Each player makes one move per turn, and the aim is to
+            capture the oponent's general. An overview of the pieces can be seen
+            below, and more detailed stats will be shown within the game.
           </div>
           <br></br>
+          <div>*{onlineDisabledMessage}</div>
+          <br></br>
           <div>
-            You may reach me at mateev.br@gmail.com if you have any questions or comments about the
-            game.
+            You may reach me at mateev.br@gmail.com if you have any questions or
+            comments about the game.
           </div>
         </div>
         <div className="game-mode-button">
-          <img src={require('../../resources/warRoom.jpg')} width="349" height="222"></img>
+          <img
+            src={require("../../resources/warRoom.jpg")}
+            width="349"
+            height="222"
+          ></img>
           <Link to="/offline-mode">
             <Button>Play offline on one screen</Button>
           </Link>
         </div>
 
         <div className="game-mode-button">
-          <img src={require('../../resources/onlineBattle.jpg')} width="349" height="222"></img>
-          <Link to="/online-mode">
-            <Button>Enter lobby to play online</Button>
-          </Link>
+          <img
+            src={require("../../resources/onlineBattle.jpg")}
+            width="349"
+            height="222"
+          ></img>
+          {/* <Link to="/online-mode"> */}
+          <span title={onlineDisabledMessage}>
+            <Button disabled={true}>Enter lobby to play online</Button>
+          </span>
+
+          {/* </Link> */}
         </div>
       </div>
       <div></div>
@@ -62,20 +79,30 @@ export default function Home() {
 }
 
 function makePieceDescription(pieceDef) {
-  return pieceDescription(pieceDef.displayName, pieceDef.lore, pieceDef.svgSource);
+  return pieceDescription(
+    pieceDef.displayName,
+    pieceDef.lore,
+    pieceDef.svgSource
+  );
 }
 
-function pieceDescription(displayName: string, lore: string, svgSource: string) {
+function pieceDescription(
+  displayName: string,
+  lore: string,
+  svgSource: string
+) {
   return (
     <div className="home-piece-description">
       <div className="home-piece-description-title">
         <button
           className="square"
           style={{
-            backgroundImage: `url(${svgSource})` || '',
+            backgroundImage: `url(${svgSource})` || "",
           }}
-        ></button>{' '}
-        <span className="home-piece-description-title-text">&nbsp;&nbsp;{displayName}</span>
+        ></button>{" "}
+        <span className="home-piece-description-title-text">
+          &nbsp;&nbsp;{displayName}
+        </span>
       </div>
       <div className="lore-text">{lore}</div>
     </div>
