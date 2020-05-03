@@ -2,6 +2,7 @@
   "name": "bolphaia",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://https://bolphaia.herokuapp.com/",
   "dependencies": {
     "@types/lodash": "^4.14.149",
     "@types/pusher-js": "^4.2.2",
@@ -50,5 +51,8 @@
     "@types/jest": "^24.x.x",
     "jest": "24.9.0",
     "ts-jest": "24.3.0"
+  },
+  "engines": {
+    "node": "^12.8.1"
   }
 }
